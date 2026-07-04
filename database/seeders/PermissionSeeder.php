@@ -47,6 +47,9 @@ class PermissionSeeder extends Seeder
             'posts' => [
                 'posts.view', 'posts.view-all', 'posts.view-own', 'posts.create', 'posts.update', 'posts.update-own', 'posts.delete', 'posts.delete-own', 'posts.publish', 'posts.feature',
             ],
+            'halaqahs' => [
+                'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
+            ],
         ];
 
         // Create permissions
@@ -62,6 +65,7 @@ class PermissionSeeder extends Seeder
         // Create roles
         $super = Role::firstOrCreate(['name' => 'super-admin', 'guard_name' => $guard]);
         $admin = Role::firstOrCreate(['name' => 'admin', 'guard_name' => $guard]);
+        $mentor = Role::firstOrCreate(['name' => 'mentor', 'guard_name' => $guard]);
         $user = Role::firstOrCreate(['name' => 'user', 'guard_name' => $guard]);
         $bot = Role::firstOrCreate(['name' => 'bot', 'guard_name' => $guard]);
 
@@ -80,6 +84,7 @@ class PermissionSeeder extends Seeder
             'pages.view', 'pages.create', 'pages.edit',
             'categories.view', 'categories.create', 'categories.update',
             'posts.view', 'posts.view-all', 'posts.create', 'posts.update', 'posts.delete', 'posts.publish', 'posts.feature',
+            'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
         ])->get();
         $admin->syncPermissions($adminPerms);
 
@@ -94,6 +99,14 @@ class PermissionSeeder extends Seeder
             'posts.delete-own',
         ])->get();
         $user->syncPermissions($userPerms);
+
+        $mentorPerms = Permission::whereIn('name', [
+            'dashboard.view',
+            'profile.update',
+            'activity.my',
+            'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
+        ])->get();
+        $mentor->syncPermissions($mentorPerms);
 
         $botPerms = Permission::whereIn('name', [
             'dashboard.view',

@@ -1,85 +1,111 @@
 @extends('layouts.base')
 
 @section('body')
-    <div class="font-sans antialiased">
 
-    {{-- The navbar with `sticky` and `full-width` --}}
-    <livewire:app::header/>
+{{-- Root Container --}} 
+<div class="h-[100dvh] flex flex-col font-sans antialiased bg-base-200/50 dark:bg-base-200 overflow-visible">
 
-    {{-- The main content with `full-width` --}}
-      <x-main with-nav full-width>
+    {{-- APP MAIN AREA --}}
+    <x-main full-width class="flex-1 min-h-0">
 
-        {{-- This is a sidebar that works also as a drawer on small screens --}}
-        {{-- Notice the `main-drawer` reference here --}}
+        {{-- SIDEBAR --}}
         @persist('sidebar')
-        <x-slot:sidebar drawer="main-drawer" collapsible wire:navigate:scroll class="bg-base-100">
-          @if ($user = auth()->user())
-            <x-card class="px-2 pb-3 bg-base-100 dark:bg-base-200 rounded-xl">
-              <div class="flex flex-row items-center justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <x-avatar
-                    :image="'https://ui-avatars.com/api/?name=' . urlencode($user->name)"
-                    alt="{{ $user->name }}"
-                    class="w-10 h-10 ring-2 ring-primary/20"
-                  />
-
-                  <div>
-                    <h3 class="font-semibold text-base-content/90">{{ $user->name }}</h3>
-                  </div>
-                </div>
-
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button type="submit" class="btn btn-circle btn-error btn-sm hover:scale-105 transition-transform" aria-label="Logout">
-                    <x-icon name="o-power" />
-                  </button>
-                </form>
-              </div>
-            </x-card>
-
-            <x-menu-separator class="opacity-70" />
-          @endif
+        <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="{{ __('Hide it') }}" class="bg-base-100 border-r border-base-content/10 flex flex-col h-full">
 
 
-          {{-- Activates the menu item when a route matches the `link` property --}}
-          <x-menu activate-by-route>
-            <x-menu-item :title="__('Dashboard')" icon="o-home" :link="route('app.dashboard')" route="app.dashboard" />
-            <x-menu-sub title="User Settings" icon="o-user">
-              <x-menu-item :title="__('Profile')" icon="o-user-circle" :link="route('app.profile')" route="app.profile"/>
-              <x-menu-item :title="__('Chat')" icon="o-chat-bubble-left-right" :link="route('app.chat')" route="app.chat" />
-              <x-menu-item :title="__('AI Chat')" icon="o-chat-bubble-left-right" :link="route('app.ai-chat')" route="app.ai-chat" />
-              @can('activity.my')
-                <x-menu-item :title="__('Push Notifications')" icon="o-bell" :link="route('app.notifications')" route="app.notifications"/>
-                <x-menu-item :title="__('My Activities')" icon="o-clock" :link="route('app.activity.my')" route="app.activity.my"/>
-              @endcan
-            </x-menu-sub>
-            <x-menu-sub title="Root Settings" icon="o-cog-6-tooth">
-              <x-menu-item :title="__('Settings')" icon="o-cog-6-tooth" :link="route('app.settings')" route="app.settings"/>
-              <x-menu-item :title="__('Roles')" icon="o-shield-check" :link="route('app.roles')" route="app.roles"/>
-              <x-menu-item :title="__('Users')" icon="o-users" :link="route('app.users')" route="app.users"/>
-              <x-menu-item :title="__('Backups')" icon="o-cloud" :link="route('app.backups')" route="app.backups"/>
-              <x-menu-item :title="__('Translations')" icon="o-language" :link="route('app.translate')" route="app.translate"/>
-              <x-menu-item :title="__('Pages')" icon="o-document-text" :link="route('app.pages')" route="app.pages"/>
-              <x-menu-item :title="__('Categories')" icon="o-tag" :link="route('app.categories')" route="app.categories"/>
-              <x-menu-item :title="__('Posts')" icon="o-document-text" :link="route('app.posts')" route="app.posts"/>
+            {{-- Sidebar Header (User) --}}
+            <div class="sticky top-0 z-10 bg-base-100/70">
+                @if($user = auth()->user())
+                    <x-list-item :item="$user" no-separator no-hover class="!m-0 pl-2 !pb-0">
+                        <x-slot:avatar>
+                            <div class="avatar ml-2">
+                                <div class="w-8 h-8 rounded-full bg-base-300 ring-2 ring-primary/20">
+                                    <img src="{{ $user->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name) }}" alt="{{ $user->name }}" class="object-cover" />
+                                </div>
+                            </div>
+                        </x-slot:avatar>
+                        <x-slot:actions>
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+                            <x-button icon="o-power" class="btn-circle btn-ghost btn-xs text-error shadow-none hover:scale-105 transition-transform" tooltip-left="{{ __('Logoff') }}" no-wire-navigate onclick="document.getElementById('logout-form').submit();" />
+                        </x-slot:actions>
+                    </x-list-item>
+                    <x-menu-separator class="opacity-70" />
+                @endif
+            </div>
+            {{-- Scrollable Sidebar Menu --}}
+            <div class="flex-1 overflow-y-auto pb-2 mt-2">
+                <x-menu activate-by-route class="px-2 !py-0">
 
-              @can('activity.feed')
-                <x-menu-item :title="__('Activity Feed')" icon="o-list-bullet" :link="route('app.activity.feed')" route="app.activity.feed"/>
-              @endcan
-            </x-menu-sub>
-          </x-menu>
+
+                    {{-- Dashboard --}}
+                    <x-menu-item title="{{ __('Dashboard') }}" icon="o-home" :link="route('app.dashboard')" route="app.dashboard" wire:navigate />
+                    
+                    {{-- Halaqahs --}}
+                    <x-menu-item title="{{ __('Halaqahs') }}" icon="o-book-open" :link="route('app.halaqahs')" route="app.halaqahs" wire:navigate />
+                    
+                    {{-- User Settings --}}
+                    <x-menu-sub title="{{ __('User Settings') }}" icon="o-user">
+                        <x-menu-item title="{{ __('Profile') }}" icon="o-user-circle" :link="route('app.profile')" route="app.profile" wire:navigate />
+                        <x-menu-item title="{{ __('Chat') }}" icon="o-chat-bubble-left-right" :link="route('app.chat')" route="app.chat" wire:navigate />
+                        <x-menu-item title="{{ __('AI Chat') }}" icon="o-chat-bubble-left-right" :link="route('app.ai-chat')" route="app.ai-chat" wire:navigate />
+                        {{-- <x-menu-item title="{{ __('AskAI (DB)') }}" icon="o-circle-stack" :link="route('app.askai')" route="app.askai" wire:navigate /> --}}
+                        @can('activity.my')
+                            <x-menu-item title="{{ __('Push Notifications') }}" icon="o-bell" :link="route('app.notifications')" route="app.notifications" wire:navigate />
+                            <x-menu-item title="{{ __('My Activities') }}" icon="o-clock" :link="route('app.activity.my')" route="app.activity.my" wire:navigate />
+                        @endcan
+                    </x-menu-sub>
+
+                    {{-- Root Settings --}}
+                    <x-menu-sub title="{{ __('Root Settings') }}" icon="o-cog-6-tooth">
+                        <x-menu-item title="{{ __('Settings') }}" icon="o-adjustments-horizontal" :link="route('app.settings')" route="app.settings" wire:navigate />
+                        
+                        @auth
+                            {{-- <x-menu-item title="{{ __('Privacy & Security') }}" icon="o-shield-check" :link="route('two-factor.setup')" route="two-factor.setup" wire:navigate /> --}}
+                        @endauth
+                        
+                        @can('roles.view')
+                            <x-menu-item title="{{ __('Roles') }}" icon="o-shield-check" :link="route('app.roles')" route="app.roles" wire:navigate />
+                        @endcan
+                        
+                        @can('users.view')
+                            <x-menu-item title="{{ __('Users') }}" icon="o-users" :link="route('app.users')" route="app.users" wire:navigate />
+                        @endcan
+
+                        <x-menu-item title="{{ __('Backups') }}" icon="o-cloud" :link="route('app.backups')" route="app.backups" wire:navigate />
+                        <x-menu-item title="{{ __('Translations') }}" icon="o-language" :link="route('app.translate')" route="app.translate" wire:navigate />
+                        <x-menu-item title="{{ __('Pages') }}" icon="o-document-text" :link="route('app.pages')" route="app.pages" wire:navigate />
+
+                        @can('activity.feed')
+                            <x-menu-item title="{{ __('Activity Feed') }}" icon="o-list-bullet" :link="route('app.activity.feed')" route="app.activity.feed" wire:navigate />
+                        @endcan
+                    </x-menu-sub>
+
+                </x-menu>
+            </div>
+
         </x-slot:sidebar>
         @endpersist
 
-        {{-- The `$slot` goes here --}}
-        {{--        @yield('content')--}}
-        <x-slot:content class="bg-base-300 px-3 md:px-6 lg:px-8 py-6 min-h-[calc(100vh-4rem)]">
-          {{ $slot }}
+        {{-- CONTENT --}}
+        <x-slot:content class="bg-base-200/50 flex flex-col h-full flex-1 min-h-0 !p-0">
+
+           {{-- Ensure the header component matches the alias you are using. --}}
+   <div class="sticky top-0 z-10 bg-base-200/50"><livewire:app::header/></div> 
+            {{-- Main Scrollable Content Area --}}
+            <div class="flex-1 overflow-y-auto">
+                <main class="px-3 md:px-6 lg:px-8 py-6 relative min-h-full">
+                    @yield('content')
+                    @isset($slot)
+                        {{ $slot }}
+                    @endisset
+                </main>
+            </div>
+
         </x-slot:content>
-      </x-main>
+    </x-main>
 
-    {{--  TOAST area --}}
+    {{-- Global UI Components --}}
     <x-toast />
-    </div>
+    <x-spotlight shortcut="meta.k" />
+</div>
 @endsection
-

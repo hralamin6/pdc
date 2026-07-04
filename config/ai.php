@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => 'gemini',
+    'default' => 'mistral',
     'default_for_images' => 'pollinations',
     'default_for_audio' => 'openai',
     'default_for_transcription' => 'openai',

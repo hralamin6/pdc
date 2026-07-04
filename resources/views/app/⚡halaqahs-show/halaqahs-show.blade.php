@@ -1,0 +1,172 @@
+<div>
+    <x-header title="{{ $halaqah->title }}" subtitle="{{ $halaqah->series ? 'Part of Course: ' . $halaqah->series->title : 'Standalone Session' }}">
+        <x-slot:actions>
+            <x-button icon="o-arrow-left" title="Back" link="{{ route('app.halaqahs') }}" class="btn-ghost" wire:navigate />
+            @can('halaqahs.manage-attendance')
+                <x-button icon="o-qr-code" title="QR & Attendance" link="{{ route('app.halaqahs.attendance', $halaqah) }}" class="btn-outline btn-primary" wire:navigate />
+            @endcan
+        </x-slot:actions>
+    </x-header>
+
+    @if($halaqah->status === 'cancelled')
+        <x-alert icon="o-exclamation-triangle" class="alert-error mb-6">
+            This session has been cancelled.
+        </x-alert>
+    @elseif($halaqah->status === 'completed')
+        <x-alert icon="o-check-circle" class="alert-info mb-6">
+            This session is completed.
+        </x-alert>
+    @endif
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
+        <div class="lg:col-span-2 space-y-6">
+            
+            @if($halaqah->series)
+                <x-card class="bg-primary/5 border-primary/20">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-lg text-primary">{{ $halaqah->series->title }}</h3>
+                        <span class="text-sm font-semibold">{{ $this->seriesProgress['completed'] }} / {{ $this->seriesProgress['total'] }} Sessions Completed</span>
+                    </div>
+                    <x-progress value="{{ $this->seriesProgress['percentage'] }}" max="100" class="progress-primary h-2" />
+                </x-card>
+            @endif
+
+            @if($halaqah->description)
+                <x-card>
+                    <p class="whitespace-pre-wrap text-base-content/80">{{ $halaqah->description }}</p>
+                </x-card>
+            @endif
+            
+            <x-card>
+                <h2 class="text-xl font-bold mb-4">Topic: {{ $halaqah->topic }}</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-4">
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-user" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">Speaker:</span> 
+                            {{ $halaqah->speaker ? $halaqah->speaker->name : 'TBA' }}
+                        </div>
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-calendar" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">Date:</span> 
+                            {{ $halaqah->scheduled_at->format('l, F j, Y') }}
+                        </div>
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-clock" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">Time:</span> 
+                            {{ $halaqah->scheduled_at->format('g:i A') }}
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-map-pin" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">Location:</span> 
+                            {{ $halaqah->location }}
+                        </div>
+                        @if($halaqah->meeting_link)
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-link" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">Online:</span> 
+                            <a href="{{ $halaqah->meeting_link }}" target="_blank" class="text-primary hover:underline">Meeting Link</a>
+                        </div>
+                        @endif
+                        <div class="flex items-center text-base-content/80">
+                            <x-icon name="o-users" class="w-5 h-5 mr-3 text-primary" />
+                            <span class="font-semibold w-24">For:</span> 
+                            @php
+                                $gender = match($halaqah->gender_restriction) {
+                                    'brothers_only' => 'Brothers Only',
+                                    'sisters_only' => 'Sisters Only',
+                                    default => 'Open to All',
+                                };
+                            @endphp
+                            {{ $gender }}
+                        </div>
+                    </div>
+                </div>
+            </x-card>
+
+            @if($halaqah->materials_path || !empty($halaqah->resources))
+            <x-card title="Session Materials & Resources" icon="o-document-text">
+                <p class="mb-4 text-base-content/70">Review these materials to prepare for the session.</p>
+                <div class="flex flex-col gap-3">
+                    @if($halaqah->materials_path)
+                        <x-button icon="o-arrow-down-tray" class="btn-outline btn-primary w-max" link="{{ asset('storage/' . $halaqah->materials_path) }}" external target="_blank">
+                            Download Attached File
+                        </x-button>
+                    @endif
+                    
+                    @if(is_array($halaqah->resources) && count($halaqah->resources) > 0)
+                        <div class="mt-2 space-y-2">
+                            <h4 class="font-semibold text-sm opacity-70 uppercase tracking-wider">External Links</h4>
+                            @foreach($halaqah->resources as $link)
+                                <a href="{{ $link }}" target="_blank" class="flex items-center gap-2 text-primary hover:underline bg-base-200 p-3 rounded-lg w-full">
+                                    <x-icon name="o-link" class="w-4 h-4 shrink-0" />
+                                    <span class="truncate">{{ $link }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </x-card>
+            @endif
+        </div>
+
+        <div>
+            <x-card title="Registration" icon="o-ticket">
+                <div class="text-center py-6">
+                    @if(!$halaqah->is_registration_open)
+                        <div class="w-16 h-16 rounded-full bg-base-300 flex items-center justify-center mx-auto mb-4">
+                            <x-icon name="o-lock-closed" class="w-8 h-8 opacity-50" />
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">Registration Closed</h3>
+                        <p class="text-sm text-base-content/70">You cannot RSVP at this time.</p>
+                    @elseif($this->hasRsvpd)
+                        <div class="w-16 h-16 rounded-full bg-success/20 flex items-center justify-center mx-auto mb-4 text-success">
+                            <x-icon name="o-check" class="w-8 h-8" />
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-success">You are attending!</h3>
+                        <p class="text-sm text-base-content/70 mb-6">We look forward to seeing you there.</p>
+                        
+                        <div class="bg-base-200 p-4 rounded-xl mb-6 text-left">
+                            <h4 class="font-semibold mb-2 flex items-center gap-2">
+                                <x-icon name="o-check-badge" class="w-5 h-5 text-primary" /> Session Preparation
+                            </h4>
+                            <p class="text-xs text-base-content/70 mb-4">Have you reviewed the materials and prepared for this session?</p>
+                            <x-toggle wire:click="togglePreparation" :checked="$this->attendanceRecord->preparation_completed" label="Preparation Completed" class="toggle-success toggle-sm" />
+                        </div>
+
+                        <x-button label="Cancel RSVP" class="btn-error btn-outline btn-block" wire:click="toggleRsvp" spinner />
+                    @elseif($this->isOnWaitlist)
+                        <div class="w-16 h-16 rounded-full bg-warning/20 flex items-center justify-center mx-auto mb-4 text-warning">
+                            <x-icon name="o-clock" class="w-8 h-8" />
+                        </div>
+                        <h3 class="font-bold text-lg mb-2 text-warning">On Waitlist</h3>
+                        <p class="text-sm text-base-content/70 mb-6">The session is full. We will notify you if a spot opens up.</p>
+                        <x-button label="Leave Waitlist" class="btn-error btn-outline btn-block" wire:click="toggleRsvp" spinner />
+                    @else
+                        <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 text-primary">
+                            <x-icon name="o-hand-raised" class="w-8 h-8" />
+                        </div>
+                        
+                        @if($isWaitlist)
+                            <h3 class="font-bold text-lg mb-2 text-warning">Session is Full</h3>
+                            <p class="text-sm text-base-content/70 mb-6">You can still join the waitlist. Spots may open up!</p>
+                            <x-button label="Join Waitlist" class="btn-warning btn-block" wire:click="toggleRsvp" spinner />
+                        @else
+                            <h3 class="font-bold text-lg mb-2">Reserve your spot</h3>
+                            @if($halaqah->max_capacity)
+                                <p class="text-sm text-success mb-6">{{ $halaqah->available_seats }} spots remaining</p>
+                            @else
+                                <p class="text-sm text-base-content/70 mb-6">Let the organizers know you are coming.</p>
+                            @endif
+                            <x-button label="RSVP Now" class="btn-primary btn-block" wire:click="toggleRsvp" spinner />
+                        @endif
+                    @endif
+                </div>
+            </x-card>
+        </div>
+    </div>
+</div>

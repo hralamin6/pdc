@@ -63,11 +63,9 @@ Route::get('/benchmark', function () {
 });
 
 Route::livewire('/', 'web::home')->name('web.home');
-Route::livewire('/posts', 'web::posts')->name('web.posts');
-Route::livewire('/posts/{slug}', 'web::post')->name('web.post');
-Route::livewire('/categories', 'web::categories')->name('web.categories');
-Route::livewire('/users', 'web::users')->name('web.users');
-Route::livewire('/users/{id}', 'web::user')->name('web.user');
+Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
+Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
+Route::livewire('/members', 'web::members')->name('web.members');
 
 Route::middleware('auth')->group(function () {
     Route::livewire('/app/', 'app::dashboard')->name('app.dashboard');
@@ -81,6 +79,18 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/pages/', 'app::pages')->name('app.pages');
     Route::livewire('/app/categories/', 'app::categories')->name('app.categories');
     Route::livewire('/app/posts/', 'app::posts')->name('app.posts');
+    
+    // Halaqahs Routes
+    Route::livewire('/app/halaqahs', 'app::halaqahs')->name('app.halaqahs');
+    Route::livewire('/app/halaqahs/manage', 'app::halaqahs-manage')->name('app.halaqahs.manage');
+    Route::livewire('/app/halaqahs/{halaqah}/attendance', 'app::halaqahs-attendance')->name('app.halaqahs.attendance');
+    Route::livewire('/app/halaqahs/{halaqah}', 'app::halaqahs-show')->name('app.halaqahs.show');
+
+    // Daily Reports Routes
+    Route::livewire('/app/daily-reports', 'app::daily-reports')->name('app.daily-reports');
+    Route::livewire('/app/daily-reports/form', 'app::daily-reports-form')->name('app.daily-reports.form');
+    Route::livewire('/app/daily-reports/settings', 'app::daily-reports-settings')->name('app.daily-reports.settings');
+    Route::livewire('/app/daily-reports/admin', 'app::daily-reports-admin')->name('app.daily-reports.admin');
 
     Route::livewire('/app/notifications/', 'app::notifications')->name('app.notifications');
 

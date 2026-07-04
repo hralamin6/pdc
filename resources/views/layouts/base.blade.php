@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html
 {{--    data-theme="light"--}}
-    data-theme="dark"
+    {{-- data-theme="dark" --}}
       lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
 
@@ -113,7 +113,10 @@
 
     </head>
 
-    <body>
+    <body
+    {{-- x-cloak x-data="{  theme: $persist(null)   }" --}}
+        {{-- :data-theme="theme" --}}
+        >
         @yield('body')
         <x-toast />
         @RegisterServiceWorkerScript
