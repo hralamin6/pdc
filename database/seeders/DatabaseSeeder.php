@@ -26,7 +26,7 @@ class DatabaseSeeder extends Seeder
         
         $this->call([HalaqahSeeder::class]);
         $this->call([DailyReportTemplateSeeder::class]);
-
+ 
 
         // Seed demo users 
         $admin = User::updateOrCreate([
