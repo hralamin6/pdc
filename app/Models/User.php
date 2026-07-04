@@ -238,4 +238,20 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return $this->hasMany(AiConversation::class);
     }
+
+    /**
+     * Get all daily reports for this user.
+     */
+    public function dailyReports()
+    {
+        return $this->hasMany(DailyReport::class);
+    }
+
+    /**
+     * Get the user's streak.
+     */
+    public function userStreak()
+    {
+        return $this->hasOne(UserStreak::class);
+    }
 }

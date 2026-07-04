@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
         $this->call([PostSeeder::class]);
 
         $this->call([PermissionSeeder::class]);
+        
+        $this->call([HalaqahSeeder::class]);
+        $this->call([DailyReportTemplateSeeder::class]);
+
 
         // Seed demo users
         $admin = User::updateOrCreate([
