@@ -5,6 +5,7 @@ cd /var/www/tallkit || exit
 echo "Pulling latest code..."
 git fetch origin
 git reset --hard origin/main
+git clean -fd
 echo "Installing composer dependencies..."
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
