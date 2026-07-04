@@ -1,5 +1,5 @@
 #!/bin/bash
-
+git config --global --add safe.directory /var/www/tallkit
 cd /var/www/tallkit || exit
 
 echo "Pulling latest code..."
