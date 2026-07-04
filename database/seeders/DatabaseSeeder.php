@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
         $this->call([DailyReportTemplateSeeder::class]);
 
 
-        // Seed demo users
+        // Seed demo users 
         $admin = User::updateOrCreate([
             'email' => 'admin@mail.com'], [
                 'name' => 'admin',
