@@ -40,6 +40,8 @@
                     {{-- Dashboard --}}
                     <x-menu-item title="{{ __('Dashboard') }}" icon="o-home" :link="route('app.dashboard')" route="app.dashboard" wire:navigate />
                     
+                    {{-- Daily Reports --}}
+                    <x-menu-item title="{{ __('Daily Reports') }}" icon="o-clipboard-document-check" :link="route('app.daily-reports')" route="app.daily-reports*" wire:navigate />
                     {{-- Halaqahs --}}
                     <x-menu-item title="{{ __('Halaqahs') }}" icon="o-book-open" :link="route('app.halaqahs')" route="app.halaqahs" wire:navigate />
                     
