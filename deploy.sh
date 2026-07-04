@@ -3,8 +3,8 @@ git config --global --add safe.directory /var/www/tallkit
 cd /var/www/tallkit || exit
 
 echo "Pulling latest code..."
-git pull origin main
-
+git fetch origin
+git reset --hard origin/main
 echo "Installing composer dependencies..."
 composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
 
