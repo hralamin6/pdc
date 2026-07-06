@@ -1,41 +1,66 @@
-<div class="max-w-4xl mx-auto py-6">
-    <div class="flex items-center gap-4 mb-8">
-        <x-button icon="o-arrow-left" class="btn-circle btn-ghost" :link="route('app.daily-reports')" wire:navigate />
-        <div>
-            <h1 class="text-3xl font-bold text-base-content">{{ __('Tracking Settings') }}</h1>
-            <p class="text-base-content/70 mt-1">{{ __('Choose which activities you want to track daily.') }}</p>
+<div class="max-w-4xl mx-auto py-6 space-y-8">
+    {{-- Header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-base-100 p-6 rounded-3xl border border-base-content/5 shadow-sm">
+        <div class="flex items-center gap-4">
+            <x-button icon="o-arrow-left" class="btn-circle btn-ghost" :link="route('app.daily-reports')" wire:navigate />
+            <div>
+                <h1 class="text-2xl sm:text-3xl font-extrabold text-base-content tracking-tight">{{ __('Tracking Preferences') }}</h1>
+                <p class="text-xs sm:text-sm text-base-content/60 mt-0.5">{{ __('Customize which activities and habits you want to track daily.') }}</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <x-button 
+                label="Reset Defaults" 
+                icon="o-arrow-path" 
+                wire:click="resetDefaults" 
+                wire:confirm="Are you sure you want to reset your tracked items to system defaults?" 
+                class="btn-ghost btn-sm rounded-xl text-base-content/60" 
+            />
+            <x-button 
+                label="Add Custom Item" 
+                icon="o-plus" 
+                wire:click="$set('showCustomModal', true)" 
+                class="btn-primary btn-sm rounded-xl font-bold" 
+            />
         </div>
     </div>
 
-    {{-- System Defaults --}}
-    <div class="bg-base-100 rounded-2xl shadow-sm border border-base-content/5 p-6 mb-8">
-        <h2 class="text-xl font-bold text-base-content mb-4 flex items-center gap-2">
-            <x-icon name="o-list-bullet" class="w-6 h-6 text-primary" /> System Items
-        </h2>
-        
+    {{-- System Default Templates --}}
+    <div class="bg-base-100 rounded-3xl border border-base-content/5 shadow-sm p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-base-content/5 pb-3">
+            <h2 class="text-lg font-bold text-base-content flex items-center gap-2">
+                <x-icon name="o-list-bullet" class="w-5 h-5 text-primary" />
+                <span>System Standard Items</span>
+            </h2>
+            <span class="text-xs text-base-content/50">Toggle to enable or disable from your daily form</span>
+        </div>
+
         @php
-            $grouped = collect($templates)->groupBy('category');
+            $userItemsByTemplate = collect($userItems)->keyBy('daily_report_template_id');
+            $groupedTemplates = collect($templates)->groupBy('category');
         @endphp
 
-        @foreach($grouped as $category => $items)
-            <div class="mb-6 last:mb-0">
-                <h3 class="font-semibold text-sm text-base-content/50 uppercase tracking-wider mb-3">{{ $category }}</h3>
-                <div class="space-y-3">
+        @foreach($groupedTemplates as $category => $items)
+            <div class="space-y-3">
+                <h3 class="font-bold text-xs text-base-content/50 uppercase tracking-wider bg-base-200/50 px-3 py-1.5 rounded-xl inline-block">{{ $category }}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                     @foreach($items as $template)
                         @php
-                            $isActive = isset($userItems[$template['id']]) ? $userItems[$template['id']]['is_active'] : false;
+                            $userItem = $userItemsByTemplate->get($template['id']);
+                            $isActive = $userItem ? (bool)$userItem['is_active'] : false;
                         @endphp
-                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-base-200/50 transition-colors border border-transparent {{ $isActive ? 'bg-primary/5 border-primary/20' : '' }}">
+                        <div class="flex items-center justify-between p-3.5 rounded-2xl border transition-all {{ $isActive ? 'bg-primary/5 border-primary/20' : 'bg-base-200/20 border-base-content/5' }}">
                             <div class="flex items-center gap-3">
                                 <div>
-                                    <p class="font-medium text-base-content">{{ $template['title'] }}</p>
+                                    <p class="font-bold text-sm text-base-content">{{ $template['title'] }}</p>
                                     <p class="text-xs text-base-content/50 capitalize">Input: {{ $template['type'] }}</p>
                                 </div>
                             </div>
                             <x-toggle 
                                 wire:click="toggleTemplate({{ $template['id'] }})" 
                                 :checked="$isActive" 
-                                class="toggle-primary" 
+                                class="toggle-primary toggle-sm" 
                             />
                         </div>
                     @endforeach
@@ -44,38 +69,76 @@
         @endforeach
     </div>
 
-    {{-- Custom Items --}}
-    <div class="bg-base-100 rounded-2xl shadow-sm border border-base-content/5 p-6">
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-xl font-bold text-base-content flex items-center gap-2">
-                <x-icon name="o-sparkles" class="w-6 h-6 text-secondary" /> Personal Custom Items
+    {{-- Personal Custom Items --}}
+    <div class="bg-base-100 rounded-3xl border border-base-content/5 shadow-sm p-6 space-y-6">
+        <div class="flex items-center justify-between border-b border-base-content/5 pb-3">
+            <h2 class="text-lg font-bold text-base-content flex items-center gap-2">
+                <x-icon name="o-sparkles" class="w-5 h-5 text-secondary" />
+                <span>Personal Custom Items</span>
             </h2>
-            <x-button icon="o-plus" class="btn-sm btn-primary rounded-full" label="Add New" wire:click="$set('showCustomModal', true)" />
+            <x-button 
+                icon="o-plus" 
+                class="btn-xs btn-outline btn-secondary rounded-lg" 
+                label="Create New" 
+                wire:click="$set('showCustomModal', true)" 
+            />
         </div>
 
         @php
-            $customs = collect($userItems)->whereNull('daily_report_template_id')->all();
+            $customs = collect($userItems)->whereNull('daily_report_template_id')->values();
         @endphp
 
-        @if(empty($customs))
-            <div class="text-center py-6 text-base-content/50 text-sm">
-                You haven't added any custom tracking items yet.
+        @if($customs->isEmpty())
+            <div class="text-center py-8 bg-base-200/20 rounded-2xl border border-dashed border-base-content/10 space-y-2">
+                <x-icon name="o-sparkles" class="w-8 h-8 text-base-content/30 mx-auto" />
+                <p class="text-sm font-semibold text-base-content/60">No personal custom items added yet.</p>
+                <p class="text-xs text-base-content/40">You can create custom goals like "Read 5 pages of Seerah" or "Drink 2L Water".</p>
             </div>
         @else
-            <div class="space-y-3">
-                @foreach($customs as $custom)
-                    <div class="flex items-center justify-between p-3 rounded-xl hover:bg-base-200/50 transition-colors border border-transparent {{ $custom['is_active'] ? 'bg-primary/5 border-primary/20' : '' }}">
+            <div class="space-y-2">
+                @foreach($customs as $index => $custom)
+                    <div class="flex items-center justify-between p-3.5 rounded-2xl border transition-all {{ $custom['is_active'] ? 'bg-secondary/5 border-secondary/20' : 'bg-base-200/20 border-base-content/5' }}">
                         <div class="flex items-center gap-3">
+                            <div class="flex items-center gap-1">
+                                <button 
+                                    type="button" 
+                                    wire:click="moveUp({{ $custom['id'] }})" 
+                                    class="p-1 hover:bg-base-200 rounded text-base-content/40 hover:text-base-content" 
+                                    title="Move Up"
+                                >
+                                    <x-icon name="o-chevron-up" class="w-3.5 h-3.5" />
+                                </button>
+                                <button 
+                                    type="button" 
+                                    wire:click="moveDown({{ $custom['id'] }})" 
+                                    class="p-1 hover:bg-base-200 rounded text-base-content/40 hover:text-base-content" 
+                                    title="Move Down"
+                                >
+                                    <x-icon name="o-chevron-down" class="w-3.5 h-3.5" />
+                                </button>
+                            </div>
                             <div>
-                                <p class="font-medium text-base-content">{{ $custom['custom_title'] }}</p>
-                                <p class="text-xs text-base-content/50 capitalize">Input: {{ $custom['type'] }}</p>
+                                <p class="font-bold text-sm text-base-content">{{ $custom['custom_title'] }}</p>
+                                <p class="text-xs text-base-content/50 capitalize">Type: {{ $custom['type'] }}</p>
                             </div>
                         </div>
-                        <x-toggle 
-                            wire:click="toggleCustomItem({{ $custom['id'] }})" 
-                            :checked="$custom['is_active']" 
-                            class="toggle-primary" 
-                        />
+
+                        <div class="flex items-center gap-3">
+                            <x-toggle 
+                                wire:click="toggleCustomItem({{ $custom['id'] }})" 
+                                :checked="$custom['is_active']" 
+                                class="toggle-secondary toggle-sm" 
+                            />
+                            <button 
+                                type="button" 
+                                wire:click="deleteCustomItem({{ $custom['id'] }})" 
+                                wire:confirm="Delete this custom item permanently?" 
+                                class="btn btn-ghost btn-circle btn-xs text-error" 
+                                title="Delete Item"
+                            >
+                                <x-icon name="o-trash" class="w-4 h-4" />
+                            </button>
+                        </div>
                     </div>
                 @endforeach
             </div>
@@ -83,21 +146,31 @@
     </div>
 
     {{-- Modal for Custom Items --}}
-    <x-modal wire:model="showCustomModal" title="Create Custom Trackable" class="backdrop-blur">
-        <div class="space-y-4">
-            <x-input label="Item Title" wire:model="customTitle" placeholder="e.g. Read 5 pages of seerah" />
-            
-            <x-select label="Input Type" wire:model="customType" :options="[
-                ['id' => 'boolean', 'name' => 'Checkbox (Yes/No)'],
-                ['id' => 'number', 'name' => 'Number Input'],
-                ['id' => 'text', 'name' => 'Text / Notes'],
-                ['id' => 'mixed', 'name' => 'Checkbox + Text'],
-            ]" />
+    <x-modal wire:model="showCustomModal" title="Create Personal Trackable" class="backdrop-blur">
+        <div class="space-y-4 pt-2">
+            <x-input 
+                label="Activity Title" 
+                wire:model="customTitle" 
+                placeholder="e.g. Read 5 pages of Seerah, Nafl Charity, Morning Jog" 
+                class="rounded-xl border-base-content/10"
+            />
+
+            <x-select 
+                label="Input Format" 
+                wire:model="customType" 
+                :options="[
+                    ['id' => 'boolean', 'name' => 'Checkbox (Done / Not Done)'],
+                    ['id' => 'number', 'name' => 'Numeric Stepper (Amount / Pages / Minutes)'],
+                    ['id' => 'text', 'name' => 'Text Field (Reflection / Journal Note)'],
+                    ['id' => 'mixed', 'name' => 'Checkbox + Text Note'],
+                ]" 
+                class="rounded-xl border-base-content/10"
+            />
         </div>
-        
+
         <x-slot:actions>
-            <x-button label="Cancel" wire:click="$set('showCustomModal', false)" class="btn-ghost" />
-            <x-button label="Save Item" wire:click="saveCustomItem" class="btn-primary" spinner />
+            <x-button label="Cancel" wire:click="$set('showCustomModal', false)" class="btn-ghost rounded-xl" />
+            <x-button label="Save Trackable" wire:click="saveCustomItem" class="btn-primary rounded-xl font-bold" spinner />
         </x-slot:actions>
     </x-modal>
 </div>

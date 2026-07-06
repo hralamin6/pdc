@@ -29,4 +29,28 @@ class DailyReport extends Model
     {
         return $this->hasMany(DailyReportEntry::class);
     }
+
+    public function getCompletedCountAttribute(): int
+    {
+        return $this->entries->filter(function ($entry) {
+            return $entry->boolean_value
+                || ($entry->numeric_value !== null && $entry->numeric_value > 0)
+                || ! empty(trim($entry->text_value ?? ''));
+        })->count();
+    }
+
+    public function getTotalItemsCountAttribute(): int
+    {
+        return $this->entries->count();
+    }
+
+    public function getCompletionPercentageAttribute(): int
+    {
+        $total = $this->total_items_count;
+        if ($total === 0) {
+            return 0;
+        }
+
+        return (int) round(($this->completed_count / $total) * 100);
+    }
 }

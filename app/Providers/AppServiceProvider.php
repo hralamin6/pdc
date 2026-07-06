@@ -20,7 +20,7 @@ use Laravel\Ai\Contracts\Gateway\Gateway;
 use App\Ai\Providers\PollinationsProvider;
 use Laravel\Ai\Gateway\Prism\PrismGateway;
 use Livewire\Blaze\Blaze;
-
+use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -36,6 +36,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+    //     if (app()->environment('production')) {
+    //     URL::forceScheme('https');
+    // }
         Blaze::optimize()
         ->in(resource_path('views/web'))
         ->in(resource_path('views/app'))
