@@ -56,7 +56,7 @@ new #[Title('Halaqahs & Study Circles')] #[Layout('layouts.web')] class extends 
         if ($this->series_filter) {
             $query->where('series_id', $this->series_filter);
         }
-
+ 
         return [
             'halaqahs' => $query->paginate(9),
             'allSeries' => HalaqahSeries::where('status', 'active')->orderBy('title')->get(),
