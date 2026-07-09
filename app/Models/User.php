@@ -254,4 +254,28 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return $this->hasOne(UserStreak::class);
     }
+
+    /**
+     * Get all donations made by this user.
+     */
+    public function donations()
+    {
+        return $this->hasMany(Donation::class);
+    }
+
+    /**
+     * Get the user's recurring donation pledges.
+     */
+    public function donationPledges()
+    {
+        return $this->hasMany(DonationPledge::class);
+    }
+
+    /**
+     * Get all donation campaigns created by this user.
+     */
+    public function createdCampaigns()
+    {
+        return $this->hasMany(DonationCampaign::class, 'created_by');
+    }
 }

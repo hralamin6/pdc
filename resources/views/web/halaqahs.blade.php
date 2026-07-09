@@ -60,33 +60,51 @@ new #[Title('Halaqahs & Study Circles')] #[Layout('layouts.web')] class extends 
         return [
             'halaqahs' => $query->paginate(9),
             'allSeries' => HalaqahSeries::where('status', 'active')->orderBy('title')->get(),
+            'totalUpcoming' => Halaqah::where('scheduled_at', '>=', now())->where('status', 'published')->count(),
+            'totalCompleted' => Halaqah::where('status', 'completed')->count(),
         ];
     }
 };
 ?>
 
-<div class="bg-base-100 dark:bg-base-100 min-h-screen">
+<div class="bg-base-100 min-h-screen">
 
-    {{-- Page Header --}}
-    <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white py-16">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-3xl md:text-4xl font-extrabold mb-2">Halaqahs & Study Circles</h1>
-            <p class="text-white/60 text-lg">Explore and join our upcoming sessions across campus.</p>
+    {{-- Hero --}}
+    <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white py-20 relative overflow-hidden">
+        <div class="absolute top-1/4 right-0 w-72 h-72 bg-primary/20 rounded-full blur-[120px]"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <p class="text-primary font-bold text-sm uppercase tracking-widest mb-3">Study Programs</p>
+            <h1 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Halaqahs & Study Circles</h1>
+            <p class="text-white/50 text-lg max-w-xl mb-8">Explore and join our sessions across campus.</p>
+            <div class="flex gap-8">
+                <div>
+                    <p class="text-3xl font-black">{{ $totalUpcoming }}</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Upcoming</p>
+                </div>
+                <div class="border-l border-white/20 pl-8">
+                    <p class="text-3xl font-black">{{ $totalCompleted }}</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Completed</p>
+                </div>
+                <div class="border-l border-white/20 pl-8">
+                    <p class="text-3xl font-black">{{ $allSeries->count() }}</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Active Series</p>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
 
-        {{-- Filters bar --}}
+        {{-- Filters --}}
         <div class="flex flex-col md:flex-row gap-4 mb-10 items-start md:items-center justify-between">
             <div class="flex gap-2 flex-wrap">
                 @foreach(['upcoming' => 'Upcoming', 'past' => 'Past', 'all' => 'All'] as $val => $label)
-                    <button wire:click="$set('filter', '{{ $val }}')" class="btn btn-sm rounded-full {{ $filter === $val ? 'btn-primary' : 'btn-ghost border border-base-content/10' }}">
+                    <button wire:click="$set('filter', '{{ $val }}')"
+                        class="btn btn-sm rounded-full transition-all {{ $filter === $val ? 'bg-primary text-white shadow-lg shadow-primary/30 border-none' : 'btn-ghost border border-base-content/10' }}">
                         {{ $label }}
                     </button>
                 @endforeach
             </div>
-
             <div class="flex gap-3 w-full md:w-auto">
                 <x-input wire:model.live.debounce.300ms="search" placeholder="Search sessions..." icon="o-magnifying-glass" class="input-sm w-full md:w-64 rounded-full" clearable />
                 @if($allSeries->count())
@@ -100,7 +118,7 @@ new #[Title('Halaqahs & Study Circles')] #[Layout('layouts.web')] class extends 
             </div>
         </div>
 
-        {{-- Session Grid --}}
+        {{-- Grid --}}
         @if($halaqahs->count())
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @foreach($halaqahs as $halaqah)
@@ -121,13 +139,20 @@ new #[Title('Halaqahs & Study Circles')] #[Layout('layouts.web')] class extends 
                                 <span class="badge badge-sm bg-white/20 border-white/30 text-white">{{ str_replace('_', ' ', ucfirst($halaqah->gender_restriction)) }}</span>
                             @endif
                         </div>
-                        
+
                         <div class="p-5 flex-grow flex flex-col">
                             @if($halaqah->series)
                                 <p class="text-xs font-bold text-primary/70 uppercase tracking-wider mb-1">{{ $halaqah->series->title }}</p>
                             @endif
                             <h3 class="font-bold text-lg text-base-content mb-2 group-hover:text-primary transition-colors">{{ $halaqah->title }}</h3>
                             <p class="text-sm text-base-content/60 mb-4 line-clamp-2 flex-grow">{{ $halaqah->topic }}</p>
+
+                            {{-- Countdown for upcoming --}}
+                            @if($halaqah->scheduled_at->isFuture())
+                                <div class="bg-primary/5 rounded-xl px-3 py-2 mb-3 text-center">
+                                    <p class="text-xs font-bold text-primary">{{ $halaqah->scheduled_at->diffForHumans() }}</p>
+                                </div>
+                            @endif
 
                             <div class="flex items-center justify-between text-xs text-base-content/50 pt-3 border-t border-base-content/5">
                                 <span class="flex items-center gap-1.5">
@@ -151,9 +176,7 @@ new #[Title('Halaqahs & Study Circles')] #[Layout('layouts.web')] class extends 
             @endforeach
         </div>
 
-        <div class="mt-10">
-            {{ $halaqahs->links() }}
-        </div>
+        <div class="mt-10">{{ $halaqahs->links() }}</div>
         @else
             <div class="text-center py-20 bg-base-200/50 rounded-2xl border border-dashed border-base-content/10">
                 <x-icon name="o-magnifying-glass" class="w-12 h-12 text-base-content/20 mx-auto mb-4" />

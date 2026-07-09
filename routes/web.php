@@ -1,56 +1,8 @@
 <?php
 
-use App\Ai\Agents\PostWriter;
-use App\Services\AI\AiServiceFactory;
-use App\Services\BotBook\StructuredResponse;
 use Illuminate\Support\Facades\Route;
-use Laravel\Ai\Ai;
-use Laravel\Ai\Image;
 
 require __DIR__.'/auth.php';
-Route::get('/image', function () {
-    $response = Image::of('A donut sitting on the kitchen counter')->generate();
-    $image = $response->images[0];
-
-    $path = $image->store();
-    $path = $image->storeAs('image.jpg');
-    $path = $image->storePublicly();
-    $path = $image->storePubliclyAs('image.jpg');
-
-    return $path;
-
-});
-
-Route::get('/ai', function () {
-    $response = PostWriter::make()
-        ->prompt('about islam');
-    return  $response;
-
-});
-Route::get('/test', function () {
-    $prompt = 'একটি বিস্তারিত এবং আকর্ষণীয় ফিটনেস/স্বাস্থ্য বিষয়ক ব্লগ পোস্ট লিখুন। '
-                ."শর্তাবলী:\n"
-                ."- দৈর্ঘ্য: ১০০-৯০০ শব্দ (সংক্ষিপ্ত কিন্তু তথ্যবহুল রাখুন)\n"
-                ."- যথাযথ স্থানে বুলেট পয়েন্ট এবং সংখ্যায়িত তালিকা ব্যবহার করুন\n"
-                ."- মূল পয়েন্টগুলোতে জোর দেওয়ার জন্য **বোল্ড** ব্যবহার করুন\n"
-                ."- সূক্ষ্ম গুরুত্ব বোঝাতে *ইটালিক* ব্যবহার করুন\n"
-                ."- ব্যস্ততা বাড়াতে প্রাসঙ্গিক ইমোজি (💪, 🏃, 🥗, ইত্যাদি) পরিমিতভাবে ব্যবহার করুন\n"
-                ."- কোনো টেবিল বা জটিল ফরম্যাটিং ব্যবহার করবেন না\n"
-                ."- শেষে একটি সংক্ষিপ্ত কল-টু-অ্যাকশন অন্তর্ভুক্ত করুন\n"
-                ."- এটি তথ্যবহুল, কার্যকর এবং অনুপ্রেরণামূলক করুন\n"
-                ."- বন্ধুত্বপূর্ণ এবং পেশাদার টোনে বাংলায় লিখুন\n\n"
-                ."শুধুমাত্র এই ফরম্যাটে একটি JSON অবজেক্ট রিটার্ন করুন:\n"
-                .'{"title": "আকর্ষণীয় পোস্টের শিরোনাম", "excerpt": "১৫০ অক্ষরের সারসংক্ষেপ", "content": "মার্কডাউন ফরম্যাটে সম্পূর্ণ পোস্টের কন্টেন্ট", "image_prompt": "write a nice small blog post image prompt in english for this post"}';
-    // Get new response
-    $response = AiServiceFactory::make('custom')->chat([['role' => 'user', 'content' => $prompt]], ['model' => 'post', 'max_tokens' => 19000]);
-    $structured = new StructuredResponse($response['content']);
-    if ($structured->isValid() && $structured->hasFields(['title', 'excerpt', 'content'])) {
-        return $structured->toArray();
-    } else {
-        return $structured->getError();
-    }
-});
-
 
 use Illuminate\Support\Benchmark;
 use Illuminate\Support\Facades\Http;
@@ -63,9 +15,16 @@ Route::get('/benchmark', function () {
 });
 
 Route::livewire('/', 'web::home')->name('web.home');
+Route::livewire('/blog', 'web::posts')->name('web.posts');
+Route::livewire('/blog/{slug}', 'web::post')->name('web.post');
+Route::livewire('/campaigns', 'web::campaigns')->name('web.campaigns');
+Route::livewire('/members', 'web::members')->name('web.members');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
 Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
-Route::livewire('/members', 'web::members')->name('web.members');
+
+// Backward compat redirects
+Route::redirect('/posts', '/blog');
+Route::redirect('/posts/{slug}', '/blog/{slug}');
 
 Route::middleware('auth')->group(function () {
     Route::livewire('/app/', 'app::dashboard')->name('app.dashboard');
@@ -79,12 +38,16 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/pages/', 'app::pages')->name('app.pages');
     Route::livewire('/app/categories/', 'app::categories')->name('app.categories');
     Route::livewire('/app/posts/', 'app::posts')->name('app.posts');
-    
+
     // Halaqahs Routes
     Route::livewire('/app/halaqahs', 'app::halaqahs')->name('app.halaqahs');
     Route::livewire('/app/halaqahs/manage', 'app::halaqahs-manage')->name('app.halaqahs.manage');
     Route::livewire('/app/halaqahs/{halaqah}/attendance', 'app::halaqahs-attendance')->name('app.halaqahs.attendance');
     Route::livewire('/app/halaqahs/{halaqah}', 'app::halaqahs-show')->name('app.halaqahs.show');
+
+    // Donations Routes
+    Route::livewire('/app/donations', 'app::donations')->name('app.donations');
+    Route::livewire('/app/donations/admin', 'app::donations-admin')->name('app.donations.admin');
 
     // Daily Reports Routes
     Route::livewire('/app/daily-reports', 'app::daily-reports')->name('app.daily-reports');

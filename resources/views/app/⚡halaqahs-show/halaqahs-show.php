@@ -13,6 +13,14 @@ new #[Title('Halaqah Details')] #[Layout('layouts.app')] class extends Component
     public Halaqah $halaqah;
     public bool $isWaitlist = false;
 
+    // Session Donation State
+    public bool $donationModal = false;
+    public $donorId = '';
+    public $donationAmount = '';
+    public $donationPaymentMethod = 'cash';
+    public $donationTransactionId = '';
+    public $donationNote = '';
+
     public function mount(Halaqah $halaqah): void
     {
         $this->authorize('halaqahs.view');
@@ -107,5 +115,42 @@ new #[Title('Halaqah Details')] #[Layout('layouts.app')] class extends Component
             'total' => $total,
             'percentage' => $percentage
         ];
+    }
+
+    public function openDonationModal()
+    {
+        $this->authorize('roles.view'); // Quick check for admin/accountant equivalent for now
+        $this->reset(['donorId', 'donationAmount', 'donationPaymentMethod', 'donationTransactionId', 'donationNote']);
+        $this->donationModal = true;
+    }
+
+    public function saveSessionDonation()
+    {
+        $this->authorize('roles.view');
+
+        $this->validate([
+            'donorId' => 'nullable|exists:users,id',
+            'donationAmount' => 'required|numeric|min:1',
+            'donationPaymentMethod' => 'required|in:cash,bkash,nagad,bank,other',
+            'donationTransactionId' => 'required_if:donationPaymentMethod,bkash,nagad,bank',
+        ], [
+            'donationTransactionId.required_if' => 'Transaction ID is required for digital payments.'
+        ]);
+
+        \App\Models\Donation::create([
+            'user_id' => $this->donorId ?: null,
+            'halaqah_id' => $this->halaqah->id,
+            'type' => 'halaqah',
+            'amount' => $this->donationAmount,
+            'payment_method' => $this->donationPaymentMethod,
+            'transaction_id' => $this->donationTransactionId,
+            'note' => $this->donationNote,
+            'status' => 'confirmed', // Treasurer is recording it directly, so it's confirmed
+            'donated_at' => now(),
+            'is_anonymous' => empty($this->donorId), // Treat as anonymous guest if no user selected
+        ]);
+
+        $this->success('Session donation recorded!');
+        $this->donationModal = false;
     }
 };

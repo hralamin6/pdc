@@ -59,9 +59,20 @@ class Halaqah extends Model
 
     public function getAvailableSeatsAttribute()
     {
-        if (!$this->max_capacity) return null;
-        
+        if (! $this->max_capacity) {
+            return null;
+        }
+
         $rsvps = $this->attendances()->where('status_new', 'rsvp')->count();
+
         return max(0, $this->max_capacity - $rsvps);
+    }
+
+    /**
+     * Get the donations collected during this halaqah.
+     */
+    public function donations(): HasMany
+    {
+        return $this->hasMany(Donation::class, 'halaqah_id');
     }
 }

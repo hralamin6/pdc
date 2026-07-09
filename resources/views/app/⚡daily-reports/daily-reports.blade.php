@@ -220,7 +220,7 @@
                         <h4 class="text-lg font-extrabold text-base-content">{{ $selectedReportDetails['date'] }}</h4>
                     </div>
                     <div class="text-right">
-                        <span class="badge badge-success font-bold">{{ uppercase($selectedReportDetails['status']) }}</span>
+                        <span class="badge badge-success font-bold">{{ strtoupper($selectedReportDetails['status']) }}</span>
                         <p class="text-xs text-base-content/60 mt-1">Privacy: <strong class="capitalize">{{ str_replace('_', ' ', $selectedReportDetails['privacy_level']) }}</strong></p>
                     </div>
                 </div>

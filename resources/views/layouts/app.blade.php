@@ -45,6 +45,14 @@
                     {{-- Halaqahs --}}
                     <x-menu-item title="{{ __('Halaqahs') }}" icon="o-book-open" :link="route('app.halaqahs')" route="app.halaqahs" wire:navigate />
                     
+                    {{-- Donations --}}
+                    <x-menu-sub title="{{ __('Donations') }}" icon="o-banknotes">
+                        <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" :link="route('app.donations')" route="app.donations" wire:navigate />
+                        @if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+                            <x-menu-item title="{{ __('Admin Dashboard') }}" icon="o-chart-bar" :link="route('app.donations.admin')" route="app.donations.admin" wire:navigate />
+                        @endif
+                    </x-menu-sub>
+                    
                     {{-- User Settings --}}
                     <x-menu-sub title="{{ __('User Settings') }}" icon="o-user">
                         <x-menu-item title="{{ __('Profile') }}" icon="o-user-circle" :link="route('app.profile')" route="app.profile" wire:navigate />

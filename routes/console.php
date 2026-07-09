@@ -1,10 +1,12 @@
 <?php
 
 use App\Jobs\ScheduledBackupJob;
-use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schedule;
 
-//log a message every minute
+Schedule::command('donation:process-recurring')->daily();
+
+// log a message every minute
 // Artisan::command('log:message', function () {
 //     \Log::info('This is a log message from the log:message command.');
 // })->purpose('Log a message every minute')->everyMinute();
@@ -48,5 +50,5 @@ Artisan::command('botbook:weekly-categories', function () {
 })->purpose('Generate AI-powered fitness/health categories weekly')->daily();
 
 Artisan::command('botbook:hourly-posts', function () {
-   Artisan::call('botbook:generate-posts', ['count' => 1]);
+    Artisan::call('botbook:generate-posts', ['count' => 1]);
 })->purpose('Generate 5 AI-powered blog posts every hour')->everyFiveMinutes();

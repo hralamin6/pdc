@@ -2,6 +2,11 @@
     <x-header title="{{ $halaqah->title }}" subtitle="{{ $halaqah->series ? 'Part of Course: ' . $halaqah->series->title : 'Standalone Session' }}">
         <x-slot:actions>
             <x-button icon="o-arrow-left" title="Back" link="{{ route('app.halaqahs') }}" class="btn-ghost" wire:navigate />
+            
+            @if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+                <x-button icon="o-banknotes" title="Collect Donations" wire:click="openDonationModal" class="btn-outline btn-success" />
+            @endif
+            
             @can('halaqahs.manage-attendance')
                 <x-button icon="o-qr-code" title="QR & Attendance" link="{{ route('app.halaqahs.attendance', $halaqah) }}" class="btn-outline btn-primary" wire:navigate />
             @endcan
@@ -169,4 +174,36 @@
             </x-card>
         </div>
     </div>
+
+    <!-- Session Donation Collection Modal -->
+    <x-modal wire:model="donationModal" title="Collect Session Donation" subtitle="Record funds received during this Halaqah" separator>
+        <div class="space-y-4">
+            <x-choices 
+                label="Donor (Optional)" 
+                wire:model="donorId" 
+                :options="\App\Models\User::orderBy('name')->get()" 
+                option-label="name" 
+                option-value="id" 
+                placeholder="Search member..." 
+                hint="Leave empty if anonymous/guest"
+                single 
+                searchable 
+            />
+
+            <x-input label="Amount (৳)" wire:model="donationAmount" type="number" prefix="৳" required />
+
+            <x-select label="Payment Method" wire:model.live="donationPaymentMethod" :options="[['id'=>'cash', 'name'=>'Cash'], ['id'=>'bkash', 'name'=>'bKash'], ['id'=>'nagad', 'name'=>'Nagad'], ['id'=>'bank', 'name'=>'Bank Transfer']]" />
+            
+            @if(in_array($donationPaymentMethod, ['bkash', 'nagad', 'bank']))
+                <x-input label="Transaction ID / Reference" wire:model="donationTransactionId" placeholder="Enter Transaction ID..." required />
+            @endif
+
+            <x-textarea label="Note (Optional)" wire:model="donationNote" placeholder="Any specific notes..." rows="2" />
+        </div>
+
+        <x-slot:actions>
+            <x-button label="Cancel" wire:click="$set('donationModal', false)" />
+            <x-button label="Record Donation" class="btn-success" wire:click="saveSessionDonation" spinner />
+        </x-slot:actions>
+    </x-modal>
 </div>
