@@ -16,7 +16,11 @@ Route::get('/benchmark', function () {
 
 Route::livewire('/', 'web::home')->name('web.home');
 Route::livewire('/blog', 'web::posts')->name('web.posts');
+Route::livewire('/users', 'web::users')->name('web.users');
+
 Route::livewire('/blog/{slug}', 'web::post')->name('web.post');
+Route::livewire('/user/{slug}', 'web::user')->name('web.user');
+
 Route::livewire('/campaigns', 'web::campaigns')->name('web.campaigns');
 Route::livewire('/members', 'web::members')->name('web.members');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
@@ -48,6 +52,14 @@ Route::middleware('auth')->group(function () {
     // Donations Routes
     Route::livewire('/app/donations', 'app::donations')->name('app.donations');
     Route::livewire('/app/donations/admin', 'app::donations-admin')->name('app.donations.admin');
+
+    // Treasury / Expense Routes
+    Route::livewire('/app/expenses', 'app::expenses')->name('app.expenses');
+    Route::livewire('/app/expenses/admin', 'app::expenses-admin')->name('app.expenses.admin');
+    Route::livewire('/app/expenses/categories', 'app::expense-categories')->name('app.expense-categories');
+    Route::livewire('/app/expenses/bank-accounts', 'app::bank-accounts')->name('app.bank-accounts');
+    Route::livewire('/app/expenses/transfers', 'app::fund-transfers')->name('app.fund-transfers');
+    Route::livewire('/app/expenses/treasury-report', 'app::treasury-report')->name('app.treasury-report');
 
     // Daily Reports Routes
     Route::livewire('/app/daily-reports', 'app::daily-reports')->name('app.daily-reports');

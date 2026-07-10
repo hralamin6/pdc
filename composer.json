@@ -11,6 +11,7 @@
     "require": {
         "php": "^8.4.0",
         "erag/laravel-pwa": "^1.9",
+        "laramint/laravel-brain": "^2.3",
         "laravel-frontend-presets/tall": "^9.1",
         "laravel-notification-channels/webpush": "^10.2",
         "laravel/ai": "^0.1.3",

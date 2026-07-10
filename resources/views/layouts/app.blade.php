@@ -52,7 +52,20 @@
                             <x-menu-item title="{{ __('Admin Dashboard') }}" icon="o-chart-bar" :link="route('app.donations.admin')" route="app.donations.admin" wire:navigate />
                         @endif
                     </x-menu-sub>
-                    
+
+                    {{-- Treasury --}}
+                    <x-menu-item title="{{ __('Financial Summary') }}" icon="o-currency-bangladeshi" :link="route('app.expenses')" route="app.expenses" wire:navigate />
+                    @if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+                        <x-menu-sub title="{{ __('Treasury') }}" icon="o-building-library">
+                            <x-menu-item title="{{ __('Expenses') }}" icon="o-receipt-percent" :link="route('app.expenses.admin')" route="app.expenses.admin" wire:navigate />
+                            <x-menu-item title="{{ __('Fund Transfers') }}" icon="o-arrows-right-left" :link="route('app.fund-transfers')" route="app.fund-transfers" wire:navigate />
+                            <x-menu-item title="{{ __('Bank Accounts') }}" icon="o-credit-card" :link="route('app.bank-accounts')" route="app.bank-accounts" wire:navigate />
+                            <x-menu-item title="{{ __('Categories') }}" icon="o-tag" :link="route('app.expense-categories')" route="app.expense-categories" wire:navigate />
+                            <x-menu-item title="{{ __('Monthly Reports') }}" icon="o-document-chart-bar" :link="route('app.treasury-report')" route="app.treasury-report" wire:navigate />
+                        </x-menu-sub>
+                    @endif
+
+
                     {{-- User Settings --}}
                     <x-menu-sub title="{{ __('User Settings') }}" icon="o-user">
                         <x-menu-item title="{{ __('Profile') }}" icon="o-user-circle" :link="route('app.profile')" route="app.profile" wire:navigate />
