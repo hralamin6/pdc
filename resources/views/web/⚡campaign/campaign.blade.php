@@ -199,24 +199,22 @@
                             <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-200/50 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 space-y-2">
                                 <span class="font-black text-[10px] uppercase tracking-wider text-rose-500 block">{{ __('Payment Instructions') }}</span>
                                 @if($paymentMethod === 'bkash')
-                                    @php $bkash = $this->bankAccounts->where('type', 'bkash')->first(); @endphp
                                     <p>{{ __('Please send money (Send Money or Cash In) to our official bKash personal account') }}:</p>
                                     <p class="font-mono font-black text-sm text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-center tracking-wide">
-                                        {{ $bkash->account_number ?? '01700000000' }}
+                                        {{ setting('payment.bkash_no', '01712345678') }}
                                     </p>
                                 @elseif($paymentMethod === 'nagad')
-                                    @php $nagad = $this->bankAccounts->where('type', 'nagad')->first(); @endphp
                                     <p>{{ __('Please send money to our official Nagad personal account') }}:</p>
                                     <p class="font-mono font-black text-sm text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-center tracking-wide">
-                                        {{ $nagad->account_number ?? '01800000000' }}
+                                        {{ setting('payment.nagad_no', '01812345678') }}
                                     </p>
                                 @else
-                                    @php $bank = $this->bankAccounts->where('type', 'bank')->first(); @endphp
                                     <p>{{ __('Please transfer funds to the following Bank Account details') }}:</p>
                                     <div class="font-mono bg-slate-100 dark:bg-slate-800 p-3 rounded-lg space-y-1">
-                                        <div><span class="text-slate-400">{{ __('Bank') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ $bank->name ?? 'Dutch Bangla Bank' }}</span></div>
-                                        <div><span class="text-slate-400">{{ __('Account') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ $bank->account_number ?? '123456789' }}</span></div>
-                                        <div><span class="text-slate-400">{{ __('Branch') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ $bank->branch ?? 'Dawah Branch' }}</span></div>
+                                        <div><span class="text-slate-400">{{ __('Bank') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_name', 'Dutch Bangla Bank PLC') }}</span></div>
+                                        <div><span class="text-slate-400">{{ __('Account') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_account_no', '123-456-7890123') }}</span></div>
+                                        <div><span class="text-slate-400">{{ __('Branch') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_branch', 'PSTU Branch') }}</span></div>
+                                        <div><span class="text-slate-400">{{ __('Holder') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_holder', 'PSTU Dawah Community') }}</span></div>
                                     </div>
                                 @endif
                             </div>

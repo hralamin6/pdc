@@ -218,6 +218,22 @@
             <x-select label="Payment Method" wire:model.live="paymentMethod" :options="[['id'=>'cash', 'name'=>'Cash (Given to Treasurer)'], ['id'=>'bkash', 'name'=>'bKash'], ['id'=>'nagad', 'name'=>'Nagad'], ['id'=>'bank', 'name'=>'Bank Transfer']]" />
             
             @if(in_array($paymentMethod, ['bkash', 'nagad', 'bank']))
+                <div class="bg-base-200 p-3.5 rounded-xl text-xs space-y-1.5 border border-base-content/10">
+                    <span class="font-bold text-primary text-[10px] uppercase tracking-wider block">Payment Details</span>
+                    @if($paymentMethod === 'bkash')
+                        <p>Please send money to our official bKash account: <strong class="font-mono text-sm block mt-1 text-center bg-base-100 py-1 rounded">{{ setting('payment.bkash_no', '01712345678') }}</strong></p>
+                    @elseif($paymentMethod === 'nagad')
+                        <p>Please send money to our official Nagad account: <strong class="font-mono text-sm block mt-1 text-center bg-base-100 py-1 rounded">{{ setting('payment.nagad_no', '01812345678') }}</strong></p>
+                    @else
+                        <p>Please transfer funds to the following Bank Account details:</p>
+                        <div class="font-mono bg-base-100 p-2.5 rounded-lg space-y-1 mt-1 text-[11px]">
+                            <div><span class="opacity-60">Bank:</span> <strong>{{ setting('payment.bank_name', 'Dutch Bangla Bank PLC') }}</strong></div>
+                            <div><span class="opacity-60">Account:</span> <strong>{{ setting('payment.bank_account_no', '123-456-7890123') }}</strong></div>
+                            <div><span class="opacity-60">Branch:</span> <strong>{{ setting('payment.bank_branch', 'PSTU Branch') }}</strong></div>
+                            <div><span class="opacity-60">Holder:</span> <strong>{{ setting('payment.bank_holder', 'PSTU Dawah Community') }}</strong></div>
+                        </div>
+                    @endif
+                </div>
                 <x-input label="Transaction ID / Reference" wire:model="transactionId" placeholder="Enter Transaction ID..." required />
             @endif
             
@@ -270,6 +286,22 @@
             <x-select label="Payment Method" wire:model.live="paymentMethod" :options="[['id'=>'cash', 'name'=>'Cash (Given to Treasurer)'], ['id'=>'bkash', 'name'=>'bKash'], ['id'=>'nagad', 'name'=>'Nagad'], ['id'=>'bank', 'name'=>'Bank Transfer']]" />
             
             @if(in_array($paymentMethod, ['bkash', 'nagad', 'bank']))
+                <div class="bg-base-200 p-3.5 rounded-xl text-xs space-y-1.5 border border-base-content/10">
+                    <span class="font-bold text-primary text-[10px] uppercase tracking-wider block">Payment Details</span>
+                    @if($paymentMethod === 'bkash')
+                        <p>Please send money to our official bKash account: <strong class="font-mono text-sm block mt-1 text-center bg-base-100 py-1 rounded">{{ setting('payment.bkash_no', '01712345678') }}</strong></p>
+                    @elseif($paymentMethod === 'nagad')
+                        <p>Please send money to our official Nagad account: <strong class="font-mono text-sm block mt-1 text-center bg-base-100 py-1 rounded">{{ setting('payment.nagad_no', '01812345678') }}</strong></p>
+                    @else
+                        <p>Please transfer funds to the following Bank Account details:</p>
+                        <div class="font-mono bg-base-100 p-2.5 rounded-lg space-y-1 mt-1 text-[11px]">
+                            <div><span class="opacity-60">Bank:</span> <strong>{{ setting('payment.bank_name', 'Dutch Bangla Bank PLC') }}</strong></div>
+                            <div><span class="opacity-60">Account:</span> <strong>{{ setting('payment.bank_account_no', '123-456-7890123') }}</strong></div>
+                            <div><span class="opacity-60">Branch:</span> <strong>{{ setting('payment.bank_branch', 'PSTU Branch') }}</strong></div>
+                            <div><span class="opacity-60">Holder:</span> <strong>{{ setting('payment.bank_holder', 'PSTU Dawah Community') }}</strong></div>
+                        </div>
+                    @endif
+                </div>
                 <x-input label="Transaction ID / Reference" wire:model="transactionId" placeholder="Enter Transaction ID..." required />
             @endif
             

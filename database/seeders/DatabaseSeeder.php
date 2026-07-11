@@ -23,12 +23,12 @@ class DatabaseSeeder extends Seeder
         $this->call([PostSeeder::class]);
 
         $this->call([PermissionSeeder::class]);
-        
+        $this->call([SettingSeeder::class]);
+
         $this->call([HalaqahSeeder::class]);
         $this->call([DailyReportTemplateSeeder::class]);
- 
 
-        // Seed demo users 
+        // Seed demo users
         $admin = User::updateOrCreate([
             'email' => 'admin@mail.com'], [
                 'name' => 'admin',
