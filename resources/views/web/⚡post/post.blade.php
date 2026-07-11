@@ -1,267 +1,390 @@
 @section('title', $this->post->title)
 @section('description', Str::limit(strip_tags($this->post->content), 333))
 @section('image', $this->post->getFirstMediaUrl('featured_image'))
+
 <div>
-
-{{-- Article Content --}}
-<article class="py-12">
-  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-    
-    {{-- Breadcrumb --}}
-    <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-8">
-      <a wire:navigate href="{{ route('web.home') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a>
-      <span>/</span>
-      <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Articles</a>
-      @if($this->post->category)
-        <span>/</span>
-        <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">{{ $this->post->category->name }}</a>
-      @endif
-    </nav>
-
-    {{-- Article Header --}}
-    <header class="mb-8">
-      {{-- Category Badge --}}
-      @if($this->post->category)
-        <div class="mb-4">
-          <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="inline-flex items-center px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-sm font-medium rounded-full hover:from-indigo-600 hover:to-purple-700 transition">
-            {{ $this->post->category->name }}
-          </a>
-        </div>
-      @endif
-
-      {{-- Title --}}
-      <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 leading-tight">
-        {{ $this->post->title }}
-      </h1>
-
-      {{-- Meta Info --}}
-      <div class="flex flex-wrap items-center gap-6 text-gray-600 dark:text-gray-400 mb-6">
-        {{-- Author --}}
-        <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="flex items-center space-x-3 hover:text-indigo-600 dark:hover:text-indigo-400 transition">
-          <div class="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-lg font-bold">
-            {{ substr($this->post->user->name ?? 'A', 0, 1) }}
-          </div>
-          <div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $this->post->user->name ?? 'Anonymous' }}</p>
-            <p class="text-xs">{{ $this->post->published_at?->format('M d, Y') }}</p>
-          </div>
-        </a>
-
-        {{-- Stats --}}
-        <div class="flex items-center space-x-4 text-sm">
-          <span class="flex items-center">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-            {{ number_format($this->post->views_count) }} views
-          </span>
-          <span class="flex items-center">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            {{ ceil(str_word_count(strip_tags($this->post->content)) / 200) }} min read
-          </span>
-        </div>
-      </div>
-
-      {{-- Share Button --}}
-      <div x-data="{open:false}" class="relative inline-block">
-        <button 
-          @click="open=!open" 
-          @keydown.escape.window="open=false" 
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-800 transition" 
-          aria-haspopup="true" 
-          :aria-expanded="open ? 'true' : 'false'"
-        >
-          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 8a3 3 0 1 0-6 0 3 3 0 0 0 6 0zM18 20a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 20a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
-          </svg>
-          <span>Share Article</span>
-        </button>
-        
-        <div 
-          x-cloak 
-          x-show="open" 
-          x-transition.opacity 
-          @click.outside="open=false" 
-          class="absolute left-0 mt-2 w-72 p-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-xl z-20"
-        >
-          <div class="grid grid-cols-2 gap-2 text-xs">
-            <a href="https://www.facebook.com/sharer/sharer.php?u={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Facebook
-            </a>
-            <a href="https://x.com/intent/tweet?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> X (Twitter)
-            </a>
-            <a href="https://wa.me/?text={{ $this->shareText }}%20{{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> WhatsApp
-            </a>
-            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
-            </a>
-            <a href="https://www.reddit.com/submit?url={{ $this->shareUrl }}&title={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-600 dark:text-orange-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Reddit
-            </a>
-            <a href="https://t.me/share/url?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-cyan-50 dark:hover:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Telegram
-            </a>
-            <a href="mailto:?subject={{ $this->shareText }}&body={{ $this->shareText }}%0A%0A{{ $this->shareUrl }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-gray-400"></span> Email
-            </a>
-            <a href="https://www.pinterest.com/pin/create/button/?url={{ $this->shareUrl }}&description={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 inline-flex items-center gap-2 transition">
-              <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pinterest
-            </a>
-            <button 
-              type="button"
-              @click="
-                const title = decodeURIComponent('{{ $this->shareText }}');
-                const url = decodeURIComponent('{{ $this->shareUrl }}');
-                if (navigator.share) {
-                  navigator.share({ title, text: title, url }).catch(()=>{});
-                } else {
-                  alert('Sharing not supported on this browser.');
-                }
-              "
-              class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 col-span-2 transition"
-            >
-              <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Device Share
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    {{-- Featured Image --}}
-    @if($this->post->getFirstMediaUrl('featured_image'))
-      <div class="mb-12 rounded-2xl overflow-hidden shadow-2xl">
-        <img 
-          src="{{ $this->post->getFirstMediaUrl('featured_image') }}" 
-          alt="{{ $this->post->title }}"
-          class="w-full h-auto"
-        >
-      </div>
-    @endif
-
-    {{-- Article Content --}}
-    <div class="prose prose-lg prose-indigo dark:prose-invert max-w-none mb-12">
-      <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-        {!! Str::markdown($this->post->content) !!}
-      </div>
+    {{-- Reading Scroll Progress Indicator (Client-side Alpine.js) --}}
+    <div x-data="{ scrollPercent: 0 }" 
+         @scroll.window="scrollPercent = (($el.parentElement.scrollTop || document.documentElement.scrollTop) / (document.documentElement.scrollHeight - document.documentElement.clientHeight)) * 100" 
+         class="fixed top-0 left-0 w-full h-1 bg-slate-200/30 dark:bg-slate-800/30 z-50">
+        <div class="bg-primary h-full transition-all duration-75" :style="`width: ${scrollPercent}%`"></div>
     </div>
 
-    {{-- Tags/Keywords (if available) --}}
-    @if($this->post->meta_keywords)
-      <div class="mb-8">
-        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Tags</h3>
-        <div class="flex flex-wrap gap-2">
-          @foreach(explode(',', $this->post->meta_keywords) as $keyword)
-            <span class="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-full text-xs">
-              {{ trim($keyword) }}
-            </span>
-          @endforeach
-        </div>
-      </div>
-    @endif
+    <div class="bg-slate-50/40 dark:bg-slate-950/40 min-h-screen py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            {{-- Breadcrumb --}}
+            <nav class="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-400">
+                <a wire:navigate href="{{ route('web.home') }}" class="hover:text-primary transition-colors">Home</a>
+                <span>/</span>
+                <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-primary transition-colors">Articles</a>
+                @if($this->post->category)
+                    <span>/</span>
+                    <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="hover:text-primary transition-colors">
+                        {{ $this->post->category->name }}
+                    </a>
+                @endif
+            </nav>
 
-    {{-- Share Section --}}
-    <div class="flex items-center justify-between py-8 border-y border-gray-200 dark:border-gray-700 mb-12">
-      <div>
-        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-2">Enjoyed this article?</h3>
-        <p class="text-sm text-gray-600 dark:text-gray-400">Share it with your friends and help spread the knowledge!</p>
-      </div>
-    </div>
+            {{-- Main Layout Grid: Left = Post (70%), Right = Sidebar (30%) --}}
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 mt-6">
+                
+                {{-- Left Column: Article Body & Comments --}}
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    {{-- Main Article Card --}}
+                    <article class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 p-5 sm:p-8 shadow-sm space-y-6">
+                        
+                        {{-- Category badge & meta --}}
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            @if($this->post->category)
+                                <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-black uppercase tracking-widest">
+                                    {{ $this->post->category->name }}
+                                </a>
+                            @endif
 
-    {{-- Author Bio --}}
-    <div class="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-gray-800 dark:to-gray-900 rounded-2xl p-8 border border-indigo-200 dark:border-gray-700 mb-12">
-      <div class="flex items-start space-x-4">
-        <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold flex-shrink-0 hover:scale-110 transition">
-          {{ substr($this->post->user->name ?? 'A', 0, 1) }}
-        </a>
-        <div class="flex-1">
-          <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="text-xl font-bold text-gray-900 dark:text-white mb-2 hover:text-indigo-600 dark:hover:text-indigo-400 transition">{{ $this->post->user->name ?? 'Anonymous' }}</a>
-          <p class="text-gray-600 dark:text-gray-400 text-sm mb-3">
-            Fitness enthusiast and health advocate sharing knowledge and inspiration with the community.
-          </p>
-          <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-            <span class="flex items-center">
-              <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-              </svg>
-              {{ $this->post->user->posts_count ?? 0 }} articles
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</article>
+                            <div class="flex items-center gap-2 text-xs text-slate-400 font-bold">
+                                <span>{{ $this->post->published_at?->format('M d, Y') }}</span>
+                                <span>•</span>
+                                <span>{{ ceil(str_word_count(strip_tags($this->post->content)) / 200) }} min read</span>
+                            </div>
+                        </div>
 
-{{-- Related Posts --}}
-@if($this->relatedPosts->isNotEmpty())
-  <section class="py-16 bg-white/50 dark:bg-gray-900/50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Related Articles</h2>
-      
-      <div class="grid md:grid-cols-3 gap-8">
-        @foreach($this->relatedPosts as $relatedPost)
-          <a wire:navigate href="{{ route('web.post', $relatedPost->slug) }}" class="group bg-white dark:bg-gray-800 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-indigo-500 dark:hover:border-indigo-500 transition-all duration-300 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2">
-            {{-- Post Image --}}
-            <div class="relative h-48 bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden">
-              @if($relatedPost->getFirstMediaUrl('featured_image'))
-                <img 
-                  src="{{ $relatedPost->getFirstMediaUrl('featured_image') }}" 
-                  alt="{{ $relatedPost->title }}" 
-                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  loading="lazy"
-                >
-              @else
-                <div class="w-full h-full flex items-center justify-center text-white text-6xl">
-                  @php
-                    $emojis = ['💪', '🏃', '🧘', '🥗', '🏋️', '🥇', '❤️', '🌟'];
-                    echo $emojis[array_rand($emojis)];
-                  @endphp
+                        {{-- Article Title --}}
+                        <h1 class="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            {{ $this->post->title }}
+                        </h1>
+
+                        {{-- Author compact top header --}}
+                        <div class="flex items-center gap-3 py-3 border-y border-slate-100 dark:border-slate-800/60">
+                            <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="w-10 h-10 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center text-primary text-sm font-bold shrink-0">
+                                @if($this->post->user->avatar_url)
+                                    <img src="{{ $this->post->user->avatar_url }}" alt="{{ $this->post->user->name }}" class="w-full h-full object-cover">
+                                @else
+                                    {{ substr($this->post->user->name ?? 'A', 0, 1) }}
+                                @endif
+                            </a>
+                            <div>
+                                <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="text-sm font-bold text-slate-800 dark:text-slate-200 hover:text-primary transition-colors block">
+                                    {{ $this->post->user->name ?? 'Anonymous' }}
+                                </a>
+                                <span class="text-[10px] text-slate-400 block font-bold uppercase">{{ __('Article Author') }}</span>
+                            </div>
+                        </div>
+
+                        {{-- Featured Image Banner --}}
+                        @if($this->post->getFirstMediaUrl('featured_image'))
+                            <div class="rounded-2xl overflow-hidden border border-slate-200/30 dark:border-slate-850 shadow-md">
+                                <img src="{{ $this->post->getFirstMediaUrl('featured_image') }}" alt="{{ $this->post->title }}" class="w-full h-auto max-h-96 object-cover">
+                            </div>
+                        @endif
+
+                        {{-- Content --}}
+                        <div class="prose prose-slate dark:prose-invert max-w-none text-slate-700 dark:text-slate-300 leading-relaxed text-sm sm:text-base">
+                            {!! Str::markdown($this->post->content) !!}
+                        </div>
+
+                        {{-- Keywords tag cloud --}}
+                        @if($this->post->meta_keywords)
+                            <div class="pt-4 border-t border-slate-100 dark:border-slate-800/65">
+                                <h4 class="text-xs font-black uppercase text-slate-400 tracking-wider mb-2.5">{{ __('Article Tags') }}</h4>
+                                <div class="flex flex-wrap gap-1.5">
+                                    @foreach(explode(',', $this->post->meta_keywords) as $keyword)
+                                        <a wire:navigate href="{{ route('web.posts') }}?tag={{ urlencode(trim($keyword)) }}" class="px-2.5 py-1 text-xs font-bold rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200/60 dark:border-slate-800/70 text-slate-600 dark:text-slate-400 hover:border-slate-350 dark:hover:border-slate-700 transition">
+                                            #{{ trim($keyword) }}
+                                        </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                    </article>
+
+                    {{-- Detailed Author Card (Option A) --}}
+                    @php $author = $this->post->user; @endphp
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 p-5 sm:p-8 shadow-sm flex flex-col sm:flex-row gap-5 items-start">
+                        <a wire:navigate href="{{ route('web.user', $author->username ?? $author->id) }}" class="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white text-2xl font-black shrink-0 hover:scale-105 transition duration-300">
+                            @if($author->avatar_url)
+                                <img src="{{ $author->avatar_url }}" alt="{{ $author->name }}" class="w-full h-full object-cover">
+                            @else
+                                {{ substr($author->name ?? 'A', 0, 1) }}
+                            @endif
+                        </a>
+                        <div class="flex-grow min-w-0">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <div>
+                                    <a wire:navigate href="{{ route('web.user', $author->username ?? $author->id) }}" class="font-black text-lg text-slate-900 dark:text-white hover:text-primary transition-colors">
+                                        {{ $author->name }}
+                                    </a>
+                                    <span class="text-xs text-slate-400 block mt-0.5 font-bold uppercase tracking-wider">{{ __('Article Contributor') }}</span>
+                                </div>
+                                
+                                {{-- Social links --}}
+                                @if($author->detail)
+                                    <div class="flex items-center gap-2">
+                                        @if($author->detail->website)
+                                            <a href="{{ $author->detail->website }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Website"><x-icon name="o-globe-alt" class="w-4 h-4" /></a>
+                                        @endif
+                                        @if($author->detail->facebook)
+                                            <a href="{{ $author->detail->facebook }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Facebook"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                        @endif
+                                        @if($author->detail->twitter)
+                                            <a href="{{ $author->detail->twitter }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Twitter"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                        @endif
+                                        @if($author->detail->linkedin)
+                                            <a href="{{ $author->detail->linkedin }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="LinkedIn"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                        @endif
+                                        @if($author->detail->github)
+                                            <a href="{{ $author->detail->github }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="GitHub"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                        @endif
+                                    </div>
+                                @endif
+                            </div>
+
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-3 leading-relaxed">
+                                {{ $author->detail->bio ?? __('A dedicated member of the PSTU Dawah community contributing valuable reflections and insights.') }}
+                            </p>
+
+                            <div class="flex items-center gap-4 mt-4 pt-3.5 border-t border-slate-100 dark:border-slate-800/80 text-xs text-slate-400">
+                                <span class="flex items-center gap-1.5 font-bold uppercase">
+                                    <x-icon name="o-document-text" class="w-4 h-4" />
+                                    {{ $author->posts()->count() }} {{ __('Articles Written') }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Threaded Comments Section (Option B) --}}
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/80 p-5 sm:p-8 shadow-sm space-y-6">
+                        <h3 class="font-black text-slate-900 dark:text-white text-lg flex items-center gap-2">
+                            <x-icon name="o-chat-bubble-left-right" class="w-5 h-5 text-primary" />
+                            {{ __('Comments & Discussion') }}
+                            <span class="badge badge-neutral text-xs ml-1">{{ count($this->comments) }}</span>
+                        </h3>
+
+                        {{-- Add comment form --}}
+                        @auth
+                            <div class="space-y-3">
+                                <x-textarea wire:model.defer="newCommentContent" placeholder="Share your thoughts about this article..." rows="3" required />
+                                <x-button label="Post Comment" class="btn-primary btn-sm rounded-xl font-black uppercase text-xs" wire:click="submitComment" spinner="submitComment" />
+                            </div>
+                        @else
+                            <div class="bg-slate-50 dark:bg-slate-950 p-4 text-center rounded-2xl border border-slate-200/30 dark:border-slate-800/80">
+                                <p class="text-sm text-slate-500 dark:text-slate-400">
+                                    Please <a href="{{ route('login') }}" class="text-primary font-black hover:underline">log in</a> to participate in the discussion.
+                                </p>
+                            </div>
+                        @endauth
+
+                        {{-- Comments list --}}
+                        <div class="space-y-5 pt-4">
+                            @forelse($this->comments as $comment)
+                                <div wire:key="comment-{{ $comment->id }}" class="p-4 bg-slate-50 dark:bg-slate-950/40 rounded-2xl border border-slate-200/40 dark:border-slate-800/60 space-y-3">
+                                    
+                                    {{-- Author header & Actions --}}
+                                    <div class="flex justify-between items-start">
+                                        <div class="flex items-center gap-2">
+                                            <div class="w-8 h-8 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center text-primary text-xs font-bold shrink-0">
+                                                @if($comment->user->avatar_url)
+                                                    <img src="{{ $comment->user->avatar_url }}" alt="{{ $comment->user->name }}" class="w-full h-full object-cover">
+                                                @else
+                                                    {{ substr($comment->user->name ?? 'A', 0, 1) }}
+                                                @endif
+                                            </div>
+                                            <div>
+                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $comment->user->name ?? 'Member' }}</span>
+                                                <span class="text-[10px] text-slate-405 font-bold block">{{ $comment->created_at->diffForHumans() }}</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="flex items-center gap-3">
+                                            @auth
+                                                <button wire:click="setReplyingTo({{ $comment->id }})" class="text-[10px] font-black uppercase text-primary hover:underline">
+                                                    {{ __('Reply') }}
+                                                </button>
+                                            @endauth
+                                            @if(auth()->check() && ($comment->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
+                                                <button wire:click="deleteComment({{ $comment->id }})" confirm="Are you sure you want to delete this comment?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                    <x-icon name="o-trash" class="w-3.5 h-3.5" />
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="text-sm text-slate-700 dark:text-slate-300 leading-relaxed pl-1">
+                                        {{ $comment->content }}
+                                    </p>
+
+                                    {{-- Inline Replying Form --}}
+                                    @if($replyingToId === $comment->id)
+                                        <div class="pl-4 border-l-2 border-primary space-y-2 mt-2">
+                                            <x-textarea wire:model.defer="newReplyContent" placeholder="Type your reply here..." rows="2" />
+                                            <div class="flex items-center gap-2">
+                                                <x-button label="Post Reply" class="btn-primary btn-xs" wire:click="submitReply({{ $comment->id }})" spinner="submitReply({{ $comment->id }})" />
+                                                <x-button label="Cancel" class="btn-ghost btn-xs" wire:click="setReplyingTo(null)" />
+                                            </div>
+                                        </div>
+                                    @endif
+
+                                    {{-- Threaded replies loop --}}
+                                    @if($comment->replies->count() > 0)
+                                        <div class="pl-4 border-l-2 border-slate-200 dark:border-slate-800 space-y-3.5 mt-3.5">
+                                            @foreach($comment->replies as $reply)
+                                                <div wire:key="reply-{{ $reply->id }}" class="space-y-1.5">
+                                                    <div class="flex justify-between items-start">
+                                                        <div class="flex items-center gap-2">
+                                                            <div class="w-6 h-6 rounded-full overflow-hidden bg-primary/10 flex items-center justify-center text-primary text-[9px] font-bold shrink-0">
+                                                                @if($reply->user->avatar_url)
+                                                                    <img src="{{ $reply->user->avatar_url }}" alt="{{ $reply->user->name }}" class="w-full h-full object-cover">
+                                                                @else
+                                                                    {{ substr($reply->user->name ?? 'A', 0, 1) }}
+                                                                @endif
+                                                            </div>
+                                                            <div>
+                                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $reply->user->name ?? 'Member' }}</span>
+                                                                <span class="text-[9px] text-slate-400 font-bold block">{{ $reply->created_at->diffForHumans() }}</span>
+                                                            </div>
+                                                        </div>
+                                                        @if(auth()->check() && ($reply->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
+                                                            <button wire:click="deleteComment({{ $reply->id }})" confirm="Are you sure you want to delete this reply?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                                <x-icon name="o-trash" class="w-3 h-3" />
+                                                            </button>
+                                                        @endif
+                                                    </div>
+                                                    <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed pl-1">
+                                                        {{ $reply->content }}
+                                                    </p>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+
+                                </div>
+                            @empty
+                                <p class="text-slate-400 text-sm italic py-4">{{ __('No comments yet. Be the first to start the discussion!') }}</p>
+                            @endforelse
+                        </div>
+
+                    </div>
+
                 </div>
-              @endif
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                {{-- Right Column: Details Sidebar --}}
+                <aside class="lg:col-span-4 space-y-6">
+                    
+                    {{-- Article Info Widget --}}
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/80 p-5 shadow-sm space-y-3.5">
+                        <h4 class="font-black text-slate-800 dark:text-slate-200 text-sm uppercase tracking-wider pb-2 border-b border-slate-100 dark:border-slate-850">
+                            {{ __('Article Stats') }}
+                        </h4>
+                        
+                        <div class="space-y-2.5 text-xs font-bold text-slate-650 dark:text-slate-350">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">{{ __('Category') }}</span>
+                                <span class="text-primary">{{ $this->post->category->name ?? 'Uncategorized' }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">{{ __('Published') }}</span>
+                                <span>{{ $this->post->published_at?->format('M d, Y') }}</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">{{ __('Views') }}</span>
+                                <span>{{ number_format($this->post->views_count) }} views</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">{{ __('Comments') }}</span>
+                                <span>{{ count($this->comments) }} discussion threads</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Share Widget --}}
+                    <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/80 p-5 shadow-sm">
+                        <h4 class="font-black text-slate-800 dark:text-slate-200 text-sm uppercase tracking-wider mb-3">
+                            {{ __('Share Article') }}
+                        </h4>
+                        
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-blue-600 dark:text-blue-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Facebook
+                            </a>
+                            <a href="https://x.com/intent/tweet?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> X / Twitter
+                            </a>
+                            <a href="https://wa.me/?text={{ $this->shareText }}%20{{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> WhatsApp
+                            </a>
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-sky-600 dark:text-sky-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
+                            </a>
+                        </div>
+                    </div>
+
+                    {{-- Related Posts Widget --}}
+                    @if($this->relatedPosts->isNotEmpty())
+                        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/80 p-5 shadow-sm space-y-4">
+                            <h4 class="font-black text-slate-800 dark:text-slate-200 text-sm uppercase tracking-wider pb-2 border-b border-slate-100 dark:border-slate-850">
+                                {{ __('Related Articles') }}
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                @foreach($this->relatedPosts as $relatedPost)
+                                    <a wire:navigate href="{{ route('web.post', $relatedPost->slug) }}" class="flex gap-3 group/rel">
+                                        <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200/30 dark:border-slate-800">
+                                            @if($relatedPost->getFirstMediaUrl('featured_image'))
+                                                <img src="{{ $relatedPost->getFirstMediaUrl('featured_image') }}" alt="{{ $relatedPost->title }}" class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center bg-slate-150 dark:bg-slate-850">
+                                                    <x-icon name="o-newspaper" class="w-5 h-5 text-slate-300 dark:text-slate-700" />
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow min-w-0">
+                                            <h5 class="text-xs font-black text-slate-800 dark:text-slate-200 group-hover/rel:text-primary transition-colors line-clamp-2 leading-tight">
+                                                {{ $relatedPost->title }}
+                                            </h5>
+                                            <span class="text-[10px] text-slate-400 block mt-1 font-bold">{{ $relatedPost->published_at?->format('M d, Y') }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Trending Posts Widget --}}
+                    @if($this->trendingPosts->isNotEmpty())
+                        <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/50 dark:border-slate-800/80 p-5 shadow-sm space-y-4">
+                            <h4 class="font-black text-slate-800 dark:text-slate-200 text-sm uppercase tracking-wider pb-2 border-b border-slate-100 dark:border-slate-850">
+                                {{ __('Trending Articles') }}
+                            </h4>
+                            
+                            <div class="space-y-4">
+                                @foreach($this->trendingPosts as $trendPost)
+                                    <a wire:navigate href="{{ route('web.post', $trendPost->slug) }}" class="flex gap-3 group/trend">
+                                        <div class="w-12 h-12 rounded-xl overflow-hidden bg-slate-100 dark:bg-slate-800 shrink-0 border border-slate-200/30 dark:border-slate-800">
+                                            @if($trendPost->getFirstMediaUrl('featured_image'))
+                                                <img src="{{ $trendPost->getFirstMediaUrl('featured_image') }}" alt="{{ $trendPost->title }}" class="w-full h-full object-cover">
+                                            @else
+                                                <div class="w-full h-full flex items-center justify-center bg-slate-150 dark:bg-slate-850">
+                                                    <x-icon name="o-newspaper" class="w-5 h-5 text-slate-300 dark:text-slate-700" />
+                                                </div>
+                                            @endif
+                                        </div>
+                                        <div class="flex-grow min-w-0">
+                                            <h5 class="text-xs font-black text-slate-800 dark:text-slate-200 group-hover/trend:text-primary transition-colors line-clamp-2 leading-tight">
+                                                {{ $trendPost->title }}
+                                            </h5>
+                                            <span class="text-[10px] text-slate-400 block mt-1 font-bold">{{ $trendPost->published_at?->format('M d, Y') }}</span>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
+
+                </aside>
+
             </div>
-
-            {{-- Post Content --}}
-            <div class="p-6">
-              <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition">
-                {{ $relatedPost->title }}
-              </h3>
-              
-              <p class="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-2">
-                {{ $relatedPost->excerpt }}
-              </p>
-
-              <div class="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                <span>{{ $relatedPost->published_at?->diffForHumans() }}</span>
-                <span class="flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                  </svg>
-                  {{ number_format($relatedPost->views_count) }}
-                </span>
-              </div>
-            </div>
-          </a>
-        @endforeach
-      </div>
-
-      {{-- View All Button --}}
-      <div class="text-center mt-12">
-        <a wire:navigate href="{{ route('web.posts') }}" class="inline-flex items-center px-8 py-3 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-lg shadow-indigo-500/50">
-          View All Posts
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
-          </svg>
-        </a>
-      </div>
+        </div>
     </div>
-  </section>
-@endif
-
 </div>

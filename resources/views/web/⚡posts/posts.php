@@ -18,6 +18,8 @@ class extends Component
     public string $search = '';
     #[Url(as: 'category')]
     public ?string $category = null;
+    #[Url(as: 'tag')]
+    public ?string $tag = null;
 
     #[Url(as: 'sort')]
     public string $sortBy = 'latest';
@@ -30,7 +32,7 @@ class extends Component
     #[Computed]
     public function posts()
     {
-        $query = Post::with(['user', 'category'])
+        $query = Post::with(['user.detail', 'category'])
             ->whereNotNull('published_at')
             ->where('published_at', '<=', now());
 
@@ -50,6 +52,11 @@ class extends Component
             });
         }
 
+        // Tag filter
+        if ($this->tag) {
+            $query->where('meta_keywords', 'like', "%{$this->tag}%");
+        }
+
         // Sorting
         match ($this->sortBy) {
             'popular' => $query->orderBy('views_count', 'desc'),
@@ -57,7 +64,7 @@ class extends Component
             default => $query->latest('published_at'),
         };
 
-        return $query->paginate(12);
+        return $query->paginate(9);
     }
 
     /**
@@ -69,6 +76,44 @@ class extends Component
         return Category::where('is_active', true)
             ->withCount('posts')
             ->orderBy('posts_count', 'desc')
+            ->get();
+    }
+
+    /**
+     * Get popular tags
+     */
+    #[Computed]
+    public function popularTags(): array
+    {
+        $keywords = Post::whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->whereNotNull('meta_keywords')
+            ->pluck('meta_keywords');
+
+        $tags = [];
+        foreach ($keywords as $list) {
+            foreach (explode(',', $list) as $tag) {
+                $trimmed = trim($tag);
+                if (!empty($trimmed)) {
+                    $tags[$trimmed] = ($tags[$trimmed] ?? 0) + 1;
+                }
+            }
+        }
+        arsort($tags);
+        return array_slice(array_keys($tags), 0, 15);
+    }
+
+    /**
+     * Get trending / popular posts
+     */
+    #[Computed]
+    public function popularPosts()
+    {
+        return Post::with(['user', 'category'])
+            ->whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->orderByDesc('views_count')
+            ->take(5)
             ->get();
     }
 
@@ -89,7 +134,7 @@ class extends Component
      */
     public function resetFilters(): void
     {
-        $this->reset(['search', 'category', 'sortBy']);
+        $this->reset(['search', 'category', 'tag', 'sortBy']);
         $this->resetPage();
     }
 
@@ -105,6 +150,14 @@ class extends Component
      * Update category and reset pagination
      */
     public function updatedCategory(): void
+    {
+        $this->resetPage();
+    }
+
+    /**
+     * Update tag and reset pagination
+     */
+    public function updatedTag(): void
     {
         $this->resetPage();
     }

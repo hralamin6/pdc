@@ -91,6 +91,16 @@ class Post extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
+    public function comments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function approvedComments(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Comment::class)->whereNull('parent_id')->where('status', 'approved');
+    }
+
     public function scopePublished($query)
     {
         return $query->whereNotNull('published_at')
