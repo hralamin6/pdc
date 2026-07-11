@@ -101,6 +101,11 @@ class Post extends Model implements HasMedia
         return $this->hasMany(Comment::class)->whereNull('parent_id')->where('status', 'approved');
     }
 
+    public function reactions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(PostReaction::class);
+    }
+
     public function scopePublished($query)
     {
         return $query->whereNotNull('published_at')

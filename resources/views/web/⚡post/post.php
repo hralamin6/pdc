@@ -177,4 +177,76 @@ class extends Component
         $comment->delete();
         $this->success('Comment deleted.');
     }
+
+    /**
+     * Get reaction counts for this post
+     */
+    #[Computed]
+    public function reactionCounts(): array
+    {
+        $counts = $this->post->reactions()
+            ->select('type', \DB::raw('count(*) as count'))
+            ->groupBy('type')
+            ->pluck('count', 'type')
+            ->toArray();
+
+        return [
+            'like' => $counts['like'] ?? 0,
+            'love' => $counts['love'] ?? 0,
+            'insightful' => $counts['insightful'] ?? 0,
+            'inspiring' => $counts['inspiring'] ?? 0,
+            'total' => array_sum($counts)
+        ];
+    }
+
+    /**
+     * Get user's current reaction type
+     */
+    #[Computed]
+    public function userReactionType(): ?string
+    {
+        if (!auth()->check()) {
+            return null;
+        }
+
+        return $this->post->reactions()
+            ->where('user_id', auth()->id())
+            ->value('type');
+    }
+
+    /**
+     * Toggle or update user reaction
+     */
+    public function react(string $type): void
+    {
+        if (!auth()->check()) {
+            $this->redirectRoute('login');
+            return;
+        }
+
+        if (!in_array($type, ['like', 'love', 'insightful', 'inspiring'])) {
+            return;
+        }
+
+        $existing = \App\Models\PostReaction::where('user_id', auth()->id())
+            ->where('post_id', $this->post->id)
+            ->first();
+
+        if ($existing) {
+            if ($existing->type === $type) {
+                // Toggle off
+                $existing->delete();
+            } else {
+                // Update reaction type
+                $existing->update(['type' => $type]);
+            }
+        } else {
+            // Create new reaction
+            \App\Models\PostReaction::create([
+                'user_id' => auth()->id(),
+                'post_id' => $this->post->id,
+                'type' => $type,
+            ]);
+        }
+    }
 };

@@ -84,6 +84,56 @@
                             {!! Str::markdown($this->post->content) !!}
                         </div>
 
+                        {{-- Rich Reactions System --}}
+                        <div class="pt-6 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-between gap-4">
+                            <div x-data="{ open: false }" class="relative">
+                                {{-- Reaction Popover Panel --}}
+                                <div x-cloak x-show="open" @click.outside="open = false" 
+                                     class="absolute bottom-full left-0 mb-2 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/90 shadow-xl rounded-full p-1.5 flex gap-3 z-30 transition-all">
+                                    <button @click="open = false" wire:click="react('like')" class="hover:scale-125 transition text-2xl" title="Like">👍</button>
+                                    <button @click="open = false" wire:click="react('love')" class="hover:scale-125 transition text-2xl" title="Love">❤️</button>
+                                    <button @click="open = false" wire:click="react('insightful')" class="hover:scale-125 transition text-2xl" title="Insightful">💡</button>
+                                    <button @click="open = false" wire:click="react('inspiring')" class="hover:scale-125 transition text-2xl" title="Inspiring">🌟</button>
+                                </div>
+                                
+                                {{-- Main Trigger Button --}}
+                                @php $userReact = $this->userReactionType; @endphp
+                                <button @click="open = !open" class="inline-flex items-center gap-2 px-4 py-2 rounded-full border transition {{ $userReact ? 'bg-primary/10 border-primary/30 text-primary' : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900' }}">
+                                    <span class="text-lg">
+                                        @if($userReact === 'like') 👍
+                                        @elseif($userReact === 'love') ❤️
+                                        @elseif($userReact === 'insightful') 💡
+                                        @elseif($userReact === 'inspiring') 🌟
+                                        @else 👍
+                                        @endif
+                                    </span>
+                                    <span class="text-xs font-black uppercase tracking-wider">
+                                        @if($userReact)
+                                            {{ ucfirst($userReact) }}
+                                        @else
+                                            {{ __('React') }}
+                                        @endif
+                                    </span>
+                                </button>
+                            </div>
+
+                            {{-- Summary Counter (Option A) --}}
+                            @php $reactCounts = $this->reactionCounts; @endphp
+                            @if($reactCounts['total'] > 0)
+                                <div class="flex items-center gap-2.5 bg-slate-50 dark:bg-slate-950/45 px-3.5 py-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/60 shadow-sm">
+                                    <div class="flex -space-x-1.5">
+                                        @if($reactCounts['like'] > 0) <span class="text-sm select-none" title="Like">👍</span> @endif
+                                        @if($reactCounts['love'] > 0) <span class="text-sm select-none" title="Love">❤️</span> @endif
+                                        @if($reactCounts['insightful'] > 0) <span class="text-sm select-none" title="Insightful">💡</span> @endif
+                                        @if($reactCounts['inspiring'] > 0) <span class="text-sm select-none" title="Inspiring">🌟</span> @endif
+                                    </div>
+                                    <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
+                                        {{ $reactCounts['total'] }} {{ trans_choice('reaction|reactions', $reactCounts['total']) }}
+                                    </span>
+                                </div>
+                            @endif
+                        </div>
+
                         {{-- Keywords tag cloud --}}
                         @if($this->post->meta_keywords)
                             <div class="pt-4 border-t border-slate-100 dark:border-slate-800/65">
@@ -305,18 +355,45 @@
                         </h4>
                         
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-blue-600 dark:text-blue-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Facebook
                             </a>
-                            <a href="https://x.com/intent/tweet?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> X / Twitter
+                            <a href="https://x.com/intent/tweet?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> X (Twitter)
                             </a>
-                            <a href="https://wa.me/?text={{ $this->shareText }}%20{{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                            <a href="https://wa.me/?text={{ $this->shareText }}%20{{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> WhatsApp
                             </a>
-                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-sky-600 dark:text-sky-400 inline-flex items-center gap-2 hover:bg-slate-100 dark:hover:bg-slate-900 transition font-bold">
+                            <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
                             </a>
+                            <a href="https://www.reddit.com/submit?url={{ $this->shareUrl }}&title={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-600 dark:text-orange-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Reddit
+                            </a>
+                            <a href="https://t.me/share/url?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-cyan-50 dark:hover:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Telegram
+                            </a>
+                            <a href="mailto:?subject={{ $this->shareText }}&body={{ $this->shareText }}%0A%0A{{ $this->shareUrl }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-450"></span> Email
+                            </a>
+                            <a href="https://www.pinterest.com/pin/create/button/?url={{ $this->shareUrl }}&description={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pinterest
+                            </a>
+                            <button 
+                              type="button"
+                              @click="
+                                const title = decodeURIComponent('{{ $this->shareText }}');
+                                const url = decodeURIComponent('{{ $this->shareUrl }}');
+                                if (navigator.share) {
+                                  navigator.share({ title, text: title, url }).catch(()=>{});
+                                } else {
+                                  alert('Sharing not supported on this browser.');
+                                }
+                              "
+                              class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 col-span-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold justify-center"
+                            >
+                              <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Device Share
+                            </button>
                         </div>
                     </div>
 

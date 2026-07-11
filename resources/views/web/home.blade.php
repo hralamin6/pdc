@@ -59,7 +59,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
             <div class="absolute -top-40 -right-40 w-[600px] h-[600px] bg-fuchsia-400/20 dark:bg-fuchsia-600/30 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse duration-1000"></div>
             <div class="absolute top-40 -left-40 w-[500px] h-[500px] bg-cyan-400/20 dark:bg-cyan-600/30 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen"></div>
             <div class="absolute -bottom-40 left-1/2 w-[800px] h-[800px] bg-violet-400/10 dark:bg-violet-600/20 rounded-full blur-[150px] mix-blend-multiply dark:mix-blend-screen"></div>
-            
+
             <!-- Grid pattern -->
             <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDM0djI2aC0ydjI0aDJWMEgzNHYzNGgyem0yMCAwdjI2aC0ydjI0aDJWMGgtMnYzNGgyem0tNDAgMHYyNmgtMnYyNGgyVjBIMTR2MzRoMnptMjAtMTRoMjZ2LTJoLTI2di0yejI2IDM0aC0yNnYyaDI2di0yeiIgLz48L2c+PC9nPjwvc3ZnPg==')] opacity-[0.03] dark:opacity-30 mix-blend-difference dark:mix-blend-normal"></div>
         </div>
@@ -70,16 +70,16 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     <span class="w-2.5 h-2.5 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(6,182,212,0.5)] dark:shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
                     {{ __('Ready for Enrollment') }}
                 </div>
-                
+
                 <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">
                     {{ __('Level Up Your') }}
                     <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-fuchsia-600 to-amber-500 dark:from-cyan-400 dark:via-fuchsia-400 dark:to-amber-400 drop-shadow-sm">{{ __('Deen & Brotherhood') }}</span>
                 </h1>
-                
+
                 <p class="text-xl text-slate-600 dark:text-white/70 max-w-2xl mx-auto leading-relaxed font-medium">
                     {{ __('PSTU Dawah Community — Gamifying your Islamic journey. Join circles, track your habits, earn XP, and grow together.') }}
                 </p>
-                
+
                 <div class="flex flex-col sm:flex-row justify-center gap-4 pt-6">
                     <a href="{{ route('web.halaqahs') }}" wire:navigate class="btn bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 border-none rounded-2xl px-10 h-14 font-black shadow-lg dark:shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:-translate-y-1 transition-transform text-lg">
                         {{ __('Explore Quests') }}
@@ -116,7 +116,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
             async boot() {
                 // Fallback to Barishal immediately
                 await this.fetchTimes(22.7010, 90.3535);
-                
+
                 // Try GPS in background, update if allowed
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
@@ -150,10 +150,10 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <p class="text-2xl font-black text-white leading-none mt-1 whitespace-nowrap" x-text="nextName + ' — ' + nextTime"></p>
                     </div>
                 </div>
-                
+
                 <div class="flex gap-2 md:gap-6 w-full overflow-x-auto pb-2 md:pb-0 hide-scrollbar justify-start md:justify-end">
                     <template x-for="[name, time] in Object.entries(times)" :key="name">
-                        <div class="text-center px-4 md:px-5 py-3 rounded-2xl transition-all min-w-[80px]" 
+                        <div class="text-center px-4 md:px-5 py-3 rounded-2xl transition-all min-w-[80px]"
                              :class="name === nextName ? 'bg-cyan-500/20 border border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.2)]' : 'border border-transparent opacity-70'">
                             <p class="text-[10px] font-black uppercase tracking-widest text-white mb-1" x-text="name"></p>
                             <p class="text-lg md:text-xl font-bold" :class="name === nextName ? 'text-cyan-400' : 'text-white'" x-text="time"></p>
@@ -179,7 +179,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                 {{ __('View Full Gallery') }} <x-icon name="o-arrow-right" class="w-4 h-4" />
             </a>
         </div>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($featuredAlbums as $album)
                 <a href="{{ route('web.showcase') }}" wire:navigate class="group relative h-64 md:h-72 rounded-[2rem] overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 block">
@@ -209,11 +209,11 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
     {{-- ===== BENTO BOX (TREASURY, QUIZ, BOOKS, ROUTINE) ===== --}}
     <section class="py-16 md:py-24 relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-            
+
             <!-- TREASURY: Col span 12 or 7 -->
             <div class="md:col-span-7 bg-gradient-to-br from-indigo-900 to-violet-900 rounded-[2.5rem] p-8 md:p-10 text-white relative overflow-hidden shadow-2xl shadow-indigo-900/20 group">
                 <div class="absolute -right-20 -top-20 w-80 h-80 bg-fuchsia-500/30 rounded-full blur-[80px] group-hover:bg-fuchsia-500/40 transition-colors duration-700 pointer-events-none"></div>
-                
+
                 <div class="flex justify-between items-start mb-10 relative z-10">
                     <div>
                         <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 border border-white/10 shadow-lg">
@@ -244,7 +244,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
             @if($activeQuiz)
             <div class="md:col-span-5 bg-gradient-to-br from-amber-500 to-orange-600 rounded-[2.5rem] p-8 md:p-10 text-white shadow-2xl shadow-orange-500/20 flex flex-col justify-between group overflow-hidden relative">
                 <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/20 rounded-full blur-[50px] group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
-                
+
                 <div class="relative z-10">
                     <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-black/10 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 border border-white/20 shadow-lg">
                         <x-icon name="o-trophy" class="w-4 h-4 text-yellow-200" />
@@ -256,7 +256,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <span class="bg-black/20 px-3 py-1 rounded-lg text-xs font-bold text-yellow-200">{{ $activeQuiz->total_marks ?? 10 }} XP</span>
                     </div>
                 </div>
-                
+
                 <div class="mt-10 relative z-10">
                     <a href="{{ route('app.quiz.take', $activeQuiz) }}" class="btn bg-white text-orange-600 hover:bg-orange-50 hover:scale-105 border-none rounded-2xl w-full font-black text-lg shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-transform h-14">
                         {{ __('Play & Earn XP') }}
@@ -276,7 +276,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     </h3>
                     <a href="{{ route('app.books') }}" class="text-indigo-500 dark:text-indigo-400 text-sm font-bold hover:underline">{{ __('All Books') }}</a>
                 </div>
-                
+
                 <div class="space-y-4">
                     @forelse($latestBooks as $book)
                     <div class="flex items-center gap-5 group cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30 p-2 -mx-2 rounded-2xl transition-colors">
@@ -301,7 +301,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
             <!-- DAILY ROUTINE: Col span 6 -->
             <div class="md:col-span-6 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-[2.5rem] p-8 md:p-10 text-white shadow-xl shadow-teal-500/20 relative overflow-hidden group">
                 <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc2MCcgaGVpZ2h0PSc2MCc+PHBhdGggZD0nTTU0LjYyNyAwdjYwaC02VjB6bS0xMiAwdjYwaC02VjB6bS0xMiAwdjYwaC02VjB6bS0xMiAwdjYwaC02VjB6TTEyIDB2NjBINlYwTTAgMHY2MGg2VjB6JyBmaWxsPSd3aGl0ZScgZmlsbC1vcGFjaXR5PScwLjA1JyBmaWxsLXJ1bGU9J2V2ZW5vZGQnLz48L3N2Zz4=')] opacity-50"></div>
-                
+
                 <div class="relative z-10 flex flex-col h-full justify-between">
                     <div>
                         <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-black/10 rounded-full text-[10px] font-black uppercase tracking-widest mb-4 border border-white/20 shadow-lg">
@@ -311,7 +311,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <h3 class="text-3xl font-black mb-3 tracking-tight">{{ __('Islamic Routine') }}</h3>
                         <p class="text-white/80 text-sm font-medium leading-relaxed max-w-sm">{{ __('Track your Salah, Quran, and Habits daily to build consistency and level up.') }}</p>
                     </div>
-                    
+
                     <div class="mt-8 flex items-center justify-between bg-black/10 backdrop-blur-sm p-4 rounded-3xl border border-white/10">
                         <div class="flex items-center gap-4">
                             <div class="flex -space-x-3">
@@ -330,7 +330,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </section>
 
@@ -348,7 +348,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     {{ __('View All Quests') }}
                 </a>
             </div>
-            
+
             @if($upcomingHalaqahs->count())
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @foreach($upcomingHalaqahs as $h)
@@ -359,22 +359,22 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase leading-none mb-1">{{ $h->scheduled_at->format('M') }}</p>
                             <p class="text-2xl font-black text-indigo-600 dark:text-indigo-400 leading-none">{{ $h->scheduled_at->format('d') }}</p>
                         </div>
-                        
+
                         <div class="h-40 p-6 flex flex-col justify-end bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/20 dark:to-purple-900/20 relative overflow-hidden">
                             <!-- Background accent -->
                             <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl"></div>
-                            
+
                             @if($h->series)
                                 <p class="text-[10px] font-black text-indigo-600 dark:text-indigo-400 uppercase tracking-widest mb-1 relative z-10">{{ $h->series->title }}</p>
                             @else
                                 <p class="text-[10px] font-black text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1 relative z-10">{{ __('Single Event') }}</p>
                             @endif
                         </div>
-                        
+
                         <div class="p-8 flex-grow flex flex-col">
                             <h3 class="font-black text-2xl text-slate-900 dark:text-white mb-3 leading-tight">{{ $h->title }}</h3>
                             <p class="text-sm text-slate-600 dark:text-slate-400 mb-8 line-clamp-2 flex-grow font-medium leading-relaxed">{{ $h->topic }}</p>
-                            
+
                             <div class="flex items-center justify-between pt-5 border-t-2 border-dashed border-slate-200 dark:border-slate-700">
                                 <div class="flex items-center gap-3">
                                     <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-500 border border-indigo-200 dark:border-indigo-800">
@@ -418,7 +418,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     {{ __('View All') }}
                 </a>
             </div>
-            
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 @foreach($activeCampaigns as $campaign)
                 <div class="bg-white dark:bg-slate-800 rounded-[2rem] border-2 border-slate-200 dark:border-slate-700/50 overflow-hidden hover:border-rose-500 dark:hover:border-rose-400 hover:shadow-[0_20px_40px_rgba(244,63,94,0.15)] hover:-translate-y-2 transition-all duration-300 group flex flex-col">
@@ -428,17 +428,17 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         @else
                             <div class="w-full h-full flex items-center justify-center"><x-icon name="o-sparkles" class="w-16 h-16 text-rose-300 dark:text-rose-700/50" /></div>
                         @endif
-                        
+
                         <!-- Progress Badge -->
                         <div class="absolute top-5 right-5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-rose-600 dark:text-rose-400 font-black px-4 py-2 rounded-xl text-sm shadow-xl border border-slate-200 dark:border-slate-700">
                             {{ $campaign->progress_percentage }}% {{ __('Funded') }}
                         </div>
                     </div>
-                    
+
                     <div class="p-8 flex-grow flex flex-col">
                         <h3 class="font-black text-2xl text-slate-900 dark:text-white mb-4 leading-tight group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{{ $campaign->title }}</h3>
                         <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-8 flex-grow font-medium leading-relaxed">{{ Str::limit($campaign->description, 90) }}</p>
-                        
+
                         <div class="space-y-3 mb-8 bg-slate-50 dark:bg-slate-900 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
                             <div class="flex justify-between text-sm font-black">
                                 <span class="text-emerald-500 dark:text-emerald-400">৳{{ number_format($campaign->collected_amount) }}</span>
@@ -450,7 +450,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                                 </div>
                             </div>
                         </div>
-                        
+
                         <a href="{{ route('app.donations') }}" wire:navigate class="btn bg-rose-500 hover:bg-rose-600 text-white btn-block rounded-xl font-black text-lg shadow-[0_10px_20px_rgba(244,63,94,0.3)] h-14">
                             {{ __('Contribute Now') }}
                         </a>
@@ -477,7 +477,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     {{ __('Read All Archives') }}
                 </a>
             </div>
-            
+
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <!-- Large Featured Post (First) -->
                 @if($mainPost = $featuredPosts->first())
@@ -497,7 +497,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             <div class="p-8 md:p-10 flex-grow flex flex-col justify-center">
                                 <h3 class="font-black text-3xl md:text-4xl text-slate-900 dark:text-white mb-5 group-hover:text-amber-500 transition-colors leading-tight">{{ $mainPost->title }}</h3>
                                 <p class="text-base text-slate-600 dark:text-slate-400 line-clamp-3 mb-8 font-medium leading-relaxed">{{ $mainPost->excerpt }}</p>
-                                
+
                                 <div class="flex items-center gap-4 mt-auto">
                                     <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-600">
                                         {{ substr($mainPost->user->name ?? 'A', 0, 1) }}
@@ -512,7 +512,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     </a>
                 </div>
                 @endif
-                
+
                 <!-- Smaller Posts (Rest) -->
                 <div class="lg:col-span-5 flex flex-col gap-8">
                     @foreach($featuredPosts->skip(1) as $post)
@@ -547,7 +547,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 class="text-4xl font-black text-slate-900 dark:text-white tracking-tight mb-3">{{ __('Guild Leaders') }}</h2>
             <p class="text-slate-500 dark:text-slate-400 font-medium mb-16 max-w-2xl mx-auto">{{ __('Learn from experienced mentors guiding the community quests.') }}</p>
-            
+
             <div class="flex flex-wrap justify-center gap-10 md:gap-16">
                 @foreach($mentors as $mentor)
                     <div class="text-center group cursor-pointer">
@@ -569,12 +569,12 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
         <div class="max-w-5xl mx-auto text-center bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600 rounded-[3rem] p-12 md:p-24 text-white relative overflow-hidden shadow-[0_30px_60px_rgba(147,51,234,0.3)]">
             <div class="absolute -top-20 -left-20 w-80 h-80 bg-white/10 rounded-full blur-[80px]"></div>
             <div class="absolute -bottom-20 -right-20 w-96 h-96 bg-black/20 rounded-full blur-[100px]"></div>
-            
+
             <div class="relative z-10">
                 <x-icon name="o-rocket-launch" class="w-20 h-20 mx-auto mb-8 text-white/90 drop-shadow-lg" />
                 <h2 class="text-4xl md:text-5xl lg:text-6xl font-black mb-6 tracking-tight leading-tight">{{ __('Ready to Start Your Journey?') }}</h2>
                 <p class="text-lg md:text-xl text-white/80 mb-12 max-w-2xl mx-auto font-medium leading-relaxed">{{ __('Join the PSTU Dawah Community today. Track habits, attend sessions, and earn your place on the leaderboards.') }}</p>
-                
+
                 <a href="{{ route('register') }}" class="btn bg-white text-purple-700 hover:bg-slate-50 hover:scale-105 border-none rounded-2xl px-12 h-16 font-black text-xl shadow-[0_15px_30px_rgba(255,255,255,0.2)] transition-transform">
                     {{ __('Create Free Account') }}
                 </a>
