@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('book_user_interactions', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->unsignedBigInteger('gamification_points')->default(0)->after('remember_token');
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('book_user_interactions');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('gamification_points');
+        });
     }
 };

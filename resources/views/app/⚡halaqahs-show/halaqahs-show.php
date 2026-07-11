@@ -24,7 +24,7 @@ new #[Title('Halaqah Details')] #[Layout('layouts.app')] class extends Component
     public function mount(Halaqah $halaqah): void
     {
         $this->authorize('halaqahs.view');
-        $this->halaqah = $halaqah->load(['speaker', 'series', 'attendances']);
+        $this->halaqah = $halaqah->load(['speaker', 'series', 'attendances', 'quizzes']);
         
         // Determine if they are on a waitlist.
         // Waitlist happens if total rsvps >= max_capacity.

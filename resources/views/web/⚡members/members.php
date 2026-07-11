@@ -9,7 +9,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 new
-#[Title('Community Members')]
+#[Title('Guild Roster | Members')]
 #[Layout('layouts.web')]
 class extends Component
 {
@@ -22,7 +22,7 @@ class extends Component
     public ?string $roleFilter = null;
 
     #[Url(as: 'sort')]
-    public string $sortBy = 'latest';
+    public string $sortBy = 'xp';
 
     public string $viewMode = 'grid'; // 'grid' or 'list'
 
@@ -34,8 +34,8 @@ class extends Component
     #[Computed]
     public function users()
     {
-        $query = User::with(['roles', 'media', 'posts'])
-            ->withCount('posts');
+        $query = User::with(['roles', 'media'])
+            ->withCount(['posts', 'dailyReports']);
 
         // Search
         if ($this->search) {
@@ -56,7 +56,8 @@ class extends Component
         match ($this->sortBy) {
             'name' => $query->orderBy('name', 'asc'),
             'oldest' => $query->oldest('created_at'),
-            default => $query->latest('created_at'),
+            'latest' => $query->latest('created_at'),
+            default => $query->orderBy('gamification_points', 'desc')->latest('created_at'), // Default XP rank
         };
 
         $perPage = $this->viewMode === 'grid' ? 12 : 20;
@@ -90,14 +91,12 @@ class extends Component
     }
 
     /**
-     * Get top contributors (users with most posts)
+     * Get top contributors (users with most XP)
      */
     #[Computed]
     public function topContributors()
     {
-        return User::whereHas('posts')
-            ->withCount('posts')
-            ->orderBy('posts_count', 'desc')
+        return User::orderBy('gamification_points', 'desc')
             ->take(6)
             ->get();
     }
@@ -151,29 +150,9 @@ class extends Component
         $this->resetPage();
     }
 
-    /**
-     * Update search and reset pagination
-     */
-    public function updatedSearch(): void
-    {
-        $this->resetPage();
-    }
-
-    /**
-     * Update role filter and reset pagination
-     */
-    public function updatedRoleFilter(): void
-    {
-        $this->resetPage();
-    }
-
-    /**
-     * Update sort and reset pagination
-     */
-    public function updatedSortBy(): void
-    {
-        $this->resetPage();
-    }
+    public function updatedSearch(): void { $this->resetPage(); }
+    public function updatedRoleFilter(): void { $this->resetPage(); }
+    public function updatedSortBy(): void { $this->resetPage(); }
 
     /**
      * Toggle view mode

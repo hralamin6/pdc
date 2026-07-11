@@ -16,13 +16,13 @@ Route::get('/benchmark', function () {
 
 Route::livewire('/', 'web::home')->name('web.home');
 Route::livewire('/blog', 'web::posts')->name('web.posts');
-Route::livewire('/users', 'web::users')->name('web.users');
 
 Route::livewire('/blog/{slug}', 'web::post')->name('web.post');
 Route::livewire('/user/{slug}', 'web::user')->name('web.user');
 
 Route::livewire('/campaigns', 'web::campaigns')->name('web.campaigns');
 Route::livewire('/members', 'web::members')->name('web.members');
+Route::livewire('/showcase', 'web::showcase')->name('web.showcase');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
 Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
 
@@ -61,11 +61,35 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/expenses/transfers', 'app::fund-transfers')->name('app.fund-transfers');
     Route::livewire('/app/expenses/treasury-report', 'app::treasury-report')->name('app.treasury-report');
 
+    // Library / Books Routes
+    Route::livewire('/app/library', 'app::books')->name('app.books');
+    Route::livewire('/app/library/my-books', 'app::my-books')->name('app.my-books');
+    Route::livewire('/app/library/borrow-requests', 'app::borrow-requests')->name('app.borrow-requests');
+    Route::livewire('/app/library/hubs', 'app::library-hubs')->name('app.library-hubs');
+    Route::livewire('/app/library/{slug}', 'app::book-details')->name('app.book-details');
+    Route::livewire('/app/library/{slug}/reader', 'app::book-reader')->name('app.book-reader');
+    Route::livewire('/app/library-admin', 'app::books-admin')->name('app.books.admin');
+    Route::livewire('/app/library-admin/metadata', 'app::books-metadata')->name('app.books.metadata');
+
     // Daily Reports Routes
     Route::livewire('/app/daily-reports', 'app::daily-reports')->name('app.daily-reports');
     Route::livewire('/app/daily-reports/form', 'app::daily-reports-form')->name('app.daily-reports.form');
     Route::livewire('/app/daily-reports/settings', 'app::daily-reports-settings')->name('app.daily-reports.settings');
     Route::livewire('/app/daily-reports/admin', 'app::daily-reports-admin')->name('app.daily-reports.admin');
+
+    // Quiz Routes
+    Route::livewire('/app/quizzes', 'app::quiz-manage')->name('app.quiz.manage');
+    Route::livewire('/app/quizzes/{quiz}/take', 'app::quiz-take')->name('app.quiz.take');
+    Route::livewire('/app/quizzes/{quiz}/live', 'app::quiz-live')->name('app.quiz.live');
+    Route::livewire('/app/quizzes/{quiz}/live/host', 'app::quiz-live-host')->name('app.quiz.live.host');
+    Route::livewire('/app/quizzes/grade', 'app::quiz-grade')->name('app.quiz.grade');
+
+    // Feedback Route
+    Route::livewire('/app/feedback', 'app::feedback-admin')->name('app.feedback.admin');
+
+    // Gallery / Showcase Routes
+    Route::livewire('/app/gallery', 'app::gallery-admin')->name('app.gallery.admin');
+    Route::livewire('/app/gallery/{slug}', 'app::gallery-album-edit')->name('app.gallery.edit');
 
     Route::livewire('/app/notifications/', 'app::notifications')->name('app.notifications');
 

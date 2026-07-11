@@ -65,6 +65,33 @@
                         </x-menu-sub>
                     @endif
 
+                    {{-- Library --}}
+                    <x-menu-sub title="{{ __('Library') }}" icon="o-book-open">
+                        <x-menu-item title="{{ __('Browse Catalog') }}" icon="o-squares-2x2" :link="route('app.books')" route="app.books" wire:navigate />
+                        <x-menu-item title="{{ __('Community Hubs') }}" icon="o-building-library" :link="route('app.library-hubs')" route="app.library-hubs" wire:navigate />
+                        <x-menu-item title="{{ __('My Shelf') }}" icon="o-bookmark-square" :link="route('app.my-books')" route="app.my-books" wire:navigate />
+                        <x-menu-item title="{{ __('Borrow Requests') }}" icon="o-inbox" :link="route('app.borrow-requests')" route="app.borrow-requests" wire:navigate />
+                        
+                        @if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'mentor']))
+                            <x-menu-item title="{{ __('Manage Catalog') }}" icon="o-cog" :link="route('app.books.admin')" route="app.books.admin" wire:navigate />
+                            <x-menu-item title="{{ __('Metadata (Authors)') }}" icon="o-tag" :link="route('app.books.metadata')" route="app.books.metadata" wire:navigate />
+                        @endif
+                    </x-menu-sub>
+
+
+                    {{-- Quizzes --}}
+                    @can('quiz.view')
+                    <x-menu-sub title="{{ __('Quizzes') }}" icon="o-question-mark-circle">
+                        <x-menu-item title="{{ __('Browse Quizzes') }}" icon="o-squares-2x2" :link="route('app.quiz.manage')" route="app.quiz.manage" wire:navigate />
+                        @can('quiz.manage')
+                            <x-menu-item title="{{ __('Manage Quizzes') }}" icon="o-cog-6-tooth" :link="route('app.quiz.manage')" route="app.quiz.manage" wire:navigate />
+                        @endcan
+                        @can('quiz.grade')
+                            <x-menu-item title="{{ __('Grade Answers') }}" icon="o-check-badge" :link="route('app.quiz.grade')" route="app.quiz.grade" wire:navigate />
+                        @endcan
+                        @livewire('quizzes.live-quiz-badge')
+                    </x-menu-sub>
+                    @endcan
 
                     {{-- User Settings --}}
                     <x-menu-sub title="{{ __('User Settings') }}" icon="o-user">
@@ -88,6 +115,14 @@
                         
                         @can('roles.view')
                             <x-menu-item title="{{ __('Roles') }}" icon="o-shield-check" :link="route('app.roles')" route="app.roles" wire:navigate />
+                        @endcan
+                        
+                        @can('feedback.manage')
+                            <x-menu-item title="{{ __('Anonymous Nasiha') }}" icon="o-inbox" :link="route('app.feedback.admin')" route="app.feedback.admin" wire:navigate />
+                        @endcan
+
+                        @can('gallery.manage')
+                            <x-menu-item title="{{ __('Showcase Gallery') }}" icon="o-photo" :link="route('app.gallery.admin')" route="app.gallery.admin" wire:navigate />
                         @endcan
                         
                         @can('users.view')

@@ -40,6 +40,12 @@
                                 <x-icon name="o-tag" class="w-4 h-4 mr-2 text-primary" />
                                 Topic: {{ $halaqah->topic }}
                             </div>
+                            @if($halaqah->quizzes()->exists())
+                            <div class="flex items-center text-sm font-bold text-accent">
+                                <x-icon name="o-question-mark-circle" class="w-4 h-4 mr-2 text-accent" />
+                                Quiz Attached
+                            </div>
+                            @endif
                         </div>
 
                         <div class="mt-6 pt-4 border-t border-base-200 flex justify-between items-center">
@@ -70,7 +76,12 @@
                     <x-card class="hover:shadow-lg transition-shadow border border-base-200 bg-gradient-to-br from-base-100 to-base-200">
                         <div class="flex justify-between items-start mb-4">
                             <h3 class="text-xl font-bold">{{ $course->title }}</h3>
-                            <x-badge value="{{ ucfirst($course->target_audience_level) }}" class="badge-primary badge-sm" />
+                            <div class="flex flex-col items-end gap-1 shrink-0">
+                                <x-badge value="{{ ucfirst($course->target_audience_level) }}" class="badge-primary badge-sm" />
+                                @if($course->quizzes_count > 0)
+                                    <x-badge value="Has Quizzes" class="badge-accent badge-sm" />
+                                @endif
+                            </div>
                         </div>
                         <p class="text-base-content/70 text-sm line-clamp-3 mb-6">{{ $course->description }}</p>
                         
@@ -103,6 +114,9 @@
                                     <h4 class="font-bold text-lg">{{ $halaqah->title }}</h4>
                                     @if($halaqah->materials_path || !empty($halaqah->resources))
                                         <x-badge value="Materials Available" class="badge-success badge-sm badge-outline" />
+                                    @endif
+                                    @if($halaqah->quizzes->isNotEmpty())
+                                        <x-badge value="Quiz Attached" class="badge-accent badge-sm badge-outline" />
                                     @endif
                                 </div>
                                 <p class="text-sm text-base-content/70 flex items-center gap-4">

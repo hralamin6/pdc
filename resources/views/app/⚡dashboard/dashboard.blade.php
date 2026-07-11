@@ -339,6 +339,9 @@
         <div class="modal-backdrop" @click="showModal = false"><button>close</button></div>
     </div>
 
+    {{-- Live Quiz Widget --}}
+    @livewire('quizzes.live-quiz-widget')
+
     {{-- Donation Widget --}}
     <div class="bg-base-100 rounded-3xl shadow-xl border border-base-200 p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
         <div class="flex items-center gap-6">

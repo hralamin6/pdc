@@ -142,6 +142,15 @@ new class extends Component {
                                         <p class="text-xs text-slate-500 dark:text-slate-400">Support our causes</p>
                                     </div>
                                 </a>
+                                <a href="{{ route('web.showcase') }}" wire:navigate class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                    <div class="w-8 h-8 bg-cyan-500/10 rounded-lg flex items-center justify-center">
+                                        <x-icon name="o-photo" class="w-4 h-4 text-cyan-600" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 transition-colors">Showcase</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">Community Gallery</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>

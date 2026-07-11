@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
 
 class Halaqah extends Model
@@ -74,5 +75,13 @@ class Halaqah extends Model
     public function donations(): HasMany
     {
         return $this->hasMany(Donation::class, 'halaqah_id');
+    }
+
+    /**
+     * Get the quizzes associated with this halaqah session.
+     */
+    public function quizzes(): MorphMany
+    {
+        return $this->morphMany(Quiz::class, 'quizzable');
     }
 }

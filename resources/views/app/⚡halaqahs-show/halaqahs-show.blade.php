@@ -93,6 +93,36 @@
                 </div>
             </x-card>
 
+            @if($halaqah->quizzes->isNotEmpty())
+            <x-card title="Session Quizzes" icon="o-question-mark-circle" class="border-accent/20 bg-accent/5">
+                <p class="mb-4 text-base-content/70">Test your knowledge on this session's topics.</p>
+                <div class="grid grid-cols-1 gap-3">
+                    @foreach($halaqah->quizzes as $quiz)
+                        <div class="flex items-center justify-between bg-base-100 p-4 rounded-xl border border-base-200 shadow-sm">
+                            <div>
+                                <h4 class="font-bold">{{ $quiz->title }}</h4>
+                                <div class="text-xs text-base-content/50 mt-1 flex gap-3">
+                                    <span class="flex items-center gap-1"><x-icon name="o-clock" class="w-3 h-3" /> {{ $quiz->time_limit_minutes ?? 'No time limit' }}</span>
+                                    <span class="flex items-center gap-1"><x-icon name="o-document-text" class="w-3 h-3" /> {{ $quiz->total_marks }} Marks</span>
+                                </div>
+                            </div>
+                            <div>
+                                @if($quiz->isAvailable() || $quiz->status === 'live' || $quiz->status === 'closed')
+                                    @if($quiz->mode === 'live')
+                                        <x-button label="{{ $quiz->status === 'closed' ? 'Results' : 'Live Quiz' }}" icon="o-signal" class="btn-sm btn-primary {{ $quiz->status === 'live' ? 'animate-pulse' : '' }}" :href="route('app.quiz.live', $quiz)" wire:navigate />
+                                    @else
+                                        <x-button label="{{ $quiz->status === 'closed' ? 'Results' : 'Take Quiz' }}" icon="o-play" class="btn-sm btn-success" :href="route('app.quiz.take', $quiz)" wire:navigate />
+                                    @endif
+                                @else
+                                    <span class="badge badge-ghost">{{ ucfirst($quiz->status) }}</span>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            </x-card>
+            @endif
+
             @if($halaqah->materials_path || !empty($halaqah->resources))
             <x-card title="Session Materials & Resources" icon="o-document-text">
                 <p class="mb-4 text-base-content/70">Review these materials to prepare for the session.</p>

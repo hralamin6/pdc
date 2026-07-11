@@ -59,6 +59,12 @@ class PermissionSeeder extends Seeder
                 'expenses.reports.manage',        // admin: generate & publish monthly reports
                 'expenses.reports.view',          // member: view published reports
             ],
+            'feedback' => [
+                'feedback.manage', 'feedback.view',
+            ],
+            'gallery' => [
+                'gallery.manage', 'gallery.view',
+            ],
         ];
 
         // Create permissions
@@ -95,10 +101,10 @@ class PermissionSeeder extends Seeder
             'categories.view', 'categories.create', 'categories.update',
             'posts.view', 'posts.view-all', 'posts.create', 'posts.update', 'posts.delete', 'posts.publish', 'posts.feature',
             'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
-            // Treasury (full access)
-            'expenses.view', 'expenses.manage', 'expenses.categories.manage',
-            'expenses.bank-accounts.manage', 'expenses.transfers.manage',
-            'expenses.reports.manage', 'expenses.reports.view',
+            'translations.view', 'translations.create', 'translations.update', 'translations.delete', 'translations.scan', 'translations.import', 'translations.export', 'translations.ai-translate',
+            'expenses.manage', 'expenses.categories.manage', 'expenses.bank-accounts.manage', 'expenses.transfers.manage', 'expenses.reports.manage', 'expenses.reports.view',
+            'feedback.manage', 'feedback.view',
+            'gallery.manage', 'gallery.view',
         ])->get();
         $admin->syncPermissions($adminPerms);
 

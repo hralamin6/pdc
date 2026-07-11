@@ -20,12 +20,12 @@ new #[Title('Halaqahs & Courses')] #[Layout('layouts.app')] class extends Compon
 
     public function with(): array
     {
-        $upcomingQuery = Halaqah::with(['speaker', 'series'])
+        $upcomingQuery = Halaqah::with(['speaker', 'series', 'quizzes'])
             ->whereIn('status', ['published'])
             ->where('scheduled_at', '>=', now())
             ->orderBy('scheduled_at', 'asc');
             
-        $pastQuery = Halaqah::with(['speaker', 'series'])
+        $pastQuery = Halaqah::with(['speaker', 'series', 'quizzes'])
             ->whereIn('status', ['published', 'completed'])
             ->where('scheduled_at', '<', now())
             ->orderBy('scheduled_at', 'desc');
@@ -33,7 +33,7 @@ new #[Title('Halaqahs & Courses')] #[Layout('layouts.app')] class extends Compon
         return [
             'upcoming' => $upcomingQuery->paginate(9, ['*'], 'upcomingPage'),
             'past' => $pastQuery->paginate(9, ['*'], 'pastPage'),
-            'series' => HalaqahSeries::withCount('halaqahs')->where('status', 'active')->paginate(9, ['*'], 'seriesPage'),
+            'series' => HalaqahSeries::withCount(['halaqahs', 'quizzes'])->where('status', 'active')->paginate(9, ['*'], 'seriesPage'),
         ];
     }
 };
