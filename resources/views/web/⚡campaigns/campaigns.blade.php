@@ -31,7 +31,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @foreach($activeCampaigns as $campaign)
             <div class="bg-base-100 rounded-2xl overflow-hidden border border-base-content/5 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 group flex flex-col">
-                <div class="h-52 relative overflow-hidden">
+                <a href="{{ route('web.campaign', $campaign->slug) }}" wire:navigate class="h-52 relative overflow-hidden block">
                     @if($campaign->cover_url)
                         <img src="{{ $campaign->cover_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $campaign->title }}">
                     @else
@@ -42,9 +42,11 @@
                     <div class="absolute top-4 right-4 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm font-black px-3 py-1.5 rounded-full text-xs shadow-lg {{ $campaign->progress_percentage >= 75 ? 'text-emerald-600' : 'text-rose-600' }}">
                         {{ $campaign->progress_percentage }}% Funded
                     </div>
-                </div>
+                </a>
                 <div class="p-6 flex-grow flex flex-col">
-                    <h3 class="font-bold text-xl text-base-content mb-2 group-hover:text-primary transition-colors">{{ $campaign->title }}</h3>
+                    <a href="{{ route('web.campaign', $campaign->slug) }}" wire:navigate>
+                        <h3 class="font-bold text-xl text-base-content mb-2 group-hover:text-primary transition-colors">{{ $campaign->title }}</h3>
+                    </a>
                     <p class="text-sm text-base-content/60 line-clamp-3 mb-6 flex-grow">{{ $campaign->description }}</p>
                     <div class="space-y-3 mb-5">
                         <div class="flex justify-between text-sm font-bold">
@@ -55,11 +57,9 @@
                             <div class="bg-gradient-to-r from-emerald-400 to-teal-500 h-full rounded-full" style="width: {{ $campaign->progress_percentage }}%"></div>
                         </div>
                     </div>
-                    @auth
-                        <a href="{{ route('app.donations') }}" wire:navigate class="btn btn-primary btn-block rounded-xl font-bold shadow-lg shadow-primary/20">Donate Now</a>
-                    @else
-                        <a href="{{ route('login') }}" wire:navigate class="btn btn-primary btn-block rounded-xl font-bold shadow-lg shadow-primary/20">Sign in to Donate</a>
-                    @endauth
+                    <a href="{{ route('web.campaign', $campaign->slug) }}" wire:navigate class="btn btn-primary btn-block rounded-xl font-bold shadow-lg shadow-primary/20">
+                        {{ __('View Details & Donate') }}
+                    </a>
                 </div>
             </div>
             @endforeach

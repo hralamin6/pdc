@@ -21,6 +21,7 @@ Route::livewire('/blog/{slug}', 'web::post')->name('web.post');
 Route::livewire('/user/{slug}', 'web::user')->name('web.user');
 
 Route::livewire('/campaigns', 'web::campaigns')->name('web.campaigns');
+Route::livewire('/campaigns/{slug}', 'web::campaign')->name('web.campaign');
 Route::livewire('/members', 'web::members')->name('web.members');
 Route::livewire('/library', 'web::library')->name('web.library');
 Route::livewire('/library/{slug}', 'web::book')->name('web.book');
