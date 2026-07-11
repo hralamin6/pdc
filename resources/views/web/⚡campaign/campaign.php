@@ -26,6 +26,16 @@ class extends Component
     public $note = '';
     public bool $isAnonymous = false;
 
+    // Form fields for new updates (Admins only)
+    public string $newUpdateTitle = '';
+    public string $newUpdateContent = '';
+
+    // Form fields for FAQ (Members can ask)
+    public string $newQuestion = '';
+
+    // Answers array for FAQ (Admins can answer)
+    public array $faqAnswers = [];
+
     public function mount(string $slug): void
     {
         $this->campaign = DonationCampaign::where('slug', $slug)
@@ -35,6 +45,11 @@ class extends Component
     public function title(): string
     {
         return $this->campaign->title . ' — Support Our Cause';
+    }
+
+    public function isAdmin(): bool
+    {
+        return auth()->check() && auth()->user()->hasAnyRole(['super-admin', 'admin']);
     }
 
     /** Bank Accounts to display payment instructions */
@@ -70,6 +85,25 @@ class extends Component
             ->orderByDesc('total_amount')
             ->take(5)
             ->get();
+    }
+
+    /** Real DB updates */
+    #[Computed]
+    public function dbUpdates()
+    {
+        return $this->campaign->updates()
+            ->with('user')
+            ->latest()
+            ->get();
+    }
+
+    /** Real DB FAQs */
+    #[Computed]
+    public function faqs()
+    {
+        return $this->campaign->faqs()
+            ->with(['user', 'answeredBy'])
+            ->get(); // Display all questions (answered and unanswered)
     }
 
     /** Predefined donation updates */
@@ -159,6 +193,96 @@ class extends Component
         // Reset form fields
         $this->reset(['customAmount', 'transactionId', 'note', 'isAnonymous']);
         $this->amount = '500';
+    }
+
+    public function addUpdate(): void
+    {
+        if (!$this->isAdmin()) {
+            $this->error('Unauthorized action.');
+            return;
+        }
+
+        $this->validate([
+            'newUpdateTitle' => 'required|string|min:3|max:255',
+            'newUpdateContent' => 'required|string|min:10',
+        ]);
+
+        \App\Models\DonationCampaignUpdate::create([
+            'campaign_id' => $this->campaign->id,
+            'user_id' => auth()->id(),
+            'title' => $this->newUpdateTitle,
+            'content' => $this->newUpdateContent,
+        ]);
+
+        $this->reset(['newUpdateTitle', 'newUpdateContent']);
+        $this->success('Campaign update posted successfully.');
+    }
+
+    public function deleteUpdate(int $id): void
+    {
+        if (!$this->isAdmin()) {
+            $this->error('Unauthorized action.');
+            return;
+        }
+
+        \App\Models\DonationCampaignUpdate::where('campaign_id', $this->campaign->id)->findOrFail($id)->delete();
+        $this->success('Campaign update deleted.');
+    }
+
+    public function askQuestion(): void
+    {
+        if (!auth()->check()) {
+            $this->redirectRoute('login');
+            return;
+        }
+
+        $this->validate([
+            'newQuestion' => 'required|string|min:5|max:500',
+        ]);
+
+        \App\Models\DonationCampaignFaq::create([
+            'campaign_id' => $this->campaign->id,
+            'user_id' => auth()->id(),
+            'question' => $this->newQuestion,
+        ]);
+
+        $this->reset(['newQuestion']);
+        $this->success('Your question has been submitted and is awaiting an answer.');
+    }
+
+    public function answerQuestion(int $faqId): void
+    {
+        if (!$this->isAdmin()) {
+            $this->error('Unauthorized action.');
+            return;
+        }
+
+        $answer = $this->faqAnswers[$faqId] ?? '';
+        if (empty(trim($answer))) {
+            $this->error('Please type an answer first.');
+            return;
+        }
+
+        $faq = \App\Models\DonationCampaignFaq::where('campaign_id', $this->campaign->id)->findOrFail($faqId);
+        $faq->update([
+            'answer' => $answer,
+            'answered_by' => auth()->id(),
+            'answered_at' => now(),
+        ]);
+
+        unset($this->faqAnswers[$faqId]);
+        $this->success('FAQ question answered successfully.');
+    }
+
+    public function deleteFaq(int $id): void
+    {
+        if (!$this->isAdmin()) {
+            $this->error('Unauthorized action.');
+            return;
+        }
+
+        \App\Models\DonationCampaignFaq::where('campaign_id', $this->campaign->id)->findOrFail($id)->delete();
+        $this->success('FAQ deleted.');
     }
 
     public function switchTab(string $tab): void

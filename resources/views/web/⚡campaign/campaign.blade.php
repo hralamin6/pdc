@@ -89,6 +89,45 @@
 
                     {{-- TAB CONTENT: Updates --}}
                     <div class="{{ $activeTab !== 'updates' ? 'hidden' : '' }} space-y-6">
+                        @if($this->isAdmin())
+                            <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-4">
+                                <h4 class="font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                    <x-icon name="o-pencil" class="w-5 h-5 text-primary" /> Post a Campaign Update
+                                </h4>
+                                <div class="space-y-3">
+                                    <x-input label="Update Title" wire:model.defer="newUpdateTitle" placeholder="e.g. Phase 1 Finished" required />
+                                    <x-textarea label="Content" wire:model.defer="newUpdateContent" placeholder="Describe the progress..." rows="3" required />
+                                    <x-button label="Publish Update" class="btn-primary btn-sm" wire:click="addUpdate" spinner="addUpdate" />
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- Real database updates --}}
+                        @foreach($this->dbUpdates as $update)
+                            <div class="relative pl-6 border-l-2 border-primary pb-6 last:pb-0">
+                                <div class="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-primary border-4 border-white dark:border-slate-900 shadow"></div>
+                                <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800">
+                                    <div class="flex justify-between items-start mb-2">
+                                        <h4 class="font-black text-slate-800 dark:text-slate-200">{{ $update->title }}</h4>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-[10px] text-slate-400 font-bold uppercase">{{ $update->created_at->diffForHumans() }}</span>
+                                            @if($this->isAdmin())
+                                                <button wire:click="deleteUpdate({{ $update->id }})" confirm="Are you sure you want to delete this update?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                    <x-icon name="o-trash" class="w-3.5 h-3.5" />
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">{{ $update->content }}</p>
+                                    <div class="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
+                                        <x-icon name="o-user" class="w-3.5 h-3.5" />
+                                        <span>{{ $update->user->name ?? 'Admin' }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+
+                        {{-- Predefined simulation updates --}}
                         @forelse($this->campaignUpdates as $update)
                         <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 pb-6 last:pb-0">
                             <div class="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-4 border-white dark:border-slate-900 shadow"></div>
@@ -105,12 +144,74 @@
                             </div>
                         </div>
                         @empty
-                            <p class="text-slate-400 text-sm italic">{{ __('No updates have been posted yet.') }}</p>
+                            @if(count($this->dbUpdates) === 0)
+                                <p class="text-slate-400 text-sm italic">{{ __('No updates have been posted yet.') }}</p>
+                            @endif
                         @endforelse
                     </div>
 
                     {{-- TAB CONTENT: FAQ --}}
-                    <div class="{{ $activeTab !== 'faq' ? 'hidden' : '' }} space-y-3">
+                    <div class="{{ $activeTab !== 'faq' ? 'hidden' : '' }} space-y-4">
+                        {{-- Ask a question form --}}
+                        @auth
+                            <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-3">
+                                <h4 class="font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
+                                    <x-icon name="o-question-mark-circle" class="w-5 h-5 text-primary" /> Ask a Question
+                                </h4>
+                                <div class="space-y-3">
+                                    <x-textarea wire:model.defer="newQuestion" placeholder="Type your question about this campaign here..." rows="2" required />
+                                    <x-button label="Submit Question" class="btn-primary btn-sm" wire:click="askQuestion" spinner="askQuestion" />
+                                </div>
+                            </div>
+                        @else
+                            <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-4 text-center border border-slate-200/50 dark:border-slate-800">
+                                <p class="text-sm text-slate-500 dark:text-slate-400">Please <a href="{{ route('login') }}" class="text-primary font-bold hover:underline">log in</a> to ask a question.</p>
+                            </div>
+                        @endauth
+
+                        {{-- Database user-submitted FAQs --}}
+                        @if(count($this->faqs) > 0)
+                            <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mt-6 mb-2">{{ __('Community Q&A') }}</h4>
+                            <div class="space-y-3">
+                                @foreach($this->faqs as $faq)
+                                    <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-3">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <span class="text-xs text-slate-400 font-bold block mb-1">Asked by {{ $faq->user->name ?? 'Member' }}</span>
+                                                <h5 class="font-bold text-slate-800 dark:text-slate-200 text-sm sm:text-base">Q: {{ $faq->question }}</h5>
+                                            </div>
+                                            @if($this->isAdmin())
+                                                <button wire:click="deleteFaq({{ $faq->id }})" confirm="Are you sure you want to delete this FAQ?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                    <x-icon name="o-trash" class="w-4 h-4" />
+                                                </button>
+                                            @endif
+                                        </div>
+
+                                        @if($faq->answer)
+                                            <div class="bg-white dark:bg-slate-900 rounded-xl p-3.5 border border-slate-100 dark:border-slate-800 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                                                <span class="font-black text-primary block mb-1">Answer from {{ $faq->answeredBy->name ?? 'Admin' }}:</span>
+                                                <p class="leading-relaxed">{{ $faq->answer }}</p>
+                                                <span class="text-[10px] text-slate-400 mt-2 block">{{ $faq->answered_at->diffForHumans() }}</span>
+                                            </div>
+                                        @else
+                                            @if($this->isAdmin())
+                                                <div class="space-y-2 mt-2">
+                                                    <x-textarea wire:model.defer="faqAnswers.{{ $faq->id }}" placeholder="Type the answer here..." rows="2" />
+                                                    <x-button label="Post Answer" class="btn-success btn-xs" wire:click="answerQuestion({{ $faq->id }})" spinner="answerQuestion({{ $faq->id }})" />
+                                                </div>
+                                            @else
+                                                <div class="text-xs text-slate-400 italic">
+                                                    <x-icon name="o-clock" class="w-3.5 h-3.5 inline mr-1" /> Awaiting response from administration...
+                                                </div>
+                                            @endif
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endif
+
+                        {{-- Predefined FAQ --}}
+                        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mt-6 mb-2">{{ __('General Campaign FAQ') }}</h4>
                         <div class="collapse collapse-plus bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200/50 dark:border-slate-800">
                             <input type="radio" name="faq-accordion" checked="checked" />
                             <div class="collapse-title text-sm font-black text-slate-800 dark:text-slate-200">

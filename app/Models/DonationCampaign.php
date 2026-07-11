@@ -35,6 +35,16 @@ class DonationCampaign extends Model implements HasMedia
         return $this->hasMany(Donation::class, 'campaign_id');
     }
 
+    public function updates(): HasMany
+    {
+        return $this->hasMany(DonationCampaignUpdate::class, 'campaign_id');
+    }
+
+    public function faqs(): HasMany
+    {
+        return $this->hasMany(DonationCampaignFaq::class, 'campaign_id');
+    }
+
     public function getCollectedAmountAttribute(): float
     {
         return (float) $this->donations()->where('status', 'confirmed')->sum('amount');
