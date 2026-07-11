@@ -127,27 +127,9 @@
                             </div>
                         @endforeach
 
-                        {{-- Predefined simulation updates --}}
-                        @forelse($this->campaignUpdates as $update)
-                        <div class="relative pl-6 border-l-2 border-slate-200 dark:border-slate-800 pb-6 last:pb-0">
-                            <div class="absolute -left-1.5 top-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 border-4 border-white dark:border-slate-900 shadow"></div>
-                            <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h4 class="font-black text-slate-800 dark:text-slate-200">{{ $update['title'] }}</h4>
-                                    <span class="text-[10px] text-slate-400 font-bold uppercase">{{ $update['date']->diffForHumans() }}</span>
-                                </div>
-                                <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{{ $update['body'] }}</p>
-                                <div class="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
-                                    <x-icon name="o-user" class="w-3.5 h-3.5" />
-                                    <span>{{ $update['author'] }}</span>
-                                </div>
-                            </div>
-                        </div>
-                        @empty
-                            @if(count($this->dbUpdates) === 0)
-                                <p class="text-slate-400 text-sm italic">{{ __('No updates have been posted yet.') }}</p>
-                            @endif
-                        @endforelse
+                        @if(count($this->dbUpdates) === 0)
+                            <p class="text-slate-400 text-sm italic">{{ __('No updates have been posted yet.') }}</p>
+                        @endif
                     </div>
 
                     {{-- TAB CONTENT: FAQ --}}
@@ -210,35 +192,9 @@
                             </div>
                         @endif
 
-                        {{-- Predefined FAQ --}}
-                        <h4 class="text-xs font-black uppercase tracking-wider text-slate-400 mt-6 mb-2">{{ __('General Campaign FAQ') }}</h4>
-                        <div class="collapse collapse-plus bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200/50 dark:border-slate-800">
-                            <input type="radio" name="faq-accordion" checked="checked" />
-                            <div class="collapse-title text-sm font-black text-slate-800 dark:text-slate-200">
-                                How can I verify my donation?
-                            </div>
-                            <div class="collapse-content text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Once you submit your payment via Bkash, Nagad, or Bank Transfer, input the Transaction Reference ID in the donation form. Our finance/accounting team checks and confirms the transaction against statements within 12–24 hours, updating your transaction status to "confirmed".
-                            </div>
-                        </div>
-                        <div class="collapse collapse-plus bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200/50 dark:border-slate-800">
-                            <input type="radio" name="faq-accordion" />
-                            <div class="collapse-title text-sm font-black text-slate-800 dark:text-slate-200">
-                                Can I donate anonymously?
-                            </div>
-                            <div class="collapse-content text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                Yes, simply check the "Donate Anonymously" option in the donation panel. Your name and profile will be completely hidden from the public feeds, donor wall, and leaderboard.
-                            </div>
-                        </div>
-                        <div class="collapse collapse-plus bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-200/50 dark:border-slate-800">
-                            <input type="radio" name="faq-accordion" />
-                            <div class="collapse-title text-sm font-black text-slate-800 dark:text-slate-200">
-                                Where are my donations stored?
-                            </div>
-                            <div class="collapse-content text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                                All funds are held in secure community treasury bank accounts managed by PSTU Dawah. Financial statements and audit breakdowns are regularly published for full accountability.
-                            </div>
-                        </div>
+                        @if(count($this->faqs) === 0)
+                            <p class="text-slate-400 text-sm italic">{{ __('No FAQs have been submitted yet.') }}</p>
+                        @endif
                     </div>
                 </div>
             </div>

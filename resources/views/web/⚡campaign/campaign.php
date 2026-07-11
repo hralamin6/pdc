@@ -106,49 +106,6 @@ class extends Component
             ->get(); // Display all questions (answered and unanswered)
     }
 
-    /** Predefined donation updates */
-    #[Computed]
-    public function campaignUpdates(): array
-    {
-        // Procedural updates based on campaign progress to keep it dynamic and real
-        $updates = [
-            [
-                'title' => 'Campaign Launched',
-                'body' => 'The donation campaign has been officially started. We appreciate your prayers and contributions to make this a success.',
-                'date' => $this->campaign->starts_at ?? $this->campaign->created_at,
-                'author' => 'Campaign Admin'
-            ]
-        ];
-
-        if ($this->campaign->progress_percentage >= 25) {
-            $updates[] = [
-                'title' => 'Quarter Milestone Reached!',
-                'body' => 'Thanks to your generous support, we have surpassed 25% of our target goal. May Allah reward all the donors.',
-                'date' => ($this->campaign->starts_at ?? $this->campaign->created_at)->addDays(3),
-                'author' => 'Campaign Admin'
-            ];
-        }
-
-        if ($this->campaign->progress_percentage >= 50) {
-            $updates[] = [
-                'title' => 'Halfway There!',
-                'body' => 'We are now 50% funded! The initial preparation and logistical setup for this campaign have started.',
-                'date' => ($this->campaign->starts_at ?? $this->campaign->created_at)->addDays(7),
-                'author' => 'Campaign Admin'
-            ];
-        }
-
-        if ($this->campaign->progress_percentage >= 80) {
-            $updates[] = [
-                'title' => 'Almost Funded!',
-                'body' => 'We are reaching the final stages of the fund collection. Please share this campaign with your family and friends.',
-                'date' => ($this->campaign->starts_at ?? $this->campaign->created_at)->addDays(12),
-                'author' => 'Campaign Admin'
-            ];
-        }
-
-        return array_reverse($updates);
-    }
 
     public function selectAmount(string $value): void
     {
