@@ -14,6 +14,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('order')->default(0);
             $table->enum('type', ['mcq', 'true_false', 'multi_select', 'short_text'])->default('mcq');
             $table->text('question_text');
+            $table->text('ideal_answer')->nullable();
             $table->string('question_image')->nullable(); // Spatie media path
             $table->decimal('marks', 4, 2)->default(1.00);
             $table->text('ai_explanation')->nullable();

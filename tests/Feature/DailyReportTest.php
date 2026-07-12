@@ -26,6 +26,7 @@ beforeEach(function () {
 
 it('auto-initializes default tracking items for a new user on dashboard view', function () {
     $user = User::factory()->create();
+    $user->givePermissionTo('daily-reports.view');
 
     $this->actingAs($user);
 
@@ -37,6 +38,7 @@ it('auto-initializes default tracking items for a new user on dashboard view', f
 
 it('allows submitting a daily report and updates streak correctly', function () {
     $user = User::factory()->create();
+    $user->givePermissionTo('daily-reports.view');
 
     $this->actingAs($user);
 
@@ -54,6 +56,7 @@ it('allows submitting a daily report and updates streak correctly', function () 
 
 it('does not double-increment streak when re-submitting report on the same day', function () {
     $user = User::factory()->create();
+    $user->givePermissionTo('daily-reports.view');
 
     $this->actingAs($user);
 

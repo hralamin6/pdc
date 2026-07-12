@@ -10,6 +10,11 @@ new #[Title('My Attempt History | PSTU Dawah')] #[Layout('layouts.web')] class e
 {
     use WithPagination;
 
+    public function mount(): void
+    {
+        $this->authorize('quiz.view');
+    }
+
     public function with(): array
     {
         $attempts = QuizAttempt::with(['quiz.quizzable'])

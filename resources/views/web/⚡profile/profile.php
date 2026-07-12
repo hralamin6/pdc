@@ -177,6 +177,7 @@ class extends Component
     // ==========================================
     public function mount(): void
     {
+        $this->authorize('profile.update');
         $user = Auth::user();
 
         $this->name = (string) $user->name;

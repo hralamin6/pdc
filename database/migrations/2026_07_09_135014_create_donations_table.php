@@ -31,9 +31,11 @@ return new class extends Migration
             $table->foreignId('collected_by')->nullable()->constrained('users')->nullOnDelete();
 
             $table->enum('payment_method', ['cash', 'bkash', 'nagad', 'bank', 'other'])->default('cash');
+            $table->string('transaction_id')->nullable();
+            $table->foreignId('bank_account_id')->nullable()->constrained('bank_accounts')->nullOnDelete();
 
-            // status: pending (needs treasurer approval if user submits), confirmed, rejected
-            $table->enum('status', ['pending', 'confirmed', 'rejected'])->default('pending');
+            // status: pending (needs treasurer approval if user submits), confirmed, rejected, pending_payment
+            $table->enum('status', ['pending', 'confirmed', 'rejected', 'pending_payment'])->default('pending');
 
             $table->boolean('is_anonymous')->default(false); // Hide name from public/members
 

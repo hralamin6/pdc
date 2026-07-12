@@ -19,6 +19,11 @@ new #[Title('Bank Accounts')] #[Layout('layouts.app')] class extends Component
     public string $notes = '';
     public bool $is_active = true;
 
+    public function mount(): void
+    {
+        $this->authorize('expenses.bank-accounts.manage');
+    }
+
     public function openModal(?int $id = null): void
     {
         $this->resetForm();

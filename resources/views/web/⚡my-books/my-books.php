@@ -55,7 +55,7 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
 
     public function mount(): void
     {
-        // Init properties if needed
+        $this->authorize('library.view');
     }
 
     #[Computed]

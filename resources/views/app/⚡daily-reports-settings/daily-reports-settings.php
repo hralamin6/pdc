@@ -23,6 +23,7 @@ new #[Title('Daily Report Settings')] #[Layout('layouts.app')] class extends Com
 
     public function mount()
     {
+        $this->authorize('daily-reports.view');
         UserReportItem::ensureDefaultsForUser(auth()->id());
         $this->loadItems();
     }

@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_active')->default(true);
 
             $table->timestamp('last_donated_at')->nullable(); // When the last successful donation for this pledge occurred
-
+            $table->timestamp('next_due_at')->nullable();
             $table->timestamps();
         });
     }

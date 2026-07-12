@@ -15,8 +15,12 @@ return new class extends Migration
             $table->id();
             $table->foreignId('halaqah_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->enum('status', ['rsvp', 'cancelled'])->default('rsvp');
+            $table->string('status')->default('rsvp');
+            $table->string('status_new')->default('rsvp');
             $table->boolean('attended')->default(false);
+            $table->boolean('preparation_completed')->default(false);
+            $table->string('check_in_method')->nullable();
+            $table->timestamp('checked_in_at')->nullable();
             $table->text('feedback')->nullable();
             $table->unsignedTinyInteger('rating')->nullable();
             $table->timestamps();

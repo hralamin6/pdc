@@ -59,6 +59,42 @@ class AppServiceProvider extends ServiceProvider
             'mail.from.address' => setting('site_email', config('mail.from.address')),
             'mail.from.name' => setting('site_name', config('mail.from.name')),
           ]);
+
+          // Dynamic AI SDK Config Overrides
+          $aiProvidersJson = setting('ai_sdk.providers');
+          if ($aiProvidersJson) {
+              $storedProviders = json_decode($aiProvidersJson, true);
+              if (is_array($storedProviders)) {
+                  $formattedProviders = [];
+                  foreach ($storedProviders as $key => $provider) {
+                      if (!empty($provider['is_enabled'])) {
+                          $formattedProviders[$key] = [
+                              'driver' => $provider['driver'],
+                              'key' => $provider['key'],
+                          ];
+                          if (!empty($provider['url'])) {
+                              $formattedProviders[$key]['url'] = $provider['url'];
+                          }
+                      }
+                  }
+                  config(['ai.providers' => array_merge(config('ai.providers', []), $formattedProviders)]);
+              }
+          }
+
+          $aiDefaultsJson = setting('ai_sdk.defaults');
+          if ($aiDefaultsJson) {
+              $storedDefaults = json_decode($aiDefaultsJson, true);
+              if (is_array($storedDefaults)) {
+                  config([
+                      'ai.default' => $storedDefaults['default'] ?? config('ai.default'),
+                      'ai.default_for_images' => $storedDefaults['default_for_images'] ?? config('ai.default_for_images'),
+                      'ai.default_for_audio' => $storedDefaults['default_for_audio'] ?? config('ai.default_for_audio'),
+                      'ai.default_for_transcription' => $storedDefaults['default_for_transcription'] ?? config('ai.default_for_transcription'),
+                      'ai.default_for_embeddings' => $storedDefaults['default_for_embeddings'] ?? config('ai.default_for_embeddings'),
+                      'ai.default_for_reranking' => $storedDefaults['default_for_reranking'] ?? config('ai.default_for_reranking'),
+                  ]);
+              }
+          }
         }
       } catch (\Exception $e) {
         // ignore if during install

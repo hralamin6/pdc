@@ -43,6 +43,7 @@ new #[Title('Expenses Management')] #[Layout('layouts.app')] class extends Compo
 
     public function mount(): void
     {
+        $this->authorize('expenses.manage');
         $this->month_filter = now()->format('Y-m');
         $this->expense_date = now()->format('Y-m-d');
     }

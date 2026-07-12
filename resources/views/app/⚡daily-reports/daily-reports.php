@@ -15,6 +15,7 @@ new #[Title('Daily Reports Dashboard')] #[Layout('layouts.app')] class extends C
 
     public function mount()
     {
+        $this->authorize('daily-reports.view');
         // Auto-initialize default tracking items for user if none exist
         UserReportItem::ensureDefaultsForUser(auth()->id());
     }

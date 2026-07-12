@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['ebook', 'physical'])->default('ebook');
+            $table->enum('type', ['ebook', 'physical', 'both'])->default('ebook');
             $table->foreignId('book_category_id')->nullable()->constrained('book_categories')->nullOnDelete();
             $table->foreignId('author_id')->nullable()->constrained('authors')->nullOnDelete();
             $table->foreignId('publication_id')->nullable()->constrained('publications')->nullOnDelete();

@@ -19,6 +19,7 @@ new #[Layout('layouts.web')] class extends Component
 
     public function mount(int $id): void
     {
+        $this->authorize('library.view');
         $this->hub = LibraryHub::with(['manager'])->findOrFail($id);
     }
 

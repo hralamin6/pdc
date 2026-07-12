@@ -29,6 +29,7 @@ new #[Title('Fund Transfers')] #[Layout('layouts.app')] class extends Component
 
     public function mount(): void
     {
+        $this->authorize('expenses.transfers.manage');
         $this->transfer_date = now()->format('Y-m-d');
     }
 

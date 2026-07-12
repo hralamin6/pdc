@@ -24,6 +24,11 @@ new #[Title('Expense Categories')] #[Layout('layouts.app')] class extends Compon
         'o-calendar' => 'Events', 'o-arrows-right-left' => 'Transfers', 'o-ellipsis-horizontal-circle' => 'Other',
     ];
 
+    public function mount(): void
+    {
+        $this->authorize('expenses.categories.manage');
+    }
+
     public function openModal(?int $id = null): void
     {
         $this->resetForm();

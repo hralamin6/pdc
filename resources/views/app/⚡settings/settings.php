@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Url;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Mary\Traits\Toast;
@@ -87,6 +88,18 @@ class extends Component
     public string $openaiApiKey = '';
     public string $openaiOrg = '';
     public string $openaiBaseUrl = '';
+    
+    // AI SDK (Dynamic Providers)
+    public array $aiProviders = [];
+    public array $aiDefaults = [];
+    
+    // New Custom Provider Modal State
+    public bool $customProviderModal = false;
+    public string $newProviderKey = '';
+    public string $newProviderDriver = 'openai';
+    public string $newProviderApiKey = '';
+    public string $newProviderUrl = '';
+
   public $output = '';
   public $selectedCommand = '';
   public $availableCommands = [];
@@ -178,6 +191,36 @@ class extends Component
         $this->openaiApiKey = (string) (setting('ai.openai.api_key', env('OPENAI_API_KEY', '')) ?? '');
         $this->openaiOrg = (string) (setting('ai.openai.org', env('OPENAI_ORG', '')) ?? '');
         $this->openaiBaseUrl = (string) (setting('ai.openai.base_url', env('OPENAI_BASE_URL', 'https://api.openai.com/v1')) ?? '');
+
+        // Load Dynamic AI SDK Settings
+        $storedProvidersJson = setting('ai_sdk.providers');
+        if ($storedProvidersJson) {
+            $this->aiProviders = json_decode($storedProvidersJson, true) ?? [];
+        } else {
+            $this->aiProviders = [];
+            foreach (config('ai.providers', []) as $key => $prov) {
+                $this->aiProviders[$key] = [
+                    'driver' => $prov['driver'] ?? 'openai',
+                    'key' => $prov['key'] ?? '',
+                    'url' => $prov['url'] ?? '',
+                    'is_enabled' => true,
+                ];
+            }
+        }
+
+        $storedDefaultsJson = setting('ai_sdk.defaults');
+        if ($storedDefaultsJson) {
+            $this->aiDefaults = json_decode($storedDefaultsJson, true) ?? [];
+        } else {
+            $this->aiDefaults = [
+                'default' => config('ai.default', 'mistral'),
+                'default_for_images' => config('ai.default_for_images', 'pollinations'),
+                'default_for_audio' => config('ai.default_for_audio', 'openai'),
+                'default_for_transcription' => config('ai.default_for_transcription', 'openai'),
+                'default_for_embeddings' => config('ai.default_for_embeddings', 'openai'),
+                'default_for_reranking' => config('ai.default_for_reranking', 'cohere'),
+            ];
+        }
     }
 
     public function saveGeneral(): void
@@ -349,6 +392,68 @@ class extends Component
         ]);
 
         $this->success('AI settings saved.', position: 'toast-bottom');
+    }
+
+    public function addCustomProvider(): void
+    {
+        $this->authorize('settings.update');
+
+        $this->validate([
+            'newProviderKey' => ['required', 'string', 'alpha_dash', 'max:50'],
+            'newProviderDriver' => ['required', 'string', 'max:50'],
+            'newProviderApiKey' => ['required', 'string', 'max:255'],
+            'newProviderUrl' => ['nullable', 'url', 'max:255'],
+        ]);
+
+        $key = strtolower($this->newProviderKey);
+
+        if (array_key_exists($key, $this->aiProviders)) {
+            $this->error("Provider key '{$key}' already exists.", position: 'toast-bottom');
+            return;
+        }
+
+        $this->aiProviders[$key] = [
+            'driver' => $this->newProviderDriver,
+            'key' => $this->newProviderApiKey,
+            'url' => $this->newProviderUrl,
+            'is_enabled' => true,
+        ];
+
+        // Reset fields & close modal
+        $this->newProviderKey = '';
+        $this->newProviderDriver = 'openai';
+        $this->newProviderApiKey = '';
+        $this->newProviderUrl = '';
+        $this->customProviderModal = false;
+
+        $this->success('Custom provider added to the list.', position: 'toast-bottom');
+    }
+
+    public function removeProvider(string $key): void
+    {
+        $this->authorize('settings.update');
+        unset($this->aiProviders[$key]);
+        $this->success("Provider '{$key}' removed.", position: 'toast-bottom');
+    }
+
+    public function saveAiSdk(): void
+    {
+        $this->authorize('settings.update');
+
+        SettingModel::set('ai_sdk.providers', json_encode($this->aiProviders));
+        SettingModel::set('ai_sdk.defaults', json_encode($this->aiDefaults));
+
+        $this->success('AI SDK Providers and defaults saved successfully.', position: 'toast-bottom');
+    }
+
+    #[Computed]
+    public function activeProviderOptions(): array
+    {
+        return collect($this->aiProviders)
+            ->filter(fn($p) => !empty($p['is_enabled']))
+            ->map(fn($p, $k) => ['id' => $k, 'name' => ucfirst($k) . ' (' . $p['driver'] . ')'])
+            ->values()
+            ->toArray();
     }
 
     public function saveBranding(): void

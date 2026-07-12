@@ -14,6 +14,11 @@ new #[Title('Islamic Quizzes | PSTU Dawah')] #[Layout('layouts.web')] class exte
     public string $search = '';
     public string $mode = 'all'; // 'all' | 'async' | 'live'
 
+    public function mount(): void
+    {
+        $this->authorize('quiz.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

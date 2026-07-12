@@ -12,6 +12,11 @@ new #[Title('Leaderboard | PSTU Dawah')] #[Layout('layouts.web')] class extends 
 
     public string $search = '';
 
+    public function mount(): void
+    {
+        $this->authorize('quiz.view');
+    }
+
     public function updatingSearch(): void
     {
         $this->resetPage();

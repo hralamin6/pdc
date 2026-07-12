@@ -36,7 +36,7 @@ class PermissionSeeder extends Seeder
                 'backups.view', 'backups.create', 'backups.download', 'backups.delete', 'backups.manage-schedules', 'backups.cleanup',
             ],
             'translate' => [
-                'translations.view', 'translations.create', 'translations.update', 'translations.delete', 'translations.scan', 'translations.import', 'translations.export', 'translations.ai-translate',
+                'translations.view', 'translations.create', 'translations.update', 'translations.delete', 'translations.scan', 'translations.import', 'translations.export', 'translations.ai-translate', 'translations.manage',
             ],
             'pages' => [
                 'pages.view', 'pages.create', 'pages.edit', 'pages.delete',

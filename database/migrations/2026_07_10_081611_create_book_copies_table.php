@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('status', ['available', 'borrowed', 'lost'])->default('available');
             $table->boolean('is_borrowable')->default(true);
             $table->string('condition')->nullable(); // e.g. "New", "Good", "Worn"
+            $table->foreignId('added_by')->nullable()->constrained('users')->nullOnDelete();
 
             $table->timestamps();
         });

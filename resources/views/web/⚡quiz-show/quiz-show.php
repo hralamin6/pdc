@@ -13,6 +13,7 @@ new #[Title('Quiz Details | PSTU Dawah')] #[Layout('layouts.web')] class extends
 
     public function mount(Quiz $quiz): void
     {
+        $this->authorize('quiz.view');
         $this->quiz = $quiz->load(['questions.options', 'quizzable']);
         
         // Ensure the quiz is published or live
@@ -27,6 +28,8 @@ new #[Title('Quiz Details | PSTU Dawah')] #[Layout('layouts.web')] class extends
             $this->redirect(route('login'), navigate: true);
             return;
         }
+
+        $this->authorize('quiz.attempt');
 
         $halaqah = $this->quiz->quizzable instanceof Halaqah ? $this->quiz->quizzable : Halaqah::first();
 

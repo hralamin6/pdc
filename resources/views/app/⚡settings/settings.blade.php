@@ -21,6 +21,7 @@
         <x-menu-item :title="__('OAuth')" icon="o-shield-check" wire:click="$set('tab', 'oauth')" :active="$tab === 'oauth'" />
         <x-menu-item :title="__('Pusher')" icon="o-bell" wire:click="$set('tab', 'pusher')" :active="$tab === 'pusher'" />
         <x-menu-item :title="__('AI')" icon="o-sparkles" wire:click="$set('tab', 'ai')" :active="$tab === 'ai'" />
+        <x-menu-item :title="__('AI SDK (Dynamic)')" icon="o-sparkles" wire:click="$set('tab', 'ai-sdk')" :active="$tab === 'ai-sdk'" />
         <x-menu-item :title="__('Image & Branding')" icon="o-photo" wire:click="$set('tab', 'image')" :active="$tab === 'image'" />
         <x-menu-item :title="__('App')" icon="o-wrench-screwdriver" wire:click="$set('tab', 'app')" :active="$tab === 'app'" />
       </x-menu>
@@ -220,6 +221,122 @@
             @endcan
           </form>
         </x-card>
+      @endif
+
+      @if($tab === 'ai-sdk')
+        <div class="space-y-6">
+          <x-card>
+            <div class="flex justify-between items-center mb-5">
+              <x-header :title="__('AI SDK Dynamics')" :subtitle="__('Configure Laravel AI SDK providers and defaults stored in DB.')" class="!mb-0" />
+              @can('settings.update')
+                <x-button label="{{ __('Add Custom Provider') }}" icon="o-plus" class="btn-primary btn-sm" wire:click="$set('customProviderModal', true)" />
+              @endcan
+            </div>
+
+            <form wire:submit="saveAiSdk" class="space-y-6">
+              
+              <!-- Defaults Configuration -->
+              <div class="bg-base-200/50 p-4 rounded-xl space-y-4">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-base-content/70 flex items-center gap-2">
+                  <x-icon name="o-adjustments-horizontal" class="w-4 h-4" />
+                  {{ __('Default Routing Rules') }}
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <x-select label="{{ __('Default Text Provider') }}" wire:model.defer="aiDefaults.default" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                  <x-select label="{{ __('Default for Images') }}" wire:model.defer="aiDefaults.default_for_images" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                  <x-select label="{{ __('Default for Audio') }}" wire:model.defer="aiDefaults.default_for_audio" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                  <x-select label="{{ __('Default for Transcription') }}" wire:model.defer="aiDefaults.default_for_transcription" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                  <x-select label="{{ __('Default for Embeddings') }}" wire:model.defer="aiDefaults.default_for_embeddings" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                  <x-select label="{{ __('Default for Reranking') }}" wire:model.defer="aiDefaults.default_for_reranking" :options="$this->activeProviderOptions" placeholder="{{ __('Select Default') }}" />
+                </div>
+              </div>
+
+              <!-- Providers Settings List -->
+              <div class="space-y-4">
+                <h3 class="text-sm font-bold uppercase tracking-wider text-base-content/70 flex items-center gap-2">
+                  <x-icon name="o-server" class="w-4 h-4" />
+                  {{ __('Configured Providers') }}
+                </h3>
+                
+                <div class="space-y-3">
+                  @forelse($aiProviders as $pKey => $provider)
+                    <div class="border border-base-300 rounded-xl p-4 bg-base-100 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-sm hover:border-primary/30 transition-all duration-300">
+                      <div class="flex items-center gap-3">
+                        <div class="avatar placeholder">
+                          <div class="bg-primary/10 text-primary font-bold rounded-lg w-12 h-12 flex items-center justify-center">
+                            <span class="text-sm uppercase">{{ substr($pKey, 0, 2) }}</span>
+                          </div>
+                        </div>
+                        <div>
+                          <div class="font-bold flex items-center gap-2">
+                            <span>{{ ucfirst($pKey) }}</span>
+                            <x-badge value="{{ $provider['driver'] }}" class="badge-neutral badge-xs uppercase" />
+                          </div>
+                          @if(!empty($provider['url']))
+                            <div class="text-xs text-base-content/50 font-mono mt-0.5 truncate max-w-[250px]" title="{{ $provider['url'] }}">{{ $provider['url'] }}</div>
+                          @else
+                            <div class="text-xs text-base-content/50 mt-0.5">{{ __('Standard SDK endpoint') }}</div>
+                          @endif
+                        </div>
+                      </div>
+                      
+                      <div class="flex items-center gap-4 flex-wrap md:flex-nowrap">
+                        <div class="w-48">
+                          <x-input type="password" placeholder="{{ __('API Key') }}" wire:model.defer="aiProviders.{{ $pKey }}.key" class="input-sm font-mono" />
+                        </div>
+                        @if(array_key_exists('url', $provider))
+                          <div class="w-64">
+                            <x-input placeholder="{{ __('Base URL') }}" wire:model.defer="aiProviders.{{ $pKey }}.url" class="input-sm font-mono" />
+                          </div>
+                        @endif
+                        <x-toggle wire:model="aiProviders.{{ $pKey }}.is_enabled" label="{{ __('Enabled') }}" class="toggle-primary toggle-sm" />
+                        
+                        <x-button icon="o-trash" wire:click="removeProvider('{{ $pKey }}')" class="btn-sm btn-ghost text-error" tooltip="{{ __('Delete Provider') }}" wire:confirm="{{ __('Remove this provider configuration?') }}" />
+                      </div>
+                    </div>
+                  @empty
+                    <div class="text-center py-8 text-base-content/40 border border-dashed border-base-300 rounded-xl">
+                      <x-icon name="o-document-text" class="w-8 h-8 mx-auto mb-2 opacity-50" />
+                      <p>{{ __('No AI providers configured yet.') }}</p>
+                    </div>
+                  @endforelse
+                </div>
+              </div>
+
+              @can('settings.update')
+                <div class="flex gap-2">
+                  <x-button type="submit" spinner="saveAiSdk" class="btn-primary" icon="o-check">{{ __('Save AI SDK Settings') }}</x-button>
+                  <x-button type="button" class="btn-ghost" icon="o-arrow-path" wire:click="$refresh">{{ __('Reset') }}</x-button>
+                </div>
+              @endcan
+
+            </form>
+          </x-card>
+
+          <!-- Custom Provider Creation Modal -->
+          <x-modal wire:model="customProviderModal" title="{{ __('Add Custom AI Provider') }}">
+            <x-form wire:submit="addCustomProvider" class="space-y-4">
+              <x-input label="{{ __('Unique Key / Name') }}" wire:model.defer="newProviderKey" placeholder="e.g. cerebras, my-router" hint="{{ __('Must be alpha-numeric, all lower case') }}" required />
+              <x-select label="{{ __('Driver') }}" wire:model.defer="newProviderDriver" :options="[
+                ['id' => 'openai', 'name' => 'OpenAI'],
+                ['id' => 'groq', 'name' => 'Groq'],
+                ['id' => 'gemini', 'name' => 'Gemini'],
+                ['id' => 'mistral', 'name' => 'Mistral'],
+                ['id' => 'openrouter', 'name' => 'OpenRouter'],
+                ['id' => 'pollinations', 'name' => 'Pollinations'],
+                ['id' => 'cohere', 'name' => 'Cohere'],
+                ['id' => 'anthropic', 'name' => 'Anthropic']
+              ]" required />
+              <x-input label="{{ __('API Key') }}" wire:model.defer="newProviderApiKey" type="password" required />
+              <x-input label="{{ __('Base URL / Endpoint (Optional)') }}" wire:model.defer="newProviderUrl" placeholder="e.g. https://api.cerebras.ai/v1" />
+
+              <x-slot:actions>
+                <x-button label="{{ __('Cancel') }}" wire:click="$set('customProviderModal', false)" class="btn-ghost" />
+                <x-button label="{{ __('Add Provider') }}" type="submit" class="btn-primary" spinner="addCustomProvider" />
+              </x-slot:actions>
+            </x-form>
+          </x-modal>
+        </div>
       @endif
 
     </div>

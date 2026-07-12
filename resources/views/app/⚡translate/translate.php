@@ -179,6 +179,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function saveAllTranslations()
     {
+        $this->authorize('translations.manage');
         try {
             $savedCount = 0;
 
@@ -224,6 +225,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function saveNewKey()
     {
+        $this->authorize('translations.manage');
         $this->validate(['newKey' => 'required|string']);
 
         try {
@@ -241,6 +243,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function deleteKey($key)
     {
+        $this->authorize('translations.manage');
         try {
             foreach ($this->languages as $lang) {
                 $this->translationService->deleteKey($lang['code'], $key);
@@ -267,6 +270,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function saveNewLanguage()
     {
+        $this->authorize('translations.manage');
         $this->validate(['newLanguageCode' => 'required|string|size:2|alpha']);
 
         try {
@@ -283,6 +287,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function deleteLanguage($code)
     {
+        $this->authorize('translations.manage');
         try {
             if ($this->translationService->deleteLanguage($code)) {
                 $this->loadLanguages();
@@ -326,6 +331,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function importLanguageFile()
     {
+        $this->authorize('translations.manage');
         $this->validate([
             'importJson' => 'required|string',
         ]);
@@ -364,6 +370,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function syncScannedKeys()
     {
+        $this->authorize('translations.manage');
         try {
             $this->translationService->syncKeys($this->scannedKeys);
             $this->scanModal = false;
@@ -389,6 +396,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
     public function autoTranslate()
     {
+        $this->authorize('translations.manage');
         $this->validate(['aiTargetLanguage' => 'required|string']);
 
         try {

@@ -101,6 +101,11 @@ class extends Component
         ];
     }
 
+    public function mount(): void
+    {
+        $this->authorize('library.view');
+    }
+
     public function updatedSearch(): void { $this->resetPage(); }
     public function updatedCategoryId(): void { $this->resetPage(); }
     public function updatedTypeFilter(): void { $this->resetPage(); }

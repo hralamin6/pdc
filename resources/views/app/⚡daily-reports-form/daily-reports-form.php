@@ -23,6 +23,7 @@ new #[Title('Fill Daily Report')] #[Layout('layouts.app')] class extends Compone
 
     public function mount()
     {
+        $this->authorize('daily-reports.view');
         $user = auth()->user();
         UserReportItem::ensureDefaultsForUser($user->id);
 

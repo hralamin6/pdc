@@ -23,6 +23,7 @@ new #[Layout('layouts.web')] class extends Component
 
     public function mount(int $id): void
     {
+        $this->authorize('library.view');
         $this->user = User::with(['media'])->findOrFail($id);
     }
 

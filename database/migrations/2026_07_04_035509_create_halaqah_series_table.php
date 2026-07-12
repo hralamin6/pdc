@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('mentor_id')->constrained('users')->cascadeOnDelete();
             $table->string('title');
             $table->text('description')->nullable();
+            $table->enum('status', ['draft', 'active', 'completed', 'cancelled'])->default('draft');
+            $table->string('banner_path')->nullable();
+            $table->string('target_audience_level')->nullable(); // beginner, intermediate, advanced
             $table->timestamps();
         });
     }

@@ -30,6 +30,7 @@ new #[Title('Monthly Treasury Reports')] #[Layout('layouts.app')] class extends 
 
     public function mount(): void
     {
+        $this->authorize('expenses.reports.manage');
         $this->year = now()->format('Y');
         $this->month = now()->format('m');
     }
