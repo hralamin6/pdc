@@ -41,7 +41,10 @@
                         @elseif($req->status === 'active')
                             <div class="text-right">
                                 <div class="text-xs text-base-content/50 mb-1">Due: <span class="font-bold {{ $req->due_date->isPast() ? 'text-error' : 'text-base-content' }}">{{ $req->due_date->format('M d, Y') }}</span></div>
-                                <x-button label="Book Returned" icon="o-arrow-path" class="btn-info text-white btn-sm w-full" wire:click="confirmReturned({{ $req->id }})" wire:confirm="Are you sure you received the book back?" />
+                                <div class="flex gap-2">
+                                    <x-button label="Remind" icon="o-bell" class="btn-warning btn-sm" wire:click="sendReminder({{ $req->id }})" />
+                                    <x-button label="Book Returned" icon="o-arrow-path" class="btn-info text-white btn-sm" wire:click="confirmReturned({{ $req->id }})" wire:confirm="Are you sure you received the book back?" />
+                                </div>
                             </div>
                         @endif
                     </div>

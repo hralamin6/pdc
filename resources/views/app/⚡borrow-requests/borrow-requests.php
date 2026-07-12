@@ -42,7 +42,7 @@ new #[Title('Borrow Requests')] #[Layout('layouts.app')] class extends Component
 
     public function acceptRequest($id)
     {
-        $req = BorrowRequest::whereHas('bookCopy', fn($q) => $q->where('owner_id', auth()->id()))->findOrFail($id);
+        $req = BorrowRequest::with(['borrower', 'bookCopy.book'])->whereHas('bookCopy', fn($q) => $q->where('owner_id', auth()->id()))->findOrFail($id);
         if ($req->status !== 'pending') return;
 
         // Auto-reject other pending requests for this same copy
@@ -52,6 +52,16 @@ new #[Title('Borrow Requests')] #[Layout('layouts.app')] class extends Component
             ->update(['status' => 'rejected']);
 
         $req->update(['status' => 'accepted']);
+
+        if ($req->borrower) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'accepted',
+                auth()->user()->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+
         $this->success('Request accepted. Please physically hand over the book.');
         unset($this->incomingRequests);
     }
@@ -68,10 +78,20 @@ new #[Title('Borrow Requests')] #[Layout('layouts.app')] class extends Component
 
     public function markGiven($id)
     {
-        $req = BorrowRequest::whereHas('bookCopy', fn($q) => $q->where('owner_id', auth()->id()))->findOrFail($id);
+        $req = BorrowRequest::with(['borrower', 'bookCopy.book'])->whereHas('bookCopy', fn($q) => $q->where('owner_id', auth()->id()))->findOrFail($id);
         if ($req->status !== 'accepted') return;
 
         $req->update(['status' => 'given']);
+
+        if ($req->borrower) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'given',
+                auth()->user()->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+
         $this->success('Marked as given. Waiting for borrower to confirm receipt.');
         unset($this->incomingRequests);
     }
@@ -92,11 +112,28 @@ new #[Title('Borrow Requests')] #[Layout('layouts.app')] class extends Component
         unset($this->incomingRequests);
     }
 
+    public function sendReminder($id)
+    {
+        $req = BorrowRequest::with(['borrower', 'bookCopy.owner', 'bookCopy.book'])->whereHas('bookCopy', fn($q) => $q->where('owner_id', auth()->id()))->findOrFail($id);
+        if ($req->status !== 'active') return;
+
+        if ($req->borrower) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'reminder',
+                auth()->user()->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+
+        $this->success('Return reminder sent to the borrower.');
+    }
+
     // --- BORROWER ACTIONS ---
 
     public function confirmReceived($id)
     {
-        $req = BorrowRequest::where('borrower_id', auth()->id())->findOrFail($id);
+        $req = BorrowRequest::with(['bookCopy.owner', 'bookCopy.book'])->where('borrower_id', auth()->id())->findOrFail($id);
         if ($req->status !== 'given') return;
 
         $req->update([
@@ -105,6 +142,15 @@ new #[Title('Borrow Requests')] #[Layout('layouts.app')] class extends Component
         ]);
         
         $req->bookCopy->update(['status' => 'borrowed']);
+
+        if ($req->bookCopy && $req->bookCopy->owner) {
+            $req->bookCopy->owner->notify(new \App\Notifications\BookNotification(
+                'received',
+                auth()->user()->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
 
         $this->success('Book received! Due date has been set.');
         unset($this->outgoingRequests);

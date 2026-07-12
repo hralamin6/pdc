@@ -52,3 +52,56 @@ Artisan::command('botbook:weekly-categories', function () {
 Artisan::command('botbook:hourly-posts', function () {
     Artisan::call('botbook:generate-posts', ['count' => 1]);
 })->purpose('Generate 5 AI-powered blog posts every hour')->everyFiveMinutes();
+
+Schedule::call(function () {
+    // 1. Due tomorrow (before one day reminder)
+    $dueTomorrow = \App\Models\BorrowRequest::with(['borrower', 'bookCopy.owner', 'bookCopy.book'])
+        ->where('status', 'active')
+        ->whereDate('due_date', \Carbon\Carbon::tomorrow())
+        ->get();
+
+    foreach ($dueTomorrow as $req) {
+        if ($req->borrower && $req->bookCopy && $req->bookCopy->owner) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'reminder_tomorrow',
+                $req->bookCopy->owner->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+    }
+
+    // 2. Due today (same day reminder)
+    $dueToday = \App\Models\BorrowRequest::with(['borrower', 'bookCopy.owner', 'bookCopy.book'])
+        ->where('status', 'active')
+        ->whereDate('due_date', \Carbon\Carbon::today())
+        ->get();
+
+    foreach ($dueToday as $req) {
+        if ($req->borrower && $req->bookCopy && $req->bookCopy->owner) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'reminder_today',
+                $req->bookCopy->owner->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+    }
+
+    // 3. Due yesterday (next day/overdue reminder)
+    $dueYesterday = \App\Models\BorrowRequest::with(['borrower', 'bookCopy.owner', 'bookCopy.book'])
+        ->where('status', 'active')
+        ->whereDate('due_date', \Carbon\Carbon::yesterday())
+        ->get();
+
+    foreach ($dueYesterday as $req) {
+        if ($req->borrower && $req->bookCopy && $req->bookCopy->owner) {
+            $req->borrower->notify(new \App\Notifications\BookNotification(
+                'reminder_overdue',
+                $req->bookCopy->owner->name,
+                $req->bookCopy->book->title,
+                route('web.my-books')
+            ));
+        }
+    }
+})->daily();

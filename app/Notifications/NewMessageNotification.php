@@ -15,6 +15,7 @@ class NewMessageNotification extends Notification implements ShouldQueue
     use Queueable;
 
     protected $message;
+
     protected $sendPush;
 
     /**
@@ -33,7 +34,7 @@ class NewMessageNotification extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        $channels = ['database']; // Always send database notification
+        $channels = ['broadcast']; // Always send database and broadcast notification
 
         // Send push notification if:
         // 1. User is online (has active session)
@@ -51,10 +52,10 @@ class NewMessageNotification extends Notification implements ShouldQueue
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('New message from ' . $this->message->user->name)
-            ->line($this->message->user->name . ' sent you a message.')
-            ->line('"' . \Illuminate\Support\Str::limit($this->message->body, 100) . '"')
-            ->action('View Message', route('app.chat', ['conversation' => $this->message->conversation_id]))
+            ->subject('New message from '.$this->message->user->name)
+            ->line($this->message->user->name.' sent you a message.')
+            ->line('"'.\Illuminate\Support\Str::limit($this->message->body, 100).'"')
+            ->action('View Message', route('web.chat', ['conversation' => $this->message->conversation_id]))
             ->line('Thank you for using our application!');
     }
 
@@ -67,27 +68,27 @@ class NewMessageNotification extends Notification implements ShouldQueue
         $hasAttachment = $this->message->hasAttachments();
 
         // Determine body text
-        if ($hasAttachment && !$this->message->body) {
+        if ($hasAttachment && ! $this->message->body) {
             $bodyText = '📎 Sent an attachment';
         } elseif ($hasAttachment && $this->message->body) {
-            $bodyText = $this->message->body . ' 📎';
+            $bodyText = $this->message->body.' 📎';
         } else {
             $bodyText = $this->message->body;
         }
 
         return (new WebPushMessage)
-            ->title('💬 ' . $sender->name)
+            ->title('💬 '.$sender->name)
             ->icon($sender->avatar_url)
             ->body(\Illuminate\Support\Str::limit($bodyText, 100))
             ->badge('/notification-badge.png')
-            ->tag('chat-' . $this->message->conversation_id) // Group notifications by conversation
+            ->tag('chat-'.$this->message->conversation_id) // Group notifications by conversation
             ->renotify(true) // Vibrate/sound even if notification is replaced
             ->requireInteraction(false) // Auto-dismiss after timeout
             ->action('Reply', 'reply')
             ->action('View', 'view')
             ->action('Mark as Read', 'mark_read')
             ->data([
-                'url' => route('app.chat', ['conversation' => $this->message->conversation_id]),
+                'url' => route('web.chat', ['conversation' => $this->message->conversation_id]),
                 'conversation_id' => $this->message->conversation_id,
                 'message_id' => $this->message->id,
                 'sender_id' => $sender->id,

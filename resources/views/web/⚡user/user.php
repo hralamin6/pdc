@@ -216,7 +216,7 @@ class extends Component
             return;
         }
         $conversation = Conversation::findOrCreateBetween(auth()->id(), $this->user->id);
-        $this->redirectRoute('app.chat', ['conversation' => $conversation->id]);
+        $this->redirectRoute('web.chat', ['conversation' => $conversation->id]);
     }
 
     public function switchTab(string $tab): void

@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 new class extends Component {
@@ -22,10 +23,67 @@ new class extends Component {
             $this->redirect(url()->previous(), navigate: true);
         }
     }
+
+    public function getUnreadNotificationsCountProperty(): int
+    {
+        return auth()->user()?->unreadNotifications()->count() ?? 0;
+    }
+
+    public function getUnreadMessagesCountProperty(): int
+    {
+        if (!auth()->check()) {
+            return 0;
+        }
+
+        return \App\Models\Message::whereIn('conversation_id', auth()->user()->conversations->pluck('id'))
+            ->where('user_id', '!=', auth()->id())
+            ->whereNull('read_at')
+            ->where('is_deleted', false)
+            ->count();
+    }
+
+    public function getRecentNotificationsProperty()
+    {
+        return auth()->user()
+            ?->unreadNotifications()
+            ->latest()
+            ->take(5)
+            ->get() ?? collect();
+    }
+
+    public function markAsReadAndRedirect(string $notificationId, string $url)
+    {
+        if (auth()->check()) {
+            $notification = auth()->user()->unreadNotifications()->find($notificationId);
+            if ($notification) {
+                $notification->markAsRead();
+            }
+        }
+        return $this->redirect($url, navigate: true);
+    }
+
+    public function getListeners(): array
+    {
+        if (auth()->check()) {
+            return [
+                "echo-private:App.Models.User." . auth()->id() . ",.Illuminate\\Notifications\\Events\\BroadcastNotificationCreated" => 'refreshNotificationCount',
+                "echo-private:user." . auth()->id() . ",notification" => 'refreshNotificationCount',
+                "echo-private:App.Models.User." . auth()->id() . ",notification" => 'refreshNotificationCount',
+                "notification-received" => 'refreshNotificationCount',
+                "message-received" => 'refreshNotificationCount',
+            ];
+        }
+        return [];
+    }
+
+    public function refreshNotificationCount(): void
+    {
+        $this->dispatch('$refresh');
+    }
 };
 ?>
 
-<div
+<div x-cloak
     x-data="{
         scrolled: false,
         openMenu: null,
@@ -180,32 +238,169 @@ new class extends Component {
                     </a>
                 </div>
 
-                {{-- Desktop Actions --}}
-                <div class="hidden lg:flex items-center gap-2">
-                    {{-- Language --}}
-                    <x-dropdown class="btn-ghost btn-sm btn-circle shadow-none" no-x-anchor right>
-                        <x-slot:trigger>
-                            <button class="btn btn-ghost btn-sm btn-circle text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
-                                <x-icon name="o-language" class="w-4 h-4" />
-                            </button>
-                        </x-slot:trigger>
-                        @foreach($languages as $code => $lang)
-                            <x-menu-item :title="$lang['flag'] . ' ' . $lang['name']"
-                                wire:click="switchLanguage('{{ $code }}')"
-                                class="rounded-xl m-1 {{ app()->getLocale() === $code ? 'text-primary font-bold bg-primary/10' : '' }}" />
-                        @endforeach
-                    </x-dropdown>
+                {{-- Right Side Actions --}}
+                <div class="flex items-center gap-1 sm:gap-2">
+                    {{-- Universal Actions (Lang & Theme) --}}
+                    <div class="flex items-center">
+                        {{-- Language --}}
+                        <x-dropdown class="btn-ghost btn-sm btn-circle shadow-none" no-x-anchor right>
+                            <x-slot:trigger>
+                                <button class="btn btn-ghost btn-sm btn-circle text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">
+                                    <x-icon name="o-language" class="w-4 h-4" />
+                                </button>
+                            </x-slot:trigger>
+                            @foreach($languages as $code => $lang)
+                                <x-menu-item :title="$lang['flag'] . ' ' . $lang['name']"
+                                    wire:click="switchLanguage('{{ $code }}')"
+                                    class="rounded-xl m-1 {{ app()->getLocale() === $code ? 'text-primary font-bold bg-primary/10' : '' }}" />
+                            @endforeach
+                        </x-dropdown>
 
-                    {{-- Theme --}}
-                    <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500 dark:text-slate-400" x-cloak />
+                        {{-- Theme --}}
+                        <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500 dark:text-slate-400" x-cloak />
+                    </div>
 
-                    <div class="w-px h-5 bg-slate-200 dark:bg-white/10 mx-1"></div>
+                    {{-- Desktop Only Actions --}}
+                    <div class="hidden lg:flex items-center gap-2">
+                        <div class="w-px h-5 bg-slate-200 dark:bg-white/10 mx-1"></div>
 
-                    @auth
-                        <a href="{{ route('app.dashboard') }}" wire:navigate
-                           class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
-                            <x-icon name="o-squares-2x2" class="w-4 h-4" /> Dashboard
+                        @auth
+                        {{-- Messages Button --}}
+                        <a href="{{ route('web.chat') }}" wire:navigate class="relative p-2.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 focus:outline-none mr-1.5">
+                            <x-icon name="o-chat-bubble-left-right" class="w-5 h-5" />
+                            @if($this->unreadMessagesCount > 0)
+                                <span class="absolute top-1 right-1 w-4 h-4 bg-primary text-[9px] font-black text-white rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
+                                    {{ $this->unreadMessagesCount }}
+                                </span>
+                                <span class="absolute top-1 right-1 w-4 h-4 bg-primary rounded-full ring-2 ring-white dark:ring-slate-900 animate-ping opacity-75"></span>
+                            @endif
                         </a>
+
+                        {{-- Notifications Dropdown --}}
+                        <div class="relative mr-3" x-data="{ open: false }" @click.away="open = false">
+                            <button @click="open = !open" class="relative p-2.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all rounded-xl hover:bg-slate-100 dark:hover:bg-white/5 focus:outline-none">
+                                <x-icon name="o-bell" class="w-5 h-5" />
+                                @if($this->unreadNotificationsCount > 0)
+                                    <span class="absolute top-1 right-1 w-4 h-4 bg-primary text-[9px] font-black text-white rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900">
+                                        {{ $this->unreadNotificationsCount }}
+                                    </span>
+                                    <span class="absolute top-1 right-1 w-4 h-4 bg-primary rounded-full ring-2 ring-white dark:ring-slate-900 animate-ping opacity-75"></span>
+                                @endif
+                            </button>
+
+                            {{-- Dropdown Menu --}}
+                            <div x-show="open"
+                                 x-cloak
+                                 x-transition:enter="transition ease-out duration-200"
+                                 x-transition:enter-start="opacity-0 scale-95 translate-y-2"
+                                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                 x-transition:leave="transition ease-in duration-150"
+                                 x-transition:leave-start="opacity-100 scale-100"
+                                 x-transition:leave-end="opacity-0 scale-95"
+                                 class="absolute right-0 mt-2.5 w-80 bg-white dark:bg-slate-900 border border-slate-200/50 dark:border-slate-800/80 rounded-2xl shadow-xl z-50 overflow-hidden">
+                                
+                                {{-- Header --}}
+                                <div class="px-4 py-3 bg-slate-50/50 dark:bg-slate-950/20 border-b border-slate-200/50 dark:border-slate-800/80 flex items-center justify-between">
+                                    <span class="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-350">
+                                        {{ __('Notifications') }}
+                                    </span>
+                                    @if($this->unreadNotificationsCount > 0)
+                                        <span class="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-[10px] font-black">
+                                            {{ $this->unreadNotificationsCount }} {{ __('New') }}
+                                        </span>
+                                    @endif
+                                </div>
+
+                                {{-- Notification list --}}
+                                <div class="max-h-72 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/60">
+                                    @forelse($this->recentNotifications as $notification)
+                                        @php
+                                            $data = $notification->data;
+                                            $targetUrl = $data['url'] ?? $data['action_url'] ?? route('web.notifications');
+                                            $isChat = str_contains($notification->type, 'NewMessageNotification');
+                                            $icon = $data['icon'] ?? ($isChat ? 'o-chat-bubble-left-right' : 'o-bell');
+                                            $type = $data['type'] ?? 'info';
+                                            $colorClass = match($type) {
+                                                'success' => 'text-emerald-500 bg-emerald-500/10 dark:bg-emerald-500/20',
+                                                'error'   => 'text-rose-500 bg-rose-500/10 dark:bg-rose-500/20',
+                                                'warning' => 'text-amber-500 bg-amber-500/10 dark:bg-amber-500/20',
+                                                default   => 'text-primary bg-primary/10 dark:bg-primary/20',
+                                            };
+                                        @endphp
+                                        <a href="#"
+                                           wire:click.prevent="markAsReadAndRedirect('{{ $notification->id }}', '{{ $targetUrl }}')"
+                                           class="block p-4 hover:bg-slate-50 dark:hover:bg-slate-950/40 transition duration-150">
+                                            <div class="flex items-start gap-3">
+                                                <div class="flex-shrink-0">
+                                                    @if($isChat && isset($data['sender_avatar']))
+                                                        <div class="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary/20">
+                                                            <img src="{{ $data['sender_avatar'] }}" alt="avatar" class="w-full h-full object-cover" />
+                                                        </div>
+                                                    @else
+                                                        <div class="w-8 h-8 rounded-lg flex items-center justify-center {{ $colorClass }}">
+                                                            <x-icon :name="$icon" class="w-4 h-4" />
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                                <div class="flex-1 min-w-0">
+                                                    <div class="flex items-center justify-between mb-0.5">
+                                                        <p class="text-xs font-black text-slate-800 dark:text-slate-200 truncate">
+                                                            {{ $data['title'] ?? $data['sender_name'] ?? __('Notification') }}
+                                                        </p>
+                                                        <span class="text-[9px] font-bold text-slate-450 dark:text-slate-500 ml-2 whitespace-nowrap">
+                                                            {{ $notification->created_at->diffForHumans(['short' => true]) }}
+                                                        </span>
+                                                    </div>
+                                                    <p class="text-xs text-slate-500 dark:text-slate-400 font-medium line-clamp-2 leading-relaxed">
+                                                        {{ $data['message'] ?? $data['body'] ?? '' }}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    @empty
+                                        <div class="py-10 px-4 text-center">
+                                            <x-icon name="o-bell-slash" class="w-8 h-8 mx-auto text-slate-300 dark:text-slate-650 mb-2" />
+                                            <p class="text-xs font-black uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                                                {{ __('No New Notifications') }}
+                                            </p>
+                                        </div>
+                                    @endforelse
+                                </div>
+
+                                {{-- Footer link to notifications panel --}}
+                                <div class="px-4 py-2 border-t border-slate-200/50 dark:border-slate-800/80 bg-slate-50/50 dark:bg-slate-950/20 text-center">
+                                    <a href="{{ route('web.notifications') }}" wire:navigate @click="open = false" class="text-[10px] font-black uppercase tracking-wider text-primary hover:text-primary-focus transition">
+                                        {{ __('View All Notifications') }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <x-dropdown class="btn-ghost shadow-none p-0" no-x-anchor right>
+                            <x-slot:trigger>
+                                <button class="flex items-center gap-2.5 hover:opacity-80 transition-opacity focus:outline-none">
+                                    <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 ring-2 ring-primary/20 overflow-hidden">
+                                        <img src="{{ userImage(auth()->user()) }}" class="w-full h-full object-cover" />
+                                    </div>
+                                    <span class="hidden md:inline text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                        {{ auth()->user()->name }}
+                                    </span>
+                                </button>
+                            </x-slot:trigger>
+
+                            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+                                <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">{{ __('Signed in as') }}</p>
+                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">{{ auth()->user()->email }}</p>
+                            </div>
+
+                            <x-menu-item title="My Profile" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="Messages" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="My Books" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="Dashboard" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-separator class="my-1 opacity-70" />
+                            <x-menu-item title="Sign Out" icon="o-power" onclick="document.getElementById('web-logout-form').submit();" class="rounded-xl m-1 text-error font-semibold" />
+                        </x-dropdown>
+                        <form id="web-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
                     @else
                         <a href="{{ route('login') }}" wire:navigate
                            class="btn btn-ghost btn-sm rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
@@ -215,15 +410,24 @@ new class extends Component {
                            class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
                             Join Free
                         </a>
+                        </a>
                     @endauth
-                </div>
+                    </div>
 
-                {{-- Mobile Hamburger --}}
-                <button @click.stop="mobileOpen = !mobileOpen" class="lg:hidden flex flex-col gap-1.5 w-8 h-8 items-center justify-center">
-                    <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? 'rotate-45 translate-y-2' : ''"></span>
-                    <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? 'opacity-0' : ''"></span>
-                    <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? '-rotate-45 -translate-y-2' : ''"></span>
-                </button>
+                    {{-- Mobile Hamburger --}}
+                    <div class="lg:hidden relative ml-1">
+                        <button @click.stop="mobileOpen = !mobileOpen" class="flex flex-col gap-1.5 w-8 h-8 items-center justify-center relative">
+                            <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? 'rotate-45 translate-y-2' : ''"></span>
+                            <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? 'opacity-0' : ''"></span>
+                            <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? '-rotate-45 -translate-y-2' : ''"></span>
+                        </button>
+                        @auth
+                            @if($this->unreadMessagesCount > 0 || $this->unreadNotificationsCount > 0)
+                                <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none shadow-sm"></span>
+                            @endif
+                        @endauth
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -263,10 +467,44 @@ new class extends Component {
             </a>
 
             <div class="border-t border-slate-100 dark:border-white/5 pt-4 mt-4 flex items-center justify-between">
-                <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500" x-cloak />
-                <div class="flex items-center gap-2">
+                {{-- <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500" x-cloak /> --}}
+                <div class="flex items-center gap-2 w-full">
                     @auth
-                        <a href="{{ route('app.dashboard') }}" wire:navigate class="btn btn-primary btn-sm rounded-xl px-5 font-bold">Dashboard</a>
+                        <div class="flex flex-col gap-2 w-full">
+                            <a href="{{ route('web.profile') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-user" class="w-5 h-5 text-primary" /> My Profile
+                            </a>
+                            <a href="{{ route('web.chat') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
+                                <span class="flex items-center gap-3">
+                                    <x-icon name="o-chat-bubble-left-right" class="w-5 h-5 text-primary" /> Messages
+                                </span>
+                                @if($this->unreadMessagesCount > 0)
+                                    <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
+                                        {{ $this->unreadMessagesCount }}
+                                    </span>
+                                @endif
+                            </a>
+                            <a href="{{ route('web.notifications') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
+                                <span class="flex items-center gap-3">
+                                    <x-icon name="o-bell" class="w-5 h-5 text-primary" /> Notifications
+                                </span>
+                                @if($this->unreadNotificationsCount > 0)
+                                    <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
+                                        {{ $this->unreadNotificationsCount }}
+                                    </span>
+                                @endif
+                            </a>
+                            <a href="{{ route('web.my-books') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> My Books
+                            </a>
+                            <a href="{{ route('app.dashboard') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-squares-2x2" class="w-5 h-5 text-primary" /> Dashboard
+                            </a>
+                            <button onclick="document.getElementById('web-logout-form-mobile').submit();" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-error hover:bg-red-50 dark:hover:bg-red-950/20 font-semibold transition-colors text-left w-full">
+                                <x-icon name="o-power" class="w-5 h-5" /> Sign Out
+                            </button>
+                            <form id="web-logout-form-mobile" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+                        </div>
                     @else
                         <a href="{{ route('login') }}" wire:navigate class="btn btn-ghost btn-sm rounded-xl font-semibold">Sign in</a>
                         <a href="{{ route('register') }}" wire:navigate class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold">Join Free</a>

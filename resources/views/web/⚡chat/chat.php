@@ -13,8 +13,8 @@ use Livewire\WithPagination;
 use Mary\Traits\Toast;
 
 new
-#[Title('Chat')]
-#[Layout('layouts.app')]
+#[Title('Messages')]
+#[Layout('layouts.web')]
 class extends Component
 {
     use Toast;
@@ -75,12 +75,11 @@ class extends Component
     public function mount($conversation = null)
     {
         // If conversation ID provided in URL, select it
-      if ($conversation) {
-//        dd($conversation);
-        $conv = Conversation::find($conversation);
-        if ($conv && $conv->hasUser(auth()->id())) {
-              $this->selectedConversationId = $conv->id;
-          $this->selectConversation($conv->id);
+        if ($conversation) {
+            $conv = Conversation::find($conversation);
+            if ($conv && $conv->hasUser(auth()->id())) {
+                $this->selectedConversationId = $conv->id;
+                $this->selectConversation($conv->id);
                 return;
             }
         }
@@ -93,8 +92,7 @@ class extends Component
             
         if ($firstConversation) {
             $this->selectedConversationId = $firstConversation->id;
-          $this->selectConversation($firstConversation->id);
-
+            $this->selectConversation($firstConversation->id);
         }
     }
 
@@ -183,6 +181,48 @@ class extends Component
             ->values();
     }
 
+    #[Computed]
+    public function activeBorrowRequest()
+    {
+        if (!$this->selectedConversationId) {
+            return null;
+        }
+
+        $selectedConversation = $this->selectedConversation;
+        if (!$selectedConversation) {
+            $selectedConversation = Conversation::find($this->selectedConversationId);
+        }
+
+        if (!$selectedConversation) {
+            return null;
+        }
+
+        $otherUser = $selectedConversation->getOtherUser(auth()->id());
+        if (!$otherUser) {
+            return null;
+        }
+
+        $userId = auth()->id();
+        $otherUserId = $otherUser->id;
+
+        return \App\Models\BorrowRequest::with(['bookCopy.book', 'borrower'])
+            ->where(function ($q) use ($userId, $otherUserId) {
+                $q->where('borrower_id', $userId)
+                  ->whereHas('bookCopy', function ($sub) use ($otherUserId) {
+                      $sub->where('owner_id', $otherUserId);
+                  });
+            })
+            ->orWhere(function ($q) use ($userId, $otherUserId) {
+                $q->where('borrower_id', $otherUserId)
+                  ->whereHas('bookCopy', function ($sub) use ($userId) {
+                      $sub->where('owner_id', $userId);
+                  });
+            })
+            ->whereIn('status', ['pending', 'accepted', 'given', 'active'])
+            ->orderBy('updated_at', 'desc')
+            ->first();
+    }
+
     public function loadOlderMessages()
     {
         if ($this->hasMoreMessages) {
@@ -218,6 +258,14 @@ class extends Component
         $this->showNewChatModal = false;
         $this->markAsRead();
         $this->dispatch('conversationSelected', conversationId: $conversation->id);
+    }
+
+    public function clearSelectedConversation(): void
+    {
+        $this->selectedConversationId = null;
+        $this->body = '';
+        $this->replyingTo = null;
+        $this->editingMessageId = null;
     }
 
     // ==========================================

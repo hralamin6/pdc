@@ -20,13 +20,9 @@ class DatabaseSeeder extends Seeder
         $this->call([DistrictSeeder::class]);
         $this->call([UpazilaSeeder::class]);
         $this->call([UnionSeeder::class]);
-        $this->call([PostSeeder::class]);
 
         $this->call([PermissionSeeder::class]);
         $this->call([SettingSeeder::class]);
-
-        $this->call([HalaqahSeeder::class]);
-        $this->call([DailyReportTemplateSeeder::class]);
 
         // Seed demo users
         $admin = User::updateOrCreate([
@@ -50,5 +46,18 @@ class DatabaseSeeder extends Seeder
         if ($user && ! $user->hasRole('user')) {
             $user->assignRole('user');
         }
+        User::factory()->count(10)->create();
+        $this->call([DailyReportTemplateSeeder::class]);
+        $this->call([BlogSeeder::class]);
+        $this->call([HalaqahSeeder::class]);
+        $this->call([P2PLibrarySeeder::class]);
+        $this->call([PostSeeder::class]);
+        $this->call([PageSeeder::class]);
+        $this->call([QuizSeeder::class]);
+        $this->call([SettingSeeder::class]);
+        $this->call([BookSeeder::class]);
+        $this->call([ChatSeeder::class]);
+        $this->call([FinanceSeeder::class]);
+
     }
 }

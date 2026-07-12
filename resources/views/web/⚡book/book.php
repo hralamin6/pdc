@@ -167,6 +167,17 @@ class extends Component
             'status'         => 'pending',
         ]);
 
+        $copy = BookCopy::with(['owner', 'book'])->find($this->selectedCopyId);
+        if ($copy && $copy->owner && $copy->owner->id !== auth()->id()) {
+            $copy->owner->notify(new \App\Notifications\BookNotification(
+                'request',
+                auth()->user()->name,
+                $copy->book->title,
+                route('web.my-books'),
+                $this->requested_days
+            ));
+        }
+
         $this->success('Borrow request sent! The book owner will be notified.');
         $this->borrowModal = false;
     }

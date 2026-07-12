@@ -34,6 +34,10 @@ Route::redirect('/posts', '/blog');
 Route::redirect('/posts/{slug}', '/blog/{slug}');
 
 Route::middleware('auth')->group(function () {
+    Route::livewire('/profile', 'web::profile')->name('web.profile');
+    Route::livewire('/my-books', 'web::my-books')->name('web.my-books');
+    Route::livewire('/notifications', 'web::notifications')->name('web.notifications');
+    Route::livewire('/chat/{conversation?}', 'web::chat')->name('web.chat');
     Route::livewire('/app/', 'app::dashboard')->name('app.dashboard');
 
     Route::livewire('/app/profile/', 'app::profile')->name('app.profile');

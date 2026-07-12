@@ -2,12 +2,20 @@
 {{-- CHAT COMPONENT --}}
 {{-- Real-time messaging with Laravel Echo --}}
 {{-- ========================================== --}}
+
 <div
-    class="h-[calc(100vh-8rem)]"
+    id="chat-root"
+    class="fixed inset-x-0 bottom-0 flex flex-col"
     x-data="chatApp()"
     x-init="init()"
     @message-sent.window="handleMessageSent()"
 >
+<style>
+    body, html { overflow: hidden !important; height: 100%; }
+    footer { display: none !important; }
+    #chat-root { top: 64px; }
+    @media (min-width: 1024px) { #chat-root { top: 72px; } }
+</style>
     {{-- ========================================== --}}
     {{-- FLASH MESSAGES --}}
     {{-- ========================================== --}}
@@ -25,15 +33,15 @@
         </div>
     @endif
 
-    <div class="flex h-full bg-base-100 rounded-xl shadow-xl overflow-hidden">
+    <div class="flex-1 flex flex-row overflow-hidden bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800">
         {{-- ========================================== --}}
         {{-- SIDEBAR: CONVERSATIONS LIST --}}
         {{-- ========================================== --}}
-        <div class="w-full md:w-96 border-r border-base-300 flex flex-col">
+        <div class="w-full md:w-72 lg:w-80 border-r border-slate-200 dark:border-slate-800 flex flex-col h-full {{ $selectedConversationId ? 'hidden md:flex' : 'flex' }} flex-shrink-0 bg-white dark:bg-slate-900">
             {{-- Sidebar Header --}}
-            <div class="p-4 border-b border-base-300 bg-gradient-to-r from-primary/10 to-secondary/10">
+            <div class="p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
                 <div class="flex items-center justify-between mb-3">
-                    <h2 class="text-xl font-bold text-base-content flex items-center gap-2">
+                    <h2 class="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
                         <x-icon name="o-chat-bubble-left-right" class="w-6 h-6 text-primary" />
                         Messages
                     </h2>
@@ -52,7 +60,7 @@
             </div>
 
             {{-- Conversations List --}}
-            <div class="flex-1 overflow-y-auto">
+            <div class="flex-1 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/40">
                 @forelse($this->conversations as $conversation)
                     @php
                         $otherUser = $conversation->getOtherUser(auth()->id());
@@ -65,32 +73,32 @@
                     <div
                         wire:click="selectConversation({{ $conversation->id }})"
                         wire:key="conversation-{{ $conversation->id }}"
-                        class="p-4 border-b border-base-300 cursor-pointer hover:bg-base-200/50 transition-all duration-200 {{ $isActive ? 'bg-primary/10 border-l-4 border-l-primary' : '' }}"
+                        class="p-4 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-all duration-200 border-l-4 {{ $isActive ? 'bg-indigo-50/40 dark:bg-indigo-950/20 border-l-indigo-600 dark:border-l-indigo-500' : 'border-l-transparent' }}"
                     >
                         <div class="flex items-start gap-3">
                             <div class="avatar {{ $otherUser->isOnline() ? 'online' : 'offline' }}">
-                                <div class="w-12 h-12 rounded-full ring-2 ring-base-300">
-                                    <img src="{{ $otherUser->avatar_url }}" alt="{{ $otherUser->name }}" />
+                                <div class="w-12 h-12 rounded-full ring-2 ring-slate-200 dark:ring-slate-800 bg-white dark:bg-slate-900">
+                                    <img src="{{ $otherUser->avatar_url }}" alt="{{ $otherUser->name }}" class="w-full h-full object-cover" />
                                 </div>
                             </div>
 
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-center justify-between mb-1">
-                                    <h3 class="font-semibold text-base-content truncate flex items-center gap-2">
+                                    <h3 class="font-semibold text-slate-900 dark:text-white truncate flex items-center gap-2">
                                         {{ $otherUser->name }}
                                         @if($unreadCount > 0)
-                                            <span class="badge badge-primary badge-sm">{{ $unreadCount }}</span>
+                                            <span class="px-1.5 py-0.5 rounded-full bg-indigo-600 text-white text-[9px] font-bold leading-none">{{ $unreadCount }}</span>
                                         @endif
                                     </h3>
                                     @if($latestMessage)
-                                        <span class="text-xs text-base-content/60">
+                                        <span class="text-xs text-slate-400 dark:text-slate-500">
                                             {{ $latestMessage->created_at->diffForHumans(null, true) }}
                                         </span>
                                     @endif
                                 </div>
 
                                 <div class="flex items-center justify-between gap-2">
-                                    <p class="text-sm text-base-content/70 truncate flex-1">
+                                    <p class="text-sm text-slate-500 dark:text-slate-400 truncate flex-1">
                                         @if($latestMessage)
                                             @if($latestMessage->user_id === auth()->id())
                                                 <span class="inline-flex items-center gap-1">
@@ -100,7 +108,7 @@
                                                             <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" transform="translate(4, 0)"/>
                                                         </svg>
                                                     @else
-                                                        <svg class="w-3 h-3 text-base-content/50" fill="currentColor" viewBox="0 0 20 20">
+                                                        <svg class="w-3 h-3 text-slate-400 dark:text-slate-500" fill="currentColor" viewBox="0 0 20 20">
                                                             <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
                                                         </svg>
                                                     @endif
@@ -108,7 +116,7 @@
                                             @endif
                                             {{ Str::limit($latestMessage->body ?? '📎 Attachment', 35) }}
                                         @else
-                                            <span class="text-base-content/50 italic">No messages yet</span>
+                                            <span class="text-slate-400 dark:text-slate-550 italic">No messages yet</span>
                                         @endif
                                     </p>
                                 </div>
@@ -138,24 +146,28 @@
         {{-- ========================================== --}}
         {{-- MAIN CHAT AREA --}}
         {{-- ========================================== --}}
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col min-w-0 h-full {{ !$selectedConversationId ? 'hidden md:flex' : 'flex' }} bg-white dark:bg-slate-900 overflow-hidden">
             @if($selectedConversationId && $this->selectedConversation)
                 @php
                     $otherUser = $this->selectedConversation->getOtherUser(auth()->id());
                 @endphp
 
                 {{-- Chat Header --}}
-                <div class="p-4 border-b border-base-300 bg-base-100 shadow-sm">
+                <div class="flex-shrink-0 p-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 z-10 shadow-sm">
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-3">
+                            {{-- Mobile Back Button --}}
+                            <button wire:click="clearSelectedConversation" class="btn btn-ghost btn-sm btn-circle md:hidden flex-shrink-0">
+                                <x-icon name="o-arrow-left" class="w-5 h-5 text-slate-700 dark:text-slate-350" />
+                            </button>
                             <div class="avatar {{ $otherUser->isOnline() ? 'online' : 'offline' }}">
                                 <div class="w-10 h-10 rounded-full ring-2 ring-primary ring-offset-2">
                                     <img src="{{ $otherUser->avatar_url }}" alt="{{ $otherUser->name }}" />
                                 </div>
                             </div>
                             <div>
-                                <h3 class="font-semibold text-base-content">{{ $otherUser->name }}</h3>
-                                <p class="text-xs text-base-content/60 flex items-center gap-1">
+                                <h3 class="font-semibold text-slate-900 dark:text-white">{{ $otherUser->name }}</h3>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
                                     @if($otherUser->isOnline())
                                         <span class="w-2 h-2 bg-success rounded-full"></span>
                                         Active now
@@ -167,7 +179,7 @@
                                 </p>
                             </div>
                           <div class="mb-2 px-1" x-show="activeConversationTyping" x-cloak>
-                            <div class="flex items-center gap-2 text-sm text-base-content/70">
+                            <div class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                               <span class="loading loading-dots loading-xs"></span>
                             </div>
                           </div>
@@ -252,7 +264,7 @@
                 {{-- MESSAGES AREA --}}
                 {{-- ========================================== --}}
                 <div
-                    class="flex-1 overflow-y-auto p-4 space-y-4 bg-base-100 relative"
+                    class="flex-1 overflow-y-auto p-4 space-y-3 bg-slate-50/40 dark:bg-slate-950/30"
                     id="message-container"
                     x-init="scrollToBottom($el)"
                     @scroll-to-bottom.window="scrollToBottom($el)"
@@ -318,7 +330,7 @@
                         {{-- Date Divider --}}
                         @if($showDateDivider)
                             <div class="flex items-center justify-center my-4">
-                                <div class="px-3 py-1 bg-base-200 rounded-full text-xs text-base-content/70 font-medium shadow-sm">
+                                <div class="px-3.5 py-1.5 bg-slate-200/80 dark:bg-slate-800 text-[10px] text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider rounded-lg shadow-sm">
                                     @if($message->created_at->isToday())
                                         Today
                                     @elseif($message->created_at->isYesterday())
@@ -348,16 +360,16 @@
 
                                 <div class="flex flex-col gap-1 {{ $isOwn ? 'items-end' : 'items-start' }}">
                                     @if($message->parent)
-                                        <div class="text-xs text-base-content/60 px-3 py-1 bg-base-200 rounded-lg border-l-2 border-primary">
+                                        <div class="text-xs text-slate-500 dark:text-slate-400 px-3 py-1.5 bg-slate-100/80 dark:bg-slate-800/80 rounded-xl border-l-2 border-indigo-500 max-w-full truncate">
                                             <span class="font-semibold">{{ $message->parent->user->name }}</span>:
                                             {{ Str::limit($message->parent->body ?? 'Attachment', 50) }}
                                         </div>
                                     @endif
 
                                     <div class="relative group">
-                                        <div class="px-4 py-2 rounded-2xl {{ $isOwn ? 'bg-primary text-primary-content' : 'bg-base-200 text-base-content' }}">
+                                        <div class="px-4.5 py-3 rounded-2xl leading-relaxed {{ $isOwn ? 'bg-gradient-to-br from-indigo-600 to-violet-650 text-white rounded-tr-none shadow-sm shadow-indigo-500/10' : 'bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/50 text-slate-800 dark:text-slate-100 rounded-tl-none shadow-sm' }}">
                                             @if(!$isOwn)
-                                                <p class="text-xs font-semibold mb-1">{{ $message->user->name }}</p>
+                                                {{-- <p class="text-[10px] font-black text-indigo-650 dark:text-indigo-400 mb-1.5 uppercase tracking-wider">{{ $message->user->name }}</p> --}}
                                             @endif
 
                                             @if($message->body)
@@ -415,8 +427,8 @@
                                                 </div>
                                             @endif
 
-                                            <div class="flex items-center gap-2 mt-1.5">
-                                                <span class="text-xs opacity-70" title="{{ $message->created_at->format('l, F j, Y \a\t g:i A') }}">
+                                            <div class="flex items-center gap-1.5 mt-2 {{ $isOwn ? 'text-white/70' : 'text-slate-400 dark:text-slate-500' }}">
+                                                <span class="text-[11px] font-medium" title="{{ $message->created_at->format('l, F j, Y \a\t g:i A') }}">
                                                     {{ messengerTime($message->created_at) }}
                                                 </span>
                                                 @if($isEdited)
@@ -446,7 +458,7 @@
                                             <label tabindex="0" class="btn btn-ghost btn-xs btn-circle">
                                                 <x-icon name="o-ellipsis-vertical" class="w-4 h-4" />
                                             </label>
-                                            <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
+                                            <ul tabindex="0" class="dropdown-content z-[1] menu p-1.5 shadow-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl w-52 text-xs font-semibold">
                                                 <li>
                                                     <button @click="addReaction({{ $message->id }}, '👍')" class="text-sm">
                                                         <span class="text-lg">👍</span> Like
@@ -506,7 +518,7 @@
                     <div 
                         x-show="showGoToLatest" 
                         x-transition
-                        class="fixed bottom-24 right-8 z-10"
+                        class="absolute bottom-6 right-6 z-10"
                     >
                         <button 
                             @click="scrollToBottom($refs.messageContainer); showGoToLatest = false"
@@ -521,7 +533,7 @@
                 {{-- ========================================== --}}
                 {{-- MESSAGE INPUT FORM --}}
                 {{-- ========================================== --}}
-                <div class="p-4 border-t border-base-300 bg-base-100">
+                <div class="flex-shrink-0 p-4 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-[0_-4px_12px_rgba(0,0,0,0.06)]">
                     @php
                         $isBlocked = $this->isUserBlocked();
                         $otherUserBlocked = \DB::table('conversation_user')
@@ -626,7 +638,7 @@
                                 wire:model="body"
                                 placeholder="@if($isBlocked || $otherUserBlocked) Cannot send messages @else Type a message... @endif"
                                 rows="1"
-                                class="textarea textarea-bordered w-full resize-none"
+                                class="textarea textarea-bordered w-full resize-none rounded-xl min-h-[46px] border-slate-200 dark:border-slate-800 focus:border-indigo-600 focus:ring-indigo-600 py-3 px-4 bg-slate-50/50 dark:bg-slate-950/20 text-sm font-semibold"
                                 @keydown.enter="if (!$event.shiftKey) { $event.preventDefault(); $wire.sendMessage(); }"
                                 @input.debounce.500ms="whisperTyping()"
                                 @if($isBlocked || $otherUserBlocked) disabled @endif
@@ -638,7 +650,7 @@
 
                         <button
                             type="submit"
-                            class="btn btn-primary btn-circle shadow-lg"
+                            class="btn btn-primary btn-circle shadow-md shadow-primary/10 hover:scale-105 transition"
                             wire:loading.attr="disabled"
                             @if($isBlocked || $otherUserBlocked) disabled @endif
                         >
@@ -652,10 +664,15 @@
                 </div>
             @else
                 {{-- Empty State: No Conversation Selected --}}
-                <div class="flex flex-col items-center justify-center h-full text-center p-8">
-                    <x-icon name="o-chat-bubble-left-ellipsis" class="w-24 h-24 text-base-content/20 mb-4" />
-                    <h3 class="text-xl font-semibold text-base-content/70 mb-2">Select a conversation</h3>
-                    <p class="text-base-content/50">Choose a conversation from the list to start messaging</p>
+                <div class="flex-1 flex flex-col items-center justify-center text-center p-8 bg-slate-50/20 dark:bg-slate-950/5">
+                    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-950/40 dark:to-violet-950/40 border border-indigo-100 dark:border-indigo-900 shadow-sm flex items-center justify-center mb-5">
+                        <x-icon name="o-chat-bubble-left-right" class="w-10 h-10 text-indigo-500" />
+                    </div>
+                    <h3 class="text-base font-bold text-slate-800 dark:text-slate-200">{{ __('Your Messages') }}</h3>
+                    <p class="text-sm text-slate-500 dark:text-slate-400 mt-2 max-w-xs mx-auto leading-relaxed">{{ __('Select a conversation or start a new one.') }}</p>
+                    <button wire:click="$set('showNewChatModal', true)" class="btn btn-primary btn-sm mt-5 rounded-xl">
+                        <x-icon name="o-plus" class="w-4 h-4" /> {{ __('New Conversation') }}
+                    </button>
                 </div>
             @endif
         </div>
@@ -666,39 +683,39 @@
     {{-- ========================================== --}}
     @if($showNewChatModal)
         <div class="modal modal-open">
-            <div class="modal-box">
-                <h3 class="font-bold text-lg mb-4">Start New Conversation</h3>
+            <div class="modal-box bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-6">
+                <h3 class="font-bold text-base text-slate-850 dark:text-white mb-4">{{ __('Start New Conversation') }}</h3>
 
                 <x-input
                     wire:model.live.debounce.300ms="search"
                     placeholder="Search users..."
                     icon="o-magnifying-glass"
-                    class="mb-4"
+                    class="mb-4 rounded-xl border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-950/20"
                 />
 
-                <div class="max-h-96 overflow-y-auto">
+                <div class="max-h-96 overflow-y-auto divide-y divide-slate-100 dark:divide-slate-800/40">
                     @forelse($this->availableUsers as $user)
                         <div
                             wire:click="startNewChat({{ $user->id }})"
-                            class="flex items-center gap-3 p-3 hover:bg-base-200 rounded-lg cursor-pointer transition-colors"
+                            class="flex items-center gap-3 p-3 hover:bg-slate-50 dark:hover:bg-slate-800/40 rounded-xl cursor-pointer transition-colors"
                         >
                             <div class="avatar">
-                                <div class="w-10 h-10 rounded-full">
-                                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" />
+                                <div class="w-10 h-10 rounded-full overflow-hidden">
+                                    <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover" />
                                 </div>
                             </div>
                             <div>
-                                <h4 class="font-semibold text-base-content">{{ $user->name }}</h4>
-                                <p class="text-sm text-base-content/60">{{ $user->email }}</p>
+                                <h4 class="font-bold text-sm text-slate-850 dark:text-white leading-none mb-1">{{ $user->name }}</h4>
+                                <p class="text-xs text-slate-550 dark:text-slate-400">{{ $user->email }}</p>
                             </div>
                         </div>
                     @empty
-                        <p class="text-center text-base-content/60 py-8">No users found</p>
+                        <p class="text-center text-slate-450 dark:text-slate-500 text-xs py-8">{{ __('No users found') }}</p>
                     @endforelse
                 </div>
 
                 <div class="modal-action">
-                    <button wire:click="$set('showNewChatModal', false)" class="btn">Close</button>
+                    <button wire:click="$set('showNewChatModal', false)" class="btn btn-ghost btn-sm rounded-xl font-bold">{{ __('Close') }}</button>
                 </div>
             </div>
             <div class="modal-backdrop" wire:click="$set('showNewChatModal', false)"></div>
@@ -1070,6 +1087,8 @@
     // SCROLL HELPERS
     // ==========================================
     scrollToBottom(container) {
+      if (!container) container = document.getElementById('message-container');
+      if (!container) return;
       setTimeout(() => {
         container.scrollTop = container.scrollHeight;
         this.showGoToLatest = false;
@@ -1077,13 +1096,14 @@
     },
 
     handleScroll(container) {
+      if (!container) return;
       const scrollTop = container.scrollTop;
       const scrollHeight = container.scrollHeight;
       const clientHeight = container.clientHeight;
       const scrolledFromBottom = scrollHeight - scrollTop - clientHeight;
 
-      // Show "Go to Latest" button if scrolled more than 200px from bottom
-      this.showGoToLatest = scrolledFromBottom > 200;
+      // Show "Go to Latest" button if scrolled more than 300px from bottom
+      this.showGoToLatest = scrolledFromBottom > 300;
 
       // Auto-load more messages when scrolled near top (Messenger style)
       if (scrollTop < 100 && !this.isLoadingMore && this.$wire.hasMoreMessages) {
@@ -1093,6 +1113,7 @@
 
     loadMoreMessages(container) {
       if (this.isLoadingMore) return;
+      if (!container) container = document.getElementById('message-container');
       
       this.isLoadingMore = true;
       
