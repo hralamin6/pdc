@@ -18,7 +18,7 @@ new #[Title('Review Attempt | PSTU Dawah')] #[Layout('layouts.web')] class exten
 
         // Security check: Only the owner or Admins/Mentors can review this attempt
         abort_unless(
-            $attempt->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin', 'mentor']),
+            $attempt->user_id === auth()->id() || auth()->user()->can('quiz.grade') || auth()->user()->can('quiz.manage'),
             403
         );
 

@@ -167,7 +167,7 @@ class extends Component
         $comment = \App\Models\Comment::findOrFail($commentId);
         
         $isAuthor = $comment->user_id === auth()->id();
-        $isAdmin = auth()->user()->hasAnyRole(['super-admin', 'admin']);
+        $isAdmin = auth()->user()->can('posts.delete');
 
         if (!$isAuthor && !$isAdmin) {
             $this->error('Unauthorized action.');

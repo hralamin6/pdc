@@ -253,7 +253,7 @@
                                                     {{ __('Reply') }}
                                                 </button>
                                             @endauth
-                                            @if(auth()->check() && ($comment->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
+                                            @if(auth()->check() && ($comment->user_id === auth()->id() || auth()->user()->can('posts.delete')))
                                                 <button wire:click="deleteComment({{ $comment->id }})" confirm="{{ __('Are you sure you want to delete this comment?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                     <x-icon name="o-trash" class="w-3.5 h-3.5" />
                                                 </button>
@@ -295,7 +295,7 @@
                                                                 <span class="text-[9px] text-slate-400 font-bold block">{{ $reply->created_at->diffForHumans() }}</span>
                                                             </div>
                                                         </div>
-                                                        @if(auth()->check() && ($reply->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
+                                                        @if(auth()->check() && ($reply->user_id === auth()->id() || auth()->user()->can('posts.delete')))
                                                             <button wire:click="deleteComment({{ $reply->id }})" confirm="{{ __('Are you sure you want to delete this reply?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                                 <x-icon name="o-trash" class="w-3 h-3" />
                                                             </button>

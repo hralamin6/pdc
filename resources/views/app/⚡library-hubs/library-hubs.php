@@ -40,7 +40,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
 
     public function mount()
     {
-        abort_if(!auth()->user()->hasRole(['super-admin', 'admin', 'mentor', 'librarian']), 403);
+        $this->authorize('library.hubs.manage');
     }
 
     // --- Data Sources ---
@@ -51,7 +51,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         $query = LibraryHub::with(['manager', 'bookCopies.book'])->withCount('bookCopies');
         
         // If not admin, only show hubs they manage
-        if (!auth()->user()->hasRole(['super-admin', 'admin'])) {
+        if (!auth()->user()->can('library.hubs.create')) {
             $query->where('manager_id', auth()->id());
         }
 
@@ -61,7 +61,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
     #[Computed]
     public function potentialManagers(): Collection
     {
-        return User::whereHas('roles', fn ($q) => $q->whereIn('name', ['admin', 'mentor', 'librarian']))->orderBy('name')->get();
+        return User::permission('library.hubs.manage')->orderBy('name')->get();
     }
 
     #[Computed]
@@ -135,7 +135,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         $hub = LibraryHub::findOrFail($this->addBooksHubId);
         
         // Ensure permission
-        if (!auth()->user()->hasRole(['super-admin', 'admin']) && $hub->manager_id !== auth()->id()) {
+        if (!auth()->user()->can('library.hubs.create') && $hub->manager_id !== auth()->id()) {
             abort(403);
         }
 
@@ -184,7 +184,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
 
     public function saveHub(): void
     {
-        abort_if(!auth()->user()->hasRole(['super-admin', 'admin']), 403, 'Only admins can create or edit hubs.');
+        $this->authorize('library.hubs.create');
 
         $this->validate([
             'hubName' => 'required|string|max:255',
@@ -209,7 +209,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
 
     public function toggleHubStatus(int $id): void
     {
-        abort_if(!auth()->user()->hasRole(['super-admin', 'admin']), 403);
+        $this->authorize('library.hubs.create');
         $hub = LibraryHub::findOrFail($id);
         $hub->update(['is_active' => !$hub->is_active]);
         $this->success('Hub status updated.');

@@ -13,6 +13,11 @@ new #[Title('Daily Reports Admin Portal')] #[Layout('layouts.app')] class extend
 {
     use Toast, WithPagination;
 
+    public function mount()
+    {
+        $this->authorize('daily-reports.manage');
+    }
+
     public string $search = '';
     public string $filter = 'all';
     public ?int $inspectingUserId = null;

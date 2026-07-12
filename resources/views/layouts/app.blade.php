@@ -46,36 +46,58 @@
 					<x-menu-item title="{{ __('Halaqahs') }}" icon="o-book-open" :link="route('app.halaqahs')" route="app.halaqahs" wire:navigate />
 					
 					{{-- Donations --}}
-					@if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+					@canany(['donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage'])
 						<x-menu-sub title="{{ __('Donations') }}" icon="o-banknotes">
-							<x-menu-item title="{{ __('Campaigns') }}" icon="o-megaphone" :link="route('app.donations.campaigns')" route="app.donations.campaigns" wire:navigate />
-							<x-menu-item title="{{ __('Pledges') }}" icon="o-arrow-path" :link="route('app.donations.pledges')" route="app.donations.pledges" wire:navigate />
-							<x-menu-item title="{{ __('Verify Payments') }}" icon="o-check-circle" :link="route('app.donations.verify')" route="app.donations.verify" wire:navigate />
-							<x-menu-item title="{{ __('Transactions') }}" icon="o-banknotes" :link="route('app.donations.transactions')" route="app.donations.transactions" wire:navigate />
+							@can('donations.campaigns.manage')
+								<x-menu-item title="{{ __('Campaigns') }}" icon="o-megaphone" :link="route('app.donations.campaigns')" route="app.donations.campaigns" wire:navigate />
+							@endcan
+							@can('donations.pledges.manage')
+								<x-menu-item title="{{ __('Pledges') }}" icon="o-arrow-path" :link="route('app.donations.pledges')" route="app.donations.pledges" wire:navigate />
+							@endcan
+							@can('donations.verify')
+								<x-menu-item title="{{ __('Verify Payments') }}" icon="o-check-circle" :link="route('app.donations.verify')" route="app.donations.verify" wire:navigate />
+							@endcan
+							@can('donations.transactions.manage')
+								<x-menu-item title="{{ __('Transactions') }}" icon="o-banknotes" :link="route('app.donations.transactions')" route="app.donations.transactions" wire:navigate />
+							@endcan
 						</x-menu-sub>
-					@endif
+					@endcanany
 
 					{{-- Treasury --}}
 					<x-menu-item title="{{ __('Financial Summary') }}" icon="o-currency-bangladeshi" :link="route('app.expenses')" route="app.expenses" wire:navigate />
-					@if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+					@canany(['expenses.manage', 'expenses.transfers.manage', 'expenses.bank-accounts.manage', 'expenses.categories.manage', 'expenses.reports.manage'])
 						<x-menu-sub title="{{ __('Treasury') }}" icon="o-building-library">
-							<x-menu-item title="{{ __('Expenses') }}" icon="o-receipt-percent" :link="route('app.expenses.admin')" route="app.expenses.admin" wire:navigate />
-							<x-menu-item title="{{ __('Fund Transfers') }}" icon="o-arrows-right-left" :link="route('app.fund-transfers')" route="app.fund-transfers" wire:navigate />
-							<x-menu-item title="{{ __('Bank Accounts') }}" icon="o-credit-card" :link="route('app.bank-accounts')" route="app.bank-accounts" wire:navigate />
-							<x-menu-item title="{{ __('Categories') }}" icon="o-tag" :link="route('app.expense-categories')" route="app.expense-categories" wire:navigate />
-							<x-menu-item title="{{ __('Monthly Reports') }}" icon="o-document-chart-bar" :link="route('app.treasury-report')" route="app.treasury-report" wire:navigate />
+							@can('expenses.manage')
+								<x-menu-item title="{{ __('Expenses') }}" icon="o-receipt-percent" :link="route('app.expenses.admin')" route="app.expenses.admin" wire:navigate />
+							@endcan
+							@can('expenses.transfers.manage')
+								<x-menu-item title="{{ __('Fund Transfers') }}" icon="o-arrows-right-left" :link="route('app.fund-transfers')" route="app.fund-transfers" wire:navigate />
+							@endcan
+							@can('expenses.bank-accounts.manage')
+								<x-menu-item title="{{ __('Bank Accounts') }}" icon="o-credit-card" :link="route('app.bank-accounts')" route="app.bank-accounts" wire:navigate />
+							@endcan
+							@can('expenses.categories.manage')
+								<x-menu-item title="{{ __('Categories') }}" icon="o-tag" :link="route('app.expense-categories')" route="app.expense-categories" wire:navigate />
+							@endcan
+							@can('expenses.reports.manage')
+								<x-menu-item title="{{ __('Monthly Reports') }}" icon="o-document-chart-bar" :link="route('app.treasury-report')" route="app.treasury-report" wire:navigate />
+							@endcan
 						</x-menu-sub>
-					@endif
+					@endcanany
 
 					{{-- Library --}}
-					<x-menu-sub title="{{ __('Library') }}" icon="o-book-open">
-						<x-menu-item title="{{ __('Community Hubs') }}" icon="o-building-library" :link="route('app.library-hubs')" route="app.library-hubs" wire:navigate />
-						
-						@if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'mentor']))
-							<x-menu-item title="{{ __('Manage Catalog') }}" icon="o-cog" :link="route('app.books.admin')" route="app.books.admin" wire:navigate />
-							<x-menu-item title="{{ __('Metadata (Authors)') }}" icon="o-tag" :link="route('app.books.metadata')" route="app.books.metadata" wire:navigate />
-						@endif
-					</x-menu-sub>
+					@canany(['library.hubs.manage', 'library.manage'])
+						<x-menu-sub title="{{ __('Library') }}" icon="o-book-open">
+							@can('library.hubs.manage')
+								<x-menu-item title="{{ __('Community Hubs') }}" icon="o-building-library" :link="route('app.library-hubs')" route="app.library-hubs" wire:navigate />
+							@endcan
+							
+							@can('library.manage')
+								<x-menu-item title="{{ __('Manage Catalog') }}" icon="o-cog" :link="route('app.books.admin')" route="app.books.admin" wire:navigate />
+								<x-menu-item title="{{ __('Metadata (Authors)') }}" icon="o-tag" :link="route('app.books.metadata')" route="app.books.metadata" wire:navigate />
+							@endcan
+						</x-menu-sub>
+					@endcanany
 
 
 					{{-- Quizzes --}}

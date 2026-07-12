@@ -119,14 +119,14 @@ new #[Title('Halaqah Details')] #[Layout('layouts.app')] class extends Component
 
     public function openDonationModal()
     {
-        $this->authorize('roles.view'); // Quick check for admin/accountant equivalent for now
+        $this->authorize('donations.transactions.manage'); // Quick check for admin/accountant equivalent for now
         $this->reset(['donorId', 'donationAmount', 'donationPaymentMethod', 'donationTransactionId', 'donationNote']);
         $this->donationModal = true;
     }
 
     public function saveSessionDonation()
     {
-        $this->authorize('roles.view');
+        $this->authorize('donations.transactions.manage');
 
         $this->validate([
             'donorId' => 'nullable|exists:users,id',

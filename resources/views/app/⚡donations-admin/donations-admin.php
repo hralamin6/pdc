@@ -25,10 +25,7 @@ new #[Title('Donations Admin')] #[Layout('layouts.app')] class extends Component
 
     public function mount()
     {
-        // Require admin or accountant role
-        if (!auth()->user()->hasRole(['super-admin', 'admin', 'accountant'])) {
-            abort(403, 'Unauthorized access.');
-        }
+        $this->authorize('donations.transactions.manage');
     }
 
     public function confirmDonation($id)

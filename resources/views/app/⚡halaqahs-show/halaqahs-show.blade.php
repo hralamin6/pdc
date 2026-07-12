@@ -3,9 +3,9 @@
         <x-slot:actions>
             <x-button icon="o-arrow-left" title="{{ __('Back') }}" link="{{ route('app.halaqahs') }}" class="btn-ghost" wire:navigate />
             
-            @if(auth()->user() && auth()->user()->hasRole(['super-admin', 'admin', 'accountant']))
+            @can('donations.transactions.manage')
                 <x-button icon="o-banknotes" title="{{ __('Collect Donations') }}" wire:click="openDonationModal" class="btn-outline btn-success" />
-            @endif
+            @endcan
             
             @can('halaqahs.manage-attendance')
                 <x-button icon="o-qr-code" title="{{ __('QR & Attendance') }}" link="{{ route('app.halaqahs.attendance', $halaqah) }}" class="btn-outline btn-primary" wire:navigate />

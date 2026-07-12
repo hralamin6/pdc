@@ -50,7 +50,7 @@ class extends Component
 
     public function isAdmin(): bool
     {
-        return auth()->check() && auth()->user()->hasAnyRole(['super-admin', 'admin']);
+        return auth()->check() && auth()->user()->can('donations.campaigns.manage');
     }
 
     /** Bank Accounts to display payment instructions */

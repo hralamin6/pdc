@@ -72,7 +72,7 @@ class ActivityController extends Controller
      */
     public function notifyAdmins(Activity $activity): JsonResponse
     {
-        $admins = User::role('admin')->get();
+        $admins = User::permission('activity.dashboard')->get();
 
         foreach ($admins as $admin) {
             if ($admin->pushSubscriptions()->exists()) {

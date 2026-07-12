@@ -15,6 +15,11 @@ new #[Title('Manage Books')] #[Layout('layouts.app')] class extends Component
 {
     use WithPagination, WithFileUploads, Toast;
 
+    public function mount()
+    {
+        $this->authorize('library.manage');
+    }
+
     public string $search = '';
     public string $statusFilter = 'all';
 

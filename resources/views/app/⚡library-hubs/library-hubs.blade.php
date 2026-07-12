@@ -1,9 +1,9 @@
 <div>
     <x-header :title="__('Community Hubs Management')" :subtitle="__('Manage your hubs, inventory, and borrow requests')" separator>
         <x-slot:actions>
-            @if(auth()->user()->hasRole(['super-admin', 'admin']))
+            @can('library.hubs.create')
                 <x-button label="{{ __('Create Hub') }}" icon="o-plus" class="btn-primary" wire:click="openHubModal" />
-            @endif
+            @endcan
         </x-slot:actions>
     </x-header>
 
@@ -28,10 +28,10 @@
                                 </div>
                             </div>
                             <div class="flex items-center gap-2">
-                                @if(auth()->user()->hasRole(['super-admin', 'admin']))
+                                @can('library.hubs.create')
                                     <x-button icon="o-pencil" class="btn-ghost btn-sm btn-circle" wire:click="openHubModal({{ $hub->id }})" tooltip="{{ __('Edit Hub') }}" />
                                     <x-button icon="o-power" class="btn-ghost btn-sm btn-circle {{ $hub->is_active ? 'text-success' : 'text-error' }}" wire:click="toggleHubStatus({{ $hub->id }})" tooltip="{{ __('Toggle Status') }}" />
-                                @endif
+                                @endcan
                                 <span class="badge {{ $hub->is_active ? 'badge-success text-success-content' : 'badge-error text-error-content' }}">
                                     {{ $hub->is_active ? __('Active') : __('Inactive') }}
                                 </span>

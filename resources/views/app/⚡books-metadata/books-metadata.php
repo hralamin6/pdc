@@ -14,6 +14,11 @@ new #[Title('Library Metadata')] #[Layout('layouts.app')] class extends Componen
 {
     use WithFileUploads, Toast;
 
+    public function mount()
+    {
+        $this->authorize('library.manage');
+    }
+
     public string $activeTab = 'authors';
 
     // Shared modal

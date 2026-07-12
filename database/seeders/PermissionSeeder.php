@@ -71,6 +71,12 @@ class PermissionSeeder extends Seeder
             'donations' => [
                 'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
             ],
+            'library' => [
+                'library.view', 'library.manage', 'library.hubs.manage', 'library.hubs.create',
+            ],
+            'daily-reports' => [
+                'daily-reports.view', 'daily-reports.manage',
+            ],
         ];
 
         // Create permissions
@@ -90,6 +96,7 @@ class PermissionSeeder extends Seeder
         $mentor = Role::firstOrCreate(['name' => 'mentor',        'guard_name' => $guard]);
         $user = Role::firstOrCreate(['name' => 'user',          'guard_name' => $guard]);
         $bot = Role::firstOrCreate(['name' => 'bot',           'guard_name' => $guard]);
+        $librarian = Role::firstOrCreate(['name' => 'librarian',     'guard_name' => $guard]);
 
         // Assign permissions
         $allPerms = Permission::where('guard_name', $guard)->get();
@@ -113,6 +120,8 @@ class PermissionSeeder extends Seeder
             'gallery.manage', 'gallery.view',
             'quiz.view', 'quiz.manage', 'quiz.create', 'quiz.grade', 'quiz.attempt', 'quiz.live.host',
             'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
+            'library.view', 'library.manage', 'library.hubs.manage', 'library.hubs.create',
+            'daily-reports.view', 'daily-reports.manage',
         ])->get();
         $admin->syncPermissions($adminPerms);
 
@@ -125,6 +134,8 @@ class PermissionSeeder extends Seeder
             'expenses.transfers.manage',
             'expenses.reports.view',
             'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
+            'library.view',
+            'daily-reports.view',
         ])->get();
         $accountant->syncPermissions($accountantPerms);
 
@@ -140,6 +151,8 @@ class PermissionSeeder extends Seeder
             'expenses.view',          // members see financial summary
             'expenses.reports.view',  // members see published reports
             'quiz.view', 'quiz.attempt',
+            'library.view',
+            'daily-reports.view',
         ])->get();
         $user->syncPermissions($userPerms);
 
@@ -150,6 +163,8 @@ class PermissionSeeder extends Seeder
             'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
             'expenses.view', 'expenses.reports.view',
             'quiz.view', 'quiz.attempt', 'quiz.live.host',
+            'library.view', 'library.hubs.manage',
+            'daily-reports.view', 'daily-reports.manage',
         ])->get();
         $mentor->syncPermissions($mentorPerms);
 
@@ -162,7 +177,18 @@ class PermissionSeeder extends Seeder
             'posts.create',
             'posts.update-own',
             'posts.delete-own',
+            'library.view',
+            'daily-reports.view',
         ])->get();
         $bot->syncPermissions($botPerms);
+
+        $librarianPerms = Permission::whereIn('name', [
+            'dashboard.view',
+            'profile.update',
+            'activity.my',
+            'library.view', 'library.hubs.manage',
+            'daily-reports.view',
+        ])->get();
+        $librarian->syncPermissions($librarianPerms);
     }
 }

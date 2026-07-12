@@ -62,14 +62,14 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
 
     public function openDonationModal(): void
     {
-        abort_unless(auth()->user()?->hasRole(['super-admin', 'admin', 'accountant']), 403);
+        $this->authorize('donations.transactions.manage');
         $this->reset(['donorId', 'donationAmount', 'donationPaymentMethod', 'donationTransactionId', 'donationNote']);
         $this->donationModal = true;
     }
 
     public function saveSessionDonation(): void
     {
-        abort_unless(auth()->user()?->hasRole(['super-admin', 'admin', 'accountant']), 403);
+        $this->authorize('donations.transactions.manage');
         $this->validate([
             'donationAmount' => 'required|numeric|min:1',
             'donationPaymentMethod' => 'required|in:cash,bkash,nagad,bank',
@@ -307,11 +307,11 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
                             <h2 class="text-lg font-black text-slate-800 dark:text-slate-100">{{ __('Session Donations') }}</h2>
                         </div>
                         @auth
-                            @if(auth()->user()->hasRole(['super-admin','admin','accountant']))
+                            @can('donations.transactions.manage')
                                 <button wire:click="openDonationModal" class="btn btn-sm btn-success rounded-xl">
                                     <x-icon name="o-plus" class="w-4 h-4" /> {{ __('Collect') }}
                                 </button>
-                            @endif
+                            @endcan
                         @endauth
                     </div>
                     <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 text-center border border-emerald-100 dark:border-emerald-900/40">

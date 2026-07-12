@@ -14,9 +14,9 @@
         </div>
         <div class="flex items-center gap-2">
             <x-button icon="o-cog-6-tooth" :link="route('app.daily-reports.settings')" wire:navigate class="btn-ghost btn-circle" tooltip="{{ __('Tracking Settings') }}" />
-            @if(auth()->user()->hasRole(['mentor', 'admin', 'super-admin']))
+            @can('daily-reports.manage')
                 <x-button icon="o-shield-check" :link="route('app.daily-reports.admin')" wire:navigate class="btn-outline btn-primary rounded-xl font-bold" :label="__('Admin Portal')" />
-            @endif
+            @endcan
             <x-button
                 :label="$todayReport && $todayReport->status === 'submitted' ? __('Edit Today\'s Log') : __('Fill Today\'s Report')"
                 icon="o-pencil-square" 
