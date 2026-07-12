@@ -9,8 +9,8 @@
     <div class="mb-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
             <div>
-                <h1 class="text-2xl font-bold text-base-content">Translation Manager</h1>
-                <p class="text-sm text-base-content/60">Manage translations for multiple languages</p>
+                <h1 class="text-2xl font-bold text-base-content">{{ __('Translation Manager') }}</h1>
+                <p class="text-sm text-base-content/60">{{ __('Manage translations for multiple languages') }}</p>
             </div>
             <div class="flex flex-wrap gap-2">
                 <button @click="addKeyModal = true; $wire.call('openAddKeyModal')" class="btn btn-primary btn-sm">
@@ -30,12 +30,12 @@
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM12.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0zM18.75 12a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                         </svg>
-                        More
+                        {{ __('More') }}
                     </label>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52">
-                        <li><a @click="scanModal = true; $wire.call('openScanModal')">Scan Code</a></li>
-                        <li><a @click="importModal = true; $wire.call('openImportModal')">Import</a></li>
-                        <li><a @click="aiTranslateModal = true; $wire.call('openAITranslateModal')">AI Translate</a></li>
+                        <li><a @click="scanModal = true; $wire.call('openScanModal')">{{ __('Scan Code') }}</a></li>
+                        <li><a @click="importModal = true; $wire.call('openImportModal')">{{ __('Import') }}</a></li>
+                        <li><a @click="aiTranslateModal = true; $wire.call('openAITranslateModal')">{{ __('AI Translate') }}</a></li>
                     </ul>
                 </div>
             </div>
@@ -99,9 +99,9 @@
         </select>
 
         <div class="join">
-            <input wire:model.live="viewMode" type="radio" name="viewMode" value="all" class="join-item btn btn-sm" aria-label="All" />
-            <input wire:model.live="viewMode" type="radio" name="viewMode" value="missing" class="join-item btn btn-sm" aria-label="Missing" />
-            <input wire:model.live="viewMode" type="radio" name="viewMode" value="translated" class="join-item btn btn-sm" aria-label="Translated" />
+            <input wire:model.live="viewMode" type="radio" name="viewMode" value="all" class="join-item btn btn-sm" aria-label="{{ __('All') }}" />
+            <input wire:model.live="viewMode" type="radio" name="viewMode" value="missing" class="join-item btn btn-sm" aria-label="{{ __('Missing') }}" />
+            <input wire:model.live="viewMode" type="radio" name="viewMode" value="translated" class="join-item btn btn-sm" aria-label="{{ __('Translated') }}" />
         </div>
 
         <select wire:model.live="perPage" class="select select-bordered select-sm">
@@ -132,7 +132,7 @@
                         <span class="badge badge-ghost">{{ $this->offset() + $index + 1 }}</span>
                         <code class="text-sm font-mono">{{ $item['key'] }}</code>
                     </div>
-                    <button wire:click="deleteKey('{{ $item['key'] }}')" wire:confirm="Delete this key?" class="btn btn-ghost btn-xs text-error">
+                    <button wire:click="deleteKey('{{ $item['key'] }}')" wire:confirm="{{ __('Delete this key?') }}" class="btn btn-ghost btn-xs text-error">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                         </svg>
@@ -176,7 +176,12 @@
     @if($this->totalFilteredCount > 0)
         <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4 bg-base-200 rounded-lg p-4">
             <div class="text-sm text-base-content/60">
-                Showing {{ $this->offset() + 1 }} to {{ min($this->offset() + $this->perPage, $this->totalFilteredCount) }} of {{ $this->totalFilteredCount }} {{ $this->totalFilteredCount === 1 ? 'key' : 'keys' }}
+                {{ __('Showing :from to :to of :total :items', [
+                    'from' => $this->offset() + 1,
+                    'to' => min($this->offset() + $this->perPage, $this->totalFilteredCount),
+                    'total' => $this->totalFilteredCount,
+                    'items' => $this->totalFilteredCount === 1 ? __('key') : __('keys'),
+                ]) }}
             </div>
             <div class="flex items-center gap-2">
                 <div class="join">
@@ -206,8 +211,8 @@
         </div>
 
         <x-slot:actions>
-            <x-button label="Cancel" @click="$wire.closeAddKeyModal()" />
-            <x-button label="Save" class="btn-primary" wire:click="saveNewKey" spinner="saveNewKey" />
+            <x-button :label="__('Cancel')" @click="$wire.closeAddKeyModal()" />
+            <x-button :label="__('Save')" class="btn-primary" wire:click="saveNewKey" spinner="saveNewKey" />
         </x-slot:actions>
     </x-modal>
 
@@ -237,7 +242,7 @@
     <x-modal wire:model="importModal" title="Import Translations" class="backdrop-blur max-w-2xl" persistent>
         <div class="space-y-4">
             <x-select
-                label="Select Language"
+                :label="__('Select Language')"
                 wire:model="importLanguage"
                 :options="$languages"
                 option-value="code"
@@ -245,7 +250,7 @@
             />
 
             <x-textarea
-                label="JSON Content"
+                :label="__('JSON Content')"
                 wire:model="importJson"
                 rows="12"
                 class="font-mono text-xs"
@@ -308,7 +313,7 @@
     <x-modal wire:model="aiTranslateModal" title="AI Auto-Translate" subtitle="Translate missing keys using Google Translate" class="backdrop-blur" persistent>
         <div class="space-y-4">
             <x-select
-                label="Target Language"
+                :label="__('Target Language')"
                 wire:model="aiTargetLanguage"
                 :options="collect($languages)->where('code', '!=', 'en')"
                 option-value="code"

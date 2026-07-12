@@ -9,6 +9,8 @@
             </div>
 
             @if($filterStatus === 'pending')
+                <x-button label="Evaluate Pending with AI" icon="o-sparkles" class="btn-primary btn-sm ml-2" wire:click="evaluatePendingWithAi" spinner tooltip="Run AI grading on all un-evaluated answers" />
+                <x-button label="Re-evaluate All" icon="o-arrow-path" class="btn-warning btn-sm ml-2" wire:click="reevaluateAllWithAi" wire:confirm="Re-run AI evaluation for ALL pending answers? This may take some time." spinner tooltip="Force AI to re-evaluate all pending answers" />
                 <x-button label="Auto-Confirm High Confidence" icon="o-check-badge" class="btn-success btn-sm ml-2" wire:click="autoConfirmHighConfidence" spinner tooltip="Confirms all pending answers with AI Grade >= 85%" />
             @endif
         </x-slot:actions>
@@ -56,7 +58,12 @@
                     </div>
 
                     {{-- Answer & Reasoning --}}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="bg-success/5 rounded-lg p-3 border border-success/10">
+                            <p class="text-xs font-bold text-success uppercase mb-2">Ideal Answer</p>
+                            <p class="text-sm">{{ $ans->question->ideal_answer ?? 'No ideal answer set.' }}</p>
+                        </div>
+
                         <div class="bg-base-200/50 rounded-lg p-3 border border-base-content/5">
                             <p class="text-xs font-bold text-base-content/40 uppercase mb-2">Student's Answer</p>
                             <p class="text-sm">{{ $ans->text_answer ?? 'No answer provided.' }}</p>

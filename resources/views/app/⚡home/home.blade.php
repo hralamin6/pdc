@@ -6,32 +6,32 @@
       <div class="text-center">
         <h1 class="text-5xl md:text-7xl font-extrabold mb-6">
         <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Transform Your Life
+          {{ __('Transform Your Life') }}
         </span>
           <br/>
-          <span class="text-gray-900 dark:text-white">Through Fitness</span>
+          <span class="text-gray-900 dark:text-white">{{ __('Through Fitness') }}</span>
         </h1>
         <p class="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-3xl mx-auto">
-          Join thousands of fitness enthusiasts sharing knowledge, motivation, and success stories
+          {{ __('Join thousands of fitness enthusiasts sharing knowledge, motivation, and success stories') }}
         </p>
 
         {{-- Stats --}}
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-12">
           <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
             <div class="text-3xl font-bold text-indigo-600 dark:text-indigo-400">{{ number_format($this->stats['posts']) }}</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Posts</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Posts') }}</div>
           </div>
           <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
             <div class="text-3xl font-bold text-purple-600 dark:text-purple-400">{{ number_format($this->stats['categories']) }}</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Categories</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Categories') }}</div>
           </div>
           <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
             <div class="text-3xl font-bold text-pink-600 dark:text-pink-400">{{ number_format($this->stats['users']) }}</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Members</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Members') }}</div>
           </div>
           <div class="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 dark:border-gray-700">
             <div class="text-3xl font-bold text-orange-600 dark:text-orange-400">{{ number_format($this->stats['views']) }}</div>
-            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Views</div>
+            <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">{{ __('Views') }}</div>
           </div>
         </div>
       </div>
@@ -43,10 +43,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Explore Topics
+          {{ __('Explore Topics') }}
         </h2>
         <p class="text-lg text-gray-600 dark:text-gray-400">
-          Discover content across various fitness and health categories
+          {{ __('Discover content across various fitness and health categories') }}
         </p>
       </div>
 
@@ -79,10 +79,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Latest Articles
+          {{ __('Latest Articles') }}
         </h2>
         <p class="text-lg text-gray-600 dark:text-gray-400">
-          Fresh insights and tips from our community
+          {{ __('Fresh insights and tips from our community') }}
         </p>
       </div>
 
@@ -130,7 +130,7 @@
                     {{ substr($post->user->name ?? 'A', 0, 1) }}
                   </div>
                   <div>
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ Str::limit($post->user->name ?? 'Anonymous', 20) }}</p>
+                    <p class="text-sm font-medium text-gray-900 dark:text-white">{{ Str::limit($post->user->name ?? __('Anonymous'), 20) }}</p>
                     <p class="text-xs text-gray-500 dark:text-gray-400">{{ $post->published_at?->diffForHumans() }}</p>
                   </div>
                 </div>
@@ -153,7 +153,7 @@
       {{-- View All Button --}}
       <div class="text-center mt-12">
         <a wire:navigate href="{{ route('web.posts') }}" class="inline-flex items-center px-8 py-3 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition shadow-lg shadow-indigo-500/50">
-          View All Posts
+          {{ __('View All Posts') }}
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
           </svg>
@@ -167,10 +167,10 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="text-center mb-12">
         <h2 class="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-          Top Contributors
+          {{ __('Top Contributors') }}
         </h2>
         <p class="text-lg text-gray-600 dark:text-gray-400">
-          Meet our most active community members
+          {{ __('Meet our most active community members') }}
         </p>
       </div>
 
@@ -204,17 +204,17 @@
 
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative text-center">
       <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
-        Ready to Start Your Journey?
+        {{ __('Ready to Start Your Journey?') }}
       </h2>
       <p class="text-xl text-white/90 mb-8">
-        Join our community today and get access to expert advice, workout plans, and motivation
+        {{ __('Join our community today and get access to expert advice, workout plans, and motivation') }}
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <a wire:navigate href="{{ route('register') }}" class="px-8 py-4 text-lg font-medium text-indigo-600 bg-white rounded-lg hover:bg-gray-50 transition shadow-xl">
-          Create Free Account
+          {{ __('Create Free Account') }}
         </a>
         <a wire:navigate href="{{ route('web.posts') }}" class="px-8 py-4 text-lg font-medium text-white bg-white/20 backdrop-blur-sm rounded-lg hover:bg-white/30 transition border border-white/30">
-          Browse Content
+          {{ __('Browse Content') }}
         </a>
       </div>
     </div>

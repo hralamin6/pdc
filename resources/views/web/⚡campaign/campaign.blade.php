@@ -92,12 +92,12 @@
                         @if($this->isAdmin())
                             <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-4">
                                 <h4 class="font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                                    <x-icon name="o-pencil" class="w-5 h-5 text-primary" /> Post a Campaign Update
+                                    <x-icon name="o-pencil" class="w-5 h-5 text-primary" /> {{ __('Post a Campaign Update') }}
                                 </h4>
                                 <div class="space-y-3">
-                                    <x-input label="Update Title" wire:model.defer="newUpdateTitle" placeholder="e.g. Phase 1 Finished" required />
-                                    <x-textarea label="Content" wire:model.defer="newUpdateContent" placeholder="Describe the progress..." rows="3" required />
-                                    <x-button label="Publish Update" class="btn-primary btn-sm" wire:click="addUpdate" spinner="addUpdate" />
+                                    <x-input label="{{ __('Update Title') }}" wire:model.defer="newUpdateTitle" placeholder="{{ __('e.g. Phase 1 Finished') }}" required />
+                                    <x-textarea label="{{ __('Content') }}" wire:model.defer="newUpdateContent" placeholder="{{ __('Describe the progress...') }}" rows="3" required />
+                                    <x-button label="{{ __('Publish Update') }}" class="btn-primary btn-sm" wire:click="addUpdate" spinner="addUpdate" />
                                 </div>
                             </div>
                         @endif
@@ -112,7 +112,7 @@
                                         <div class="flex items-center gap-2">
                                             <span class="text-[10px] text-slate-400 font-bold uppercase">{{ $update->created_at->diffForHumans() }}</span>
                                             @if($this->isAdmin())
-                                                <button wire:click="deleteUpdate({{ $update->id }})" confirm="Are you sure you want to delete this update?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                <button wire:click="deleteUpdate({{ $update->id }})" confirm="{{ __('Are you sure you want to delete this update?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                     <x-icon name="o-trash" class="w-3.5 h-3.5" />
                                                 </button>
                                             @endif
@@ -121,7 +121,7 @@
                                     <p class="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-line">{{ $update->content }}</p>
                                     <div class="mt-3 flex items-center gap-1.5 text-xs text-slate-400">
                                         <x-icon name="o-user" class="w-3.5 h-3.5" />
-                                        <span>{{ $update->user->name ?? 'Admin' }}</span>
+                                        <span>{{ $update->user->name ?? __('Admin') }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -138,16 +138,16 @@
                         @auth
                             <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-3">
                                 <h4 class="font-black text-slate-800 dark:text-slate-200 flex items-center gap-2">
-                                    <x-icon name="o-question-mark-circle" class="w-5 h-5 text-primary" /> Ask a Question
+                                    <x-icon name="o-question-mark-circle" class="w-5 h-5 text-primary" /> {{ __('Ask a Question') }}
                                 </h4>
                                 <div class="space-y-3">
-                                    <x-textarea wire:model.defer="newQuestion" placeholder="Type your question about this campaign here..." rows="2" required />
-                                    <x-button label="Submit Question" class="btn-primary btn-sm" wire:click="askQuestion" spinner="askQuestion" />
+                                    <x-textarea wire:model.defer="newQuestion" placeholder="{{ __('Type your question about this campaign here...') }}" rows="2" required />
+                                    <x-button label="{{ __('Submit Question') }}" class="btn-primary btn-sm" wire:click="askQuestion" spinner="askQuestion" />
                                 </div>
                             </div>
                         @else
                             <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-4 text-center border border-slate-200/50 dark:border-slate-800">
-                                <p class="text-sm text-slate-500 dark:text-slate-400">Please <a href="{{ route('login') }}" class="text-primary font-bold hover:underline">log in</a> to ask a question.</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">{{ __('Please') }} <a href="{{ route('login') }}" class="text-primary font-bold hover:underline">{{ __('log in') }}</a> {{ __('to ask a question.') }}</p>
                             </div>
                         @endauth
 
@@ -159,11 +159,11 @@
                                     <div class="bg-slate-50 dark:bg-slate-800/40 rounded-2xl p-5 border border-slate-200/50 dark:border-slate-800 space-y-3">
                                         <div class="flex justify-between items-start">
                                             <div>
-                                                <span class="text-xs text-slate-400 font-bold block mb-1">Asked by {{ $faq->user->name ?? 'Member' }}</span>
-                                                <h5 class="font-bold text-slate-800 dark:text-slate-200 text-sm sm:text-base">Q: {{ $faq->question }}</h5>
+                                                <span class="text-xs text-slate-400 font-bold block mb-1">{{ __('Asked by') }} {{ $faq->user->name ?? __('Member') }}</span>
+                                                <h5 class="font-bold text-slate-800 dark:text-slate-200 text-sm sm:text-base">{{ __('Q:') }} {{ $faq->question }}</h5>
                                             </div>
                                             @if($this->isAdmin())
-                                                <button wire:click="deleteFaq({{ $faq->id }})" confirm="Are you sure you want to delete this FAQ?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                <button wire:click="deleteFaq({{ $faq->id }})" confirm="{{ __('Are you sure you want to delete this FAQ?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                     <x-icon name="o-trash" class="w-4 h-4" />
                                                 </button>
                                             @endif
@@ -171,19 +171,19 @@
 
                                         @if($faq->answer)
                                             <div class="bg-white dark:bg-slate-900 rounded-xl p-3.5 border border-slate-100 dark:border-slate-800 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                                                <span class="font-black text-primary block mb-1">Answer from {{ $faq->answeredBy->name ?? 'Admin' }}:</span>
+                                                <span class="font-black text-primary block mb-1">{{ __('Answer from') }} {{ $faq->answeredBy->name ?? __('Admin') }}:</span>
                                                 <p class="leading-relaxed">{{ $faq->answer }}</p>
                                                 <span class="text-[10px] text-slate-400 mt-2 block">{{ $faq->answered_at->diffForHumans() }}</span>
                                             </div>
                                         @else
                                             @if($this->isAdmin())
                                                 <div class="space-y-2 mt-2">
-                                                    <x-textarea wire:model.defer="faqAnswers.{{ $faq->id }}" placeholder="Type the answer here..." rows="2" />
-                                                    <x-button label="Post Answer" class="btn-success btn-xs" wire:click="answerQuestion({{ $faq->id }})" spinner="answerQuestion({{ $faq->id }})" />
+                                                    <x-textarea wire:model.defer="faqAnswers.{{ $faq->id }}" placeholder="{{ __('Type the answer here...') }}" rows="2" />
+                                                    <x-button label="{{ __('Post Answer') }}" class="btn-success btn-xs" wire:click="answerQuestion({{ $faq->id }})" spinner="answerQuestion({{ $faq->id }})" />
                                                 </div>
                                             @else
                                                 <div class="text-xs text-slate-400 italic">
-                                                    <x-icon name="o-clock" class="w-3.5 h-3.5 inline mr-1" /> Awaiting response from administration...
+                                                    <x-icon name="o-clock" class="w-3.5 h-3.5 inline mr-1" /> {{ __('Awaiting response from administration...') }}
                                                 </div>
                                             @endif
                                         @endif
@@ -231,7 +231,7 @@
                             {{-- Custom Amount --}}
                             <div>
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">{{ __('Or Custom Amount') }}</label>
-                                <input type="number" wire:model.live="customAmount" placeholder="Enter amount (৳)"
+                                <input type="number" wire:model.live="customAmount" placeholder="{{ __('Enter amount (৳)') }}"
                                        class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
                                 @error('customAmount') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                             </div>
@@ -239,55 +239,76 @@
                             {{-- Payment Method Selector --}}
                             <div>
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">{{ __('Payment Method') }}</label>
-                                <div class="grid grid-cols-3 gap-2">
-                                    @foreach(['bkash' => 'bKash', 'nagad' => 'Nagad', 'bank' => 'Bank'] as $key => $label)
+                                <div class="grid grid-cols-5 gap-2">
+                                    @foreach(['cash' => 'Cash', 'bkash' => 'bKash', 'nagad' => 'Nagad', 'bank' => 'Bank', 'other' => 'Other'] as $key => $label)
                                     <button type="button" wire:click="$set('paymentMethod', '{{ $key }}')"
-                                            class="py-2 rounded-xl border text-[11px] font-black transition-all
+                                            class="py-2 rounded-xl border text-[10px] sm:text-[11px] font-black transition-all text-center
                                             {{ $paymentMethod === $key
                                                 ? 'bg-slate-900 dark:bg-slate-700 border-slate-950 text-white'
-                                                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400' }}">
+                                                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700' }}">
                                         {{ $label }}
                                     </button>
                                     @endforeach
                                 </div>
+                                @error('paymentMethod') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                             </div>
 
                             {{-- Payment Instructions depending on selected method --}}
-                            <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-200/50 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300 space-y-2">
-                                <span class="font-black text-[10px] uppercase tracking-wider text-rose-500 block">{{ __('Payment Instructions') }}</span>
-                                @if($paymentMethod === 'bkash')
-                                    <p>{{ __('Please send money (Send Money or Cash In) to our official bKash personal account') }}:</p>
-                                    <p class="font-mono font-black text-sm text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-center tracking-wide">
-                                        {{ setting('payment.bkash_no', '01712345678') }}
-                                    </p>
-                                @elseif($paymentMethod === 'nagad')
-                                    <p>{{ __('Please send money to our official Nagad personal account') }}:</p>
-                                    <p class="font-mono font-black text-sm text-slate-950 dark:text-white bg-slate-100 dark:bg-slate-800 p-2 rounded-lg text-center tracking-wide">
-                                        {{ setting('payment.nagad_no', '01812345678') }}
-                                    </p>
-                                @else
-                                    <p>{{ __('Please transfer funds to the following Bank Account details') }}:</p>
-                                    <div class="font-mono bg-slate-100 dark:bg-slate-800 p-3 rounded-lg space-y-1">
-                                        <div><span class="text-slate-400">{{ __('Bank') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_name', 'Dutch Bangla Bank PLC') }}</span></div>
-                                        <div><span class="text-slate-400">{{ __('Account') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_account_no', '123-456-7890123') }}</span></div>
-                                        <div><span class="text-slate-400">{{ __('Branch') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_branch', 'PSTU Branch') }}</span></div>
-                                        <div><span class="text-slate-400">{{ __('Holder') }}:</span> <span class="text-slate-800 dark:text-slate-200 font-bold">{{ setting('payment.bank_holder', 'PSTU Dawah Community') }}</span></div>
+                            @if($paymentMethod && $this->filteredBankAccounts->isNotEmpty())
+                                <div>
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-2 block">{{ __('Available :type Accounts', ['type' => ucfirst($paymentMethod)]) }}</label>
+                                    <div class="bg-slate-50 dark:bg-slate-800/50 rounded-xl p-3 border border-slate-200 dark:border-slate-700/50 max-h-48 overflow-y-auto space-y-3 mb-3">
+                                        @foreach($this->filteredBankAccounts as $account)
+                                            <div class="flex items-start gap-3">
+                                                <div class="p-2 rounded-lg shrink-0 {{ $account->type_color }}">
+                                                    <x-icon :name="$account->type_icon" class="w-5 h-5" />
+                                                </div>
+                                                <div>
+                                                    <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200 leading-none mb-1">{{ $account->name }}</h4>
+                                                    @if($account->account_number)
+                                                        <p class="text-xs text-slate-600 dark:text-slate-400 font-mono font-semibold">{{ __('A/C:') }} {{ $account->account_number }}</p>
+                                                    @endif
+                                                    @if($account->bank_name || $account->branch)
+                                                        <p class="text-[10px] text-slate-500">{{ $account->bank_name }} {{ $account->branch ? ' - ' . $account->branch : '' }}</p>
+                                                    @endif
+                                                    @if($account->holder_name)
+                                                        <p class="text-[10px] text-slate-500">{{ __('Name:') }} {{ $account->holder_name }}</p>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endif
-                            </div>
+                                    
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">{{ __('Destination Account') }}</label>
+                                    <select wire:model="bankAccountId" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
+                                        <option value="">{{ __('Select where you sent the money...') }}</option>
+                                        @foreach($this->filteredBankAccounts as $account)
+                                            <option value="{{ $account->id }}">{{ $account->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('bankAccountId') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                                </div>
+                            @elseif($paymentMethod)
+                                <div class="p-3 rounded-xl bg-warning/20 text-warning-content text-xs">
+                                    <x-icon name="o-exclamation-triangle" class="w-4 h-4 inline mr-1" />
+                                    {{ __('No :type accounts are currently configured. Please hand cash directly to the administration or select another method.', ['type' => ucfirst($paymentMethod)]) }}
+                                </div>
+                            @endif
 
                             {{-- Transaction ID --}}
-                            <div>
-                                <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">{{ __('Transaction ID / Reference') }}</label>
-                                <input type="text" wire:model="transactionId" placeholder="TrxID (e.g. AM89KJ09)"
-                                       class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
-                                @error('transactionId') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
-                            </div>
+                            @if(in_array($paymentMethod, ['bkash', 'nagad', 'bank']))
+                                <div>
+                                    <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">{{ __('Transaction ID / Reference') }}</label>
+                                    <input type="text" wire:model="transactionId" placeholder="{{ __('TrxID (e.g. AM89KJ09)') }}"
+                                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-mono font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500">
+                                    @error('transactionId') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
+                                </div>
+                            @endif
 
                             {{-- Notes --}}
                             <div>
                                 <label class="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1 block">{{ __('Note (Optional)') }}</label>
-                                <textarea wire:model="note" rows="2" placeholder="Write a short message..."
+                                <textarea wire:model="note" rows="2" placeholder="{{ __('Write a short message...') }}"
                                           class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm font-bold text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500"></textarea>
                                 @error('note') <span class="text-xs text-rose-500 mt-1 block">{{ $message }}</span> @enderror
                             </div>

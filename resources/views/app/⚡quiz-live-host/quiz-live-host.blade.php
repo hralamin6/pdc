@@ -15,7 +15,27 @@
     <div class="mb-6 p-4 rounded-2xl border font-bold flex items-center gap-3
         {{ $quiz->status === 'live' ? 'bg-error/10 border-error/30 text-error animate-pulse' :
            ($quiz->status === 'closed' ? 'bg-base-200 border-base-content/10 text-base-content/50' :
-           'bg-warning/10 border-warning/30 text-warning') }}">
+           'bg-warning/10 border-warning/30 text-warning') }}"
+        @if($quiz->status === 'published' && $quiz->available_from)
+           x-data="{ 
+              end: new Date('{{ $quiz->available_from->toIso8601String() }}').getTime(),
+              now: new Date().getTime(),
+              started: false,
+              format() {
+                  let d = Math.max(0, this.end - this.now) / 1000;
+                  if (d <= 0 && !this.started) {
+                      this.started = true;
+                      $wire.startLiveQuiz();
+                  }
+                  if (d <= 0) return '00:00';
+                  let m = Math.floor(d / 60);
+                  let s = Math.floor(d % 60);
+                  return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+              }
+           }"
+           x-init="setInterval(() => now = new Date().getTime(), 1000)"
+        @endif
+    >
         <x-icon name="{{ $quiz->status === 'live' ? 'o-signal' : ($quiz->status === 'closed' ? 'o-lock-closed' : 'o-clock') }}" class="w-5 h-5" />
         @if($quiz->status === 'live')
             LIVE — Started {{ $quiz->live_started_at?->diffForHumans() }}
@@ -23,6 +43,9 @@
             CLOSED — Quiz ended
         @else
             READY — Click "Start Live Quiz" when participants have joined
+            @if($quiz->available_from && $quiz->available_from > now())
+                <span class="ml-2 font-black text-warning">Auto-starting in: <span x-text="format()" class="font-mono bg-warning/20 px-2 py-0.5 rounded ml-1"></span></span>
+            @endif
         @endif
     </div>
 

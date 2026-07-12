@@ -18,9 +18,9 @@
       <meta property="og:title" content="@yield('title', $title) - {{ setting('name', 'starter') }}" />
       <meta name="twitter:title" content="@yield('title', $title) - {{ setting('name', 'starter') }}" />
 
-      <meta name="description" content="@yield('description', setting('details', 'dummy description') ) - {{ setting('name', 'starter') }}">
-      <meta property="og:description" content="@yield('description', setting('details', 'dummy description') ) - {{ setting('name', 'starter') }}" />
-      <meta name="twitter:description" content="@yield('description', setting('details', 'dummy description') ) - {{ setting('name', 'starter') }}" />
+      <meta name="description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}">
+      <meta property="og:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}" />
+      <meta name="twitter:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}" />
 
       <meta property="og:image:width" content="1536" />
       <meta property="og:image:height" content="1024" />

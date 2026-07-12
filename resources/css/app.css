@@ -5,6 +5,13 @@
 
 @theme {
     --font-sans: 'Inter var';
+    
+    --animate-shimmer: shimmer 1.5s infinite;
+    @keyframes shimmer {
+      100% {
+        transform: translateX(200%);
+      }
+    }
 }
 
 /* Include Tailwind CSS plugins for enhanced form styling and typography */

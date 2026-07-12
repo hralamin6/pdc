@@ -23,6 +23,11 @@ class BookCopy extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    public function addedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
     public function libraryHub(): BelongsTo
     {
         return $this->belongsTo(LibraryHub::class);

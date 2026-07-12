@@ -30,7 +30,7 @@ class QuizQuestionGenerator implements Agent, HasStructuredOutput
             .'3. All generated content must strictly follow the requested language and question type. '
             .'4. For true_false questions, always provide exactly 2 options: "True" and "False". '
             .'5. For multi_select, provide multiple correct options. '
-            .'6. For short_text, provide no options — just the question and explanation. '
+            .'6. For short_text, provide no options — instead, provide an `ideal_answer` along with the question and explanation. '
             .'7. Ensure each question has exactly one clear correct answer for mcq/true_false.';
     }
 
@@ -53,6 +53,7 @@ class QuizQuestionGenerator implements Agent, HasStructuredOutput
                     'question_text' => $schema->string()->required(),
                     'type' => $schema->string()->required(),
                     'marks' => $schema->number()->required(),
+                    'ideal_answer' => $schema->string()->nullable(),
                     'explanation' => $schema->string()->required(),
                     'options' => $schema->array(
                         $schema->object([

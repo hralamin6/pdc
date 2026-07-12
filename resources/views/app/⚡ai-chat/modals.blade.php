@@ -8,7 +8,7 @@
             <div class="relative inline-block overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 bg-white dark:bg-gray-800 sm:p-6 sm:pb-4">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">AI Settings</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('AI Settings') }}</h3>
                         <button wire:click="$set('showSettingsModal', false)" class="text-gray-400 hover:text-gray-500">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -20,12 +20,12 @@
                         {{-- AI Provider --}}
                         <div>
                             <x-choices-offline
-                                label="AI Provider"
+                                :label="__('AI Provider')"
                                 wire:model.live="aiProvider"
                                 :options="$this->getAvailableProviders()"
                                 option-value="id"
                                 option-label="name"
-                                placeholder="Select AI Provider..."
+                                :placeholder="__('Select AI Provider...')"
                                 single
                                 searchable
                             />
@@ -34,12 +34,12 @@
                         {{-- Model --}}
                         <div>
                             <x-choices-offline
-                                label="Model"
+                                :label="__('Model')"
                                 wire:model.live="model"
                                 :options="$this->getAvailableModels()"
                                 option-value="id"
                                 option-label="name"
-                                placeholder="Search models..."
+                                :placeholder="__('Search models...')"
                                 single
                                 clearable
                                 searchable
@@ -49,20 +49,20 @@
                         {{-- System Prompt --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                System Prompt
+                                {{ __('System Prompt') }}
                             </label>
                             <textarea
                                 wire:model="systemPrompt"
                                 rows="4"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                                placeholder="You are a helpful AI assistant..."
+                                placeholder="{{ __('You are a helpful AI assistant...') }}"
                             ></textarea>
                         </div>
 
                         {{-- Temperature --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Temperature: {{ $temperature }}
+                                {{ __('Temperature:') }} {{ $temperature }}
                             </label>
                             <input
                                 type="range"
@@ -73,16 +73,16 @@
                                 class="w-full"
                             />
                             <div class="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                <span>Precise</span>
-                                <span>Balanced</span>
-                                <span>Creative</span>
+                                <span>{{ __('Precise') }}</span>
+                                <span>{{ __('Balanced') }}</span>
+                                <span>{{ __('Creative') }}</span>
                             </div>
                         </div>
 
                         {{-- Max Tokens --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Max Tokens: {{ $maxTokens }}
+                                {{ __('Max Tokens:') }} {{ $maxTokens }}
                             </label>
                             <input
                                 type="range"
@@ -101,13 +101,13 @@
                                 wire:click="$set('showSettingsModal', false)"
                                 class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition"
                             >
-                                Cancel
+                                {{ __('Cancel') }}
                             </button>
                             <button
                                 type="submit"
                                 class="px-4 py-2 text-sm font-medium text-white bg-blue-500 hover:bg-blue-600 rounded-lg transition"
                             >
-                                Save Settings
+                                {{ __('Save Settings') }}
                             </button>
                         </div>
                     </form>

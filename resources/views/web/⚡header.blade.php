@@ -126,7 +126,7 @@ new class extends Component {
                     {{-- Home --}}
                     <a href="{{ route('web.home') }}" wire:navigate
                        class="px-4 py-2 rounded-xl text-sm font-semibold transition-all {{ request()->routeIs('web.home') ? 'text-primary bg-primary/10' : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5' }}">
-                        Home
+                        {{ __('Home') }}
                     </a>
 
                     {{-- Learn Dropdown --}}
@@ -134,7 +134,7 @@ new class extends Component {
                         <button
                             @click.stop="toggleMenu('learn')"
                             class="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
-                            Learn
+                            {{ __('Learn') }}
                             <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openMenu === 'learn' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div
@@ -148,14 +148,14 @@ new class extends Component {
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-slate-100 dark:border-white/5 py-2 z-50">
                             <div class="px-3 py-2">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Study Programs</p>
+                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">{{ __('Study Programs') }}</p>
                                 <a href="{{ route('web.halaqahs') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
                                     <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
                                         <x-icon name="o-book-open" class="w-4 h-4 text-primary" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">Halaqahs</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Study circles & sessions</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">{{ __('Halaqahs') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Study circles & sessions') }}</p>
                                     </div>
                                 </a>
                                 <a href="{{ route('web.library') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
@@ -163,8 +163,17 @@ new class extends Component {
                                         <x-icon name="o-academic-cap" class="w-4 h-4 text-emerald-600" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 transition-colors">Library</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Books & Islamic resources</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 transition-colors">{{ __('Library') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Books & Islamic resources') }}</p>
+                                    </div>
+                                </a>
+                                <a href="{{ route('web.quizzes') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                    <div class="w-8 h-8 bg-indigo-500/10 rounded-lg flex items-center justify-center">
+                                        <x-icon name="o-beaker" class="w-4 h-4 text-indigo-600" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-indigo-600 transition-colors">{{ __('Quizzes') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Islamic knowledge competitions') }}</p>
                                     </div>
                                 </a>
                             </div>
@@ -176,7 +185,7 @@ new class extends Component {
                         <button
                             @click.stop="toggleMenu('community')"
                             class="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
-                            Community
+                            {{ __('Community') }}
                             <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openMenu === 'community' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         <div
@@ -190,14 +199,14 @@ new class extends Component {
                             x-transition:leave-end="opacity-0 scale-95"
                             class="absolute top-full left-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-slate-100 dark:border-white/5 py-2 z-50">
                             <div class="px-3 py-2">
-                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">People & Content</p>
+                                <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">{{ __('People & Content') }}</p>
                                 <a href="{{ route('web.members') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
                                     <div class="w-8 h-8 bg-violet-500/10 rounded-lg flex items-center justify-center">
                                         <x-icon name="o-users" class="w-4 h-4 text-violet-600" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-violet-600 transition-colors">Members</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Community directory</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-violet-600 transition-colors">{{ __('Members') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Community directory') }}</p>
                                     </div>
                                 </a>
                                 <a href="{{ route('web.posts') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
@@ -205,8 +214,8 @@ new class extends Component {
                                         <x-icon name="o-newspaper" class="w-4 h-4 text-amber-600" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 transition-colors">Blog & Knowledge</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Articles & reflections</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-amber-600 transition-colors">{{ __('Blog & Knowledge') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Articles & reflections') }}</p>
                                     </div>
                                 </a>
                                 <a href="{{ route('web.campaigns') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
@@ -214,8 +223,8 @@ new class extends Component {
                                         <x-icon name="o-heart" class="w-4 h-4 text-rose-600" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-rose-600 transition-colors">Campaigns</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Support our causes</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-rose-600 transition-colors">{{ __('Campaigns') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Support our causes') }}</p>
                                     </div>
                                 </a>
                                 <a href="{{ route('web.showcase') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
@@ -223,8 +232,8 @@ new class extends Component {
                                         <x-icon name="o-photo" class="w-4 h-4 text-cyan-600" />
                                     </div>
                                     <div>
-                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 transition-colors">Showcase</p>
-                                        <p class="text-xs text-slate-500 dark:text-slate-400">Community Gallery</p>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-cyan-600 transition-colors">{{ __('Showcase') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Community Gallery') }}</p>
                                     </div>
                                 </a>
                             </div>
@@ -234,7 +243,7 @@ new class extends Component {
                     {{-- About --}}
                     <a href="#about"
                        class="px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
-                        About
+                        {{ __('About') }}
                     </a>
                 </div>
 
@@ -334,7 +343,7 @@ new class extends Component {
                                                 <div class="flex-shrink-0">
                                                     @if($isChat && isset($data['sender_avatar']))
                                                         <div class="w-8 h-8 rounded-full overflow-hidden ring-2 ring-primary/20">
-                                                            <img src="{{ $data['sender_avatar'] }}" alt="avatar" class="w-full h-full object-cover" />
+                                                            <img src="{{ $data['sender_avatar'] }}" alt="{{ __('avatar') }}" class="w-full h-full object-cover" />
                                                         </div>
                                                     @else
                                                         <div class="w-8 h-8 rounded-lg flex items-center justify-center {{ $colorClass }}">
@@ -393,22 +402,24 @@ new class extends Component {
                                 <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">{{ auth()->user()->email }}</p>
                             </div>
 
-                            <x-menu-item title="My Profile" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="Messages" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="My Books" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="Dashboard" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('My Profile') }}" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('My Quizzes') }}" icon="o-academic-cap" link="{{ route('web.my-quizzes') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('My Books') }}" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" link="{{ route('web.my-donations') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('Dashboard') }}" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-separator class="my-1 opacity-70" />
-                            <x-menu-item title="Sign Out" icon="o-power" onclick="document.getElementById('web-logout-form').submit();" class="rounded-xl m-1 text-error font-semibold" />
+                            <x-menu-item title="{{ __('Sign Out') }}" icon="o-power" onclick="document.getElementById('web-logout-form').submit();" class="rounded-xl m-1 text-error font-semibold" />
                         </x-dropdown>
                         <form id="web-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
                     @else
                         <a href="{{ route('login') }}" wire:navigate
                            class="btn btn-ghost btn-sm rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
-                            Sign in
+                            {{ __('Sign in') }}
                         </a>
                         <a href="{{ route('register') }}" wire:navigate
                            class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
-                            Join Free
+                            {{ __('Join Free') }}
                         </a>
                         </a>
                     @endauth
@@ -443,27 +454,30 @@ new class extends Component {
         class="fixed inset-x-0 top-16 z-40 lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-white/5 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 py-6 space-y-1">
             <a href="{{ route('web.home') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('web.home') ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5' }} font-semibold transition-colors">
-                <x-icon name="o-home" class="w-5 h-5" /> Home
+                <x-icon name="o-home" class="w-5 h-5" /> {{ __('Home') }}
             </a>
-            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">Learn</div>
+            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">{{ __('Learn') }}</div>
             <a href="{{ route('web.halaqahs') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> Halaqahs
+                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> {{ __('Halaqahs') }}
             </a>
             <a href="{{ route('web.library') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-academic-cap" class="w-5 h-5 text-emerald-600" /> Library
+                <x-icon name="o-academic-cap" class="w-5 h-5 text-emerald-600" /> {{ __('Library') }}
             </a>
-            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">Community</div>
+            <a href="{{ route('web.quizzes') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                <x-icon name="o-beaker" class="w-5 h-5 text-indigo-500" /> {{ __('Quizzes') }}
+            </a>
+            <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">{{ __('Community') }}</div>
             <a href="{{ route('web.members') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-users" class="w-5 h-5 text-violet-600" /> Members
+                <x-icon name="o-users" class="w-5 h-5 text-violet-600" /> {{ __('Members') }}
             </a>
             <a href="{{ route('web.posts') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-newspaper" class="w-5 h-5 text-amber-600" /> Blog
+                <x-icon name="o-newspaper" class="w-5 h-5 text-amber-600" /> {{ __('Blog') }}
             </a>
             <a href="{{ route('web.campaigns') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-heart" class="w-5 h-5 text-rose-600" /> Campaigns
+                <x-icon name="o-heart" class="w-5 h-5 text-rose-600" /> {{ __('Campaigns') }}
             </a>
             <a href="{{ route('web.showcase') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                <x-icon name="o-photo" class="w-5 h-5 text-cyan-600" /> Showcase
+                <x-icon name="o-photo" class="w-5 h-5 text-cyan-600" /> {{ __('Showcase') }}
             </a>
 
             <div class="border-t border-slate-100 dark:border-white/5 pt-4 mt-4 flex items-center justify-between">
@@ -472,11 +486,11 @@ new class extends Component {
                     @auth
                         <div class="flex flex-col gap-2 w-full">
                             <a href="{{ route('web.profile') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-user" class="w-5 h-5 text-primary" /> My Profile
+                                <x-icon name="o-user" class="w-5 h-5 text-primary" /> {{ __('My Profile') }}
                             </a>
                             <a href="{{ route('web.chat') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
                                 <span class="flex items-center gap-3">
-                                    <x-icon name="o-chat-bubble-left-right" class="w-5 h-5 text-primary" /> Messages
+                                    <x-icon name="o-chat-bubble-left-right" class="w-5 h-5 text-primary" /> {{ __('Messages') }}
                                 </span>
                                 @if($this->unreadMessagesCount > 0)
                                     <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
@@ -486,7 +500,7 @@ new class extends Component {
                             </a>
                             <a href="{{ route('web.notifications') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
                                 <span class="flex items-center gap-3">
-                                    <x-icon name="o-bell" class="w-5 h-5 text-primary" /> Notifications
+                                    <x-icon name="o-bell" class="w-5 h-5 text-primary" /> {{ __('Notifications') }}
                                 </span>
                                 @if($this->unreadNotificationsCount > 0)
                                     <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
@@ -495,19 +509,25 @@ new class extends Component {
                                 @endif
                             </a>
                             <a href="{{ route('web.my-books') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> My Books
+                                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> {{ __('My Books') }}
+                            </a>
+                            <a href="{{ route('web.my-quizzes') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-beaker" class="w-5 h-5 text-primary" /> {{ __('My Quizzes') }}
+                            </a>
+                            <a href="{{ route('web.my-donations') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-heart" class="w-5 h-5 text-primary" /> {{ __('My Donations') }}
                             </a>
                             <a href="{{ route('app.dashboard') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-squares-2x2" class="w-5 h-5 text-primary" /> Dashboard
+                                <x-icon name="o-squares-2x2" class="w-5 h-5 text-primary" /> {{ __('Dashboard') }}
                             </a>
                             <button onclick="document.getElementById('web-logout-form-mobile').submit();" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-error hover:bg-red-50 dark:hover:bg-red-950/20 font-semibold transition-colors text-left w-full">
-                                <x-icon name="o-power" class="w-5 h-5" /> Sign Out
+                                <x-icon name="o-power" class="w-5 h-5" /> {{ __('Sign Out') }}
                             </button>
                             <form id="web-logout-form-mobile" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
                         </div>
                     @else
-                        <a href="{{ route('login') }}" wire:navigate class="btn btn-ghost btn-sm rounded-xl font-semibold">Sign in</a>
-                        <a href="{{ route('register') }}" wire:navigate class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold">Join Free</a>
+                        <a href="{{ route('login') }}" wire:navigate class="btn btn-ghost btn-sm rounded-xl font-semibold">{{ __('Sign in') }}</a>
+                        <a href="{{ route('register') }}" wire:navigate class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold">{{ __('Join Free') }}</a>
                     @endauth
                 </div>
             </div>

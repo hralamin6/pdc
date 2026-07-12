@@ -5,11 +5,11 @@
     <div class="text-center mb-8">
       <h1 class="text-4xl md:text-5xl font-extrabold mb-4">
         <span class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-          Browse Categories
+          {{ __('Browse Categories') }}
         </span>
       </h1>
       <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-        Explore all fitness and health topics
+        {{ __('Explore all fitness and health topics') }}
       </p>
     </div>
 
@@ -19,7 +19,7 @@
         <input 
           wire:model.live.debounce.300ms="search" 
           type="text" 
-          placeholder="Search categories..." 
+          placeholder="{{ __('Search categories...') }}"
           class="w-full px-6 py-4 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
         />
         <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,7 +63,7 @@
               @endif
 
               <div class="mt-4 flex items-center text-indigo-600 dark:text-indigo-400 text-sm font-medium">
-                <span>Explore posts</span>
+                <span>{{ __('Explore posts') }}</span>
                 <svg class="w-4 h-4 ml-2 group-hover:translate-x-2 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                 </svg>
@@ -80,8 +80,8 @@
     @else
       <div class="text-center py-16">
         <div class="text-6xl mb-4">🔍</div>
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">No categories found</h3>
-        <p class="text-gray-600 dark:text-gray-400">Try adjusting your search terms</p>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ __('No categories found') }}</h3>
+        <p class="text-gray-600 dark:text-gray-400">{{ __('Try adjusting your search terms') }}</p>
       </div>
     @endif
   </div>

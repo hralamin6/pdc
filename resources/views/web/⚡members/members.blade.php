@@ -14,10 +14,10 @@
             {{ __('Guild Roster') }}
         </div>
         <h1 class="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight">
-          PSTU Dawah <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400">Community</span>
+          PSTU Dawah <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400">{{ __('Community') }}</span>
         </h1>
         <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-medium">
-          Meet the dedicated seekers, mentors, and scholars leveling up their Deen and brotherhood together.
+          {{ __('Meet the dedicated seekers, mentors, and scholars leveling up their Deen and brotherhood together.') }}
         </p>
 
         {{-- Top Contributors Spotlight --}}
@@ -31,7 +31,7 @@
             @endforeach
           </div>
           <span class="font-bold text-white bg-white/10 px-4 py-2 rounded-full border border-white/10 backdrop-blur-sm">
-            Join {{ number_format($this->stats['total']) }}+ Active Players
+            {{ __('Join') }} {{ number_format($this->stats['total']) }}+ {{ __('Active Players') }}
           </span>
         </div>
         @endif
@@ -124,7 +124,7 @@
                         {{-- Banner Area --}}
                         <div class="h-32 bg-slate-200 dark:bg-slate-800 relative overflow-hidden">
                             @if($user->banner_url)
-                                <img src="{{ $user->banner_url }}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" alt="Banner">
+                                <img src="{{ $user->banner_url }}" class="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-700" alt="{{ __('Banner') }}">
                             @else
                                 <div class="absolute inset-0 bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">
                                     <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiM4YjViZjYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE0YzMuMzE0IDAgNiAyLjY4NiA2IDZzLTIuNjg2IDYtNiA2LTYtMi42ODYtNi02IDIuNjg2LTYgNi02ek0wIDIwYzMuMzE0IDAgNiAyLjY4NiA2IDZzLTIuNjg2IDYtNiA2djhsMTIgMTJoOHYtOGMzLjMxNCAwIDYgMi42ODYgNiA2czIuNjg2IDYgNiA2aDh2LThoLTZ2LTZoNnYtNmgtNnYtNmg2di02aC02di02aDZ2LTZoLTZ2LTZoNlYwSDM2djZoLTZ2Nmg2djZoLTZ2Nmg2djZoLTZ2Nmg2djZoLTZ2Nmg2djZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-20 dark:opacity-10"></div>

@@ -96,6 +96,64 @@
         </div>
     </section>
 
+    {{-- ══════════════════════════ COMMUNITY HUBS ══════════════════════════ --}}
+    @if($this->hubs->isNotEmpty() && !$search)
+    <section class="pt-8 pb-4 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <x-icon name="o-building-library" class="w-6 h-6 text-cyan-500" /> {{ __('Community Hubs') }}
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                @foreach($this->hubs as $hub)
+                    <a href="{{ route('web.library.hub', $hub->id) }}" class="block bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center gap-4 hover:border-cyan-500/50 transition-colors shadow-sm group hover:shadow-md cursor-pointer" wire:navigate>
+                        <div class="w-12 h-12 bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                            <x-icon name="o-building-library" class="w-6 h-6" />
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate group-hover:text-cyan-600 transition-colors">{{ $hub->name }}</h3>
+                            <p class="text-xs text-slate-500 truncate mb-1">
+                                <x-icon name="o-map-pin" class="w-3 h-3 inline" /> {{ $hub->location ?? __('Location TBA') }}
+                            </p>
+                            <span class="text-[10px] font-black uppercase tracking-widest text-cyan-600 bg-cyan-50 dark:bg-cyan-900/20 px-2 py-0.5 rounded-md">
+                                {{ $hub->book_copies_count }} {{ __('Books Available') }}
+                            </span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
+    {{-- ══════════════════════════ TOP CONTRIBUTORS ══════════════════════════ --}}
+    @if($this->topUsers->isNotEmpty() && !$search)
+    <section class="py-6 border-b border-slate-200 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-xl font-black text-slate-900 dark:text-white mb-4 flex items-center gap-2">
+                <x-icon name="o-star" class="w-6 h-6 text-amber-500" /> {{ __('Top Contributors') }}
+            </h2>
+            <div class="flex overflow-x-auto gap-4 pb-4 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
+                @foreach($this->topUsers as $user)
+                    <a href="{{ route('web.library.user', $user->id) }}" class="flex-none w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col items-center text-center hover:border-amber-500/50 hover:shadow-lg transition-all group">
+                        <div class="relative mb-3">
+                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="w-16 h-16 rounded-full object-cover ring-4 ring-slate-50 dark:ring-slate-950 group-hover:ring-amber-100 transition-all">
+                            @if($loop->iteration <= 3)
+                                <div class="absolute -top-2 -right-2 w-7 h-7 bg-amber-400 text-white rounded-full flex items-center justify-center font-black text-xs shadow-sm ring-2 ring-white dark:ring-slate-900">
+                                    #{{ $loop->iteration }}
+                                </div>
+                            @endif
+                        </div>
+                        <h3 class="font-bold text-sm text-slate-900 dark:text-white truncate w-full mb-1">{{ $user->name }}</h3>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded-md">
+                            {{ $user->book_copies_count }} {{ __('Books Shared') }}
+                        </span>
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </section>
+    @endif
+
     {{-- ══════════════════════════ BOOK GRID ══════════════════════════ --}}
     <section class="py-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -128,17 +186,17 @@
                                 {{-- Type Badge --}}
                                 <div class="absolute top-2 left-2">
                                     @if($book->type === 'ebook')
-                                        <span class="text-[9px] font-black uppercase tracking-widest bg-cyan-600 text-white px-2 py-0.5 rounded-md shadow">eBook</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest bg-cyan-600 text-white px-2 py-0.5 rounded-md shadow">{{ __('eBook') }}</span>
                                     @elseif($book->type === 'both')
-                                        <span class="text-[9px] font-black uppercase tracking-widest bg-fuchsia-600 text-white px-2 py-0.5 rounded-md shadow">Digital+Physical</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest bg-fuchsia-600 text-white px-2 py-0.5 rounded-md shadow">{{ __('Digital+Physical') }}</span>
                                     @else
-                                        <span class="text-[9px] font-black uppercase tracking-widest bg-amber-600 text-white px-2 py-0.5 rounded-md shadow">Physical</span>
+                                        <span class="text-[9px] font-black uppercase tracking-widest bg-amber-600 text-white px-2 py-0.5 rounded-md shadow">{{ __('Physical') }}</span>
                                     @endif
                                 </div>
 
                                 @if($book->created_at->diffInDays() < 14)
                                 <div class="absolute top-2 right-2">
-                                    <span class="text-[9px] font-black uppercase tracking-widest bg-emerald-500 text-white px-2 py-0.5 rounded-md shadow">New</span>
+                                    <span class="text-[9px] font-black uppercase tracking-widest bg-emerald-500 text-white px-2 py-0.5 rounded-md shadow">{{ __('New') }}</span>
                                 </div>
                                 @endif
 
@@ -182,7 +240,7 @@
                             <div class="flex-1 min-w-0">
                                 <div class="flex items-start gap-2 mb-1">
                                     <h3 class="font-black text-slate-900 dark:text-white line-clamp-1 group-hover:text-cyan-600 transition-colors">{{ $book->title }}</h3>
-                                    @if($book->type === 'ebook') <span class="shrink-0 text-[9px] font-black uppercase bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 px-2 py-0.5 rounded-md">eBook</span> @endif
+                                    @if($book->type === 'ebook') <span class="shrink-0 text-[9px] font-black uppercase bg-cyan-100 dark:bg-cyan-900/30 text-cyan-600 dark:text-cyan-400 px-2 py-0.5 rounded-md">{{ __('eBook') }}</span> @endif
                                 </div>
                                 <p class="text-sm text-slate-500 dark:text-slate-400 font-bold">{{ $book->author?->name ?? __('Unknown') }} @if($book->category) · {{ $book->category->name }} @endif</p>
                                 @if($book->description)

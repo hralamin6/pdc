@@ -573,7 +573,7 @@
                                 icon="o-map"
                                 wire:model.live="upazila_id"
                                 :options="$upazilas"
-                                placeholder="Select Upazila"
+                                placeholder="{{ __('Select Upazila') }}"
                             />
                         @endif
 
@@ -824,7 +824,7 @@
                                 <div class="mt-2">
                                     <p class="text-sm font-medium mb-2">{{ __('Preview') }}</p>
                                     <div class="relative w-full h-48 rounded-lg overflow-hidden border dark:border-gray-700">
-                                        <img src="{{ $banner_photo->temporaryUrl() }}" alt="Preview" class="w-full h-full object-cover" />
+                                        <img src="{{ $banner_photo->temporaryUrl() }}" alt="{{ __('Preview') }}" class="w-full h-full object-cover" />
                                     </div>
                                 </div>
                             @endif

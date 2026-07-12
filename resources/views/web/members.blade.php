@@ -7,7 +7,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-new #[Title('Community Members')] #[Layout('layouts.web')] class extends Component
+new #[Title(__('Community Members'))] #[Layout('layouts.web')] class extends Component
 {
     use WithPagination;
 
@@ -55,21 +55,21 @@ new #[Title('Community Members')] #[Layout('layouts.web')] class extends Compone
     <div class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-white py-20 relative overflow-hidden">
         <div class="absolute bottom-0 left-1/4 w-72 h-72 bg-violet-500/20 rounded-full blur-[120px]"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <p class="text-violet-400 font-bold text-sm uppercase tracking-widest mb-3">Our People</p>
-            <h1 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">Community Members</h1>
-            <p class="text-white/50 text-lg max-w-xl mb-8">Meet the brothers and sisters of PSTU Dawah Community.</p>
+            <p class="text-violet-400 font-bold text-sm uppercase tracking-widest mb-3">{{ __('Our People') }}</p>
+            <h1 class="text-3xl md:text-5xl font-black mb-4 tracking-tight">{{ __('Community Members') }}</h1>
+            <p class="text-white/50 text-lg max-w-xl mb-8">{{ __('Meet the brothers and sisters of PSTU Dawah Community.') }}</p>
             <div class="flex gap-8">
                 <div>
                     <p class="text-3xl font-black">{{ $totalCount }}</p>
-                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Total Members</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">{{ __('Total Members') }}</p>
                 </div>
                 <div class="border-l border-white/20 pl-8">
                     <p class="text-3xl font-black">{{ $mentorCount }}</p>
-                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Mentors & Admins</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">{{ __('Mentors & Admins') }}</p>
                 </div>
                 <div class="border-l border-white/20 pl-8">
                     <p class="text-3xl font-black">{{ $recentCount }}</p>
-                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">Joined this Month</p>
+                    <p class="text-xs text-white/40 uppercase tracking-wider mt-1">{{ __('Joined this Month') }}</p>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@ new #[Title('Community Members')] #[Layout('layouts.web')] class extends Compone
         {{-- Filters --}}
         <div class="flex flex-col sm:flex-row gap-4 mb-10 items-start sm:items-center justify-between">
             <div class="flex gap-2 flex-wrap">
-                @php $roles = ['' => 'All', 'mentor' => 'Mentors', 'admin' => 'Admins', 'super-admin' => 'Leaders']; @endphp
+                @php $roles = ['' => __('All'), 'mentor' => __('Mentors'), 'admin' => __('Admins'), 'super-admin' => __('Leaders')]; @endphp
                 @foreach($roles as $val => $label)
                     <button wire:click="$set('role', '{{ $val }}')"
                         class="btn btn-sm rounded-full transition-all {{ $role === $val ? 'bg-primary text-white shadow-lg shadow-primary/30 border-none' : 'btn-ghost border border-base-content/10' }}">
@@ -88,7 +88,7 @@ new #[Title('Community Members')] #[Layout('layouts.web')] class extends Compone
                     </button>
                 @endforeach
             </div>
-            <x-input wire:model.live.debounce.300ms="search" placeholder="Search members..." icon="o-magnifying-glass" class="input-sm w-full sm:w-64 rounded-full" clearable />
+            <x-input wire:model.live.debounce.300ms="search" :placeholder="__('Search members...')" icon="o-magnifying-glass" class="input-sm w-full sm:w-64 rounded-full" clearable />
         </div>
 
         {{-- Grid --}}
@@ -115,9 +115,9 @@ new #[Title('Community Members')] #[Layout('layouts.web')] class extends Compone
                     @if($memberRoles->count())
                         <p class="text-xs text-primary font-semibold mt-0.5">{{ ucfirst($memberRoles->first()) }}</p>
                     @else
-                        <p class="text-xs text-base-content/40 mt-0.5">Member</p>
+                        <p class="text-xs text-base-content/40 mt-0.5">{{ __('Member') }}</p>
                     @endif
-                    <p class="text-[10px] text-base-content/30 mt-1">Joined {{ $member->created_at->format('M Y') }}</p>
+                    <p class="text-[10px] text-base-content/30 mt-1">{{ __('Joined') }} {{ $member->created_at->format('M Y') }}</p>
                 </div>
             @endforeach
         </div>
@@ -126,8 +126,8 @@ new #[Title('Community Members')] #[Layout('layouts.web')] class extends Compone
         @else
             <div class="text-center py-20 bg-base-200/50 rounded-2xl border border-dashed border-base-content/10">
                 <x-icon name="o-users" class="w-12 h-12 text-base-content/20 mx-auto mb-4" />
-                <h3 class="text-lg font-bold text-base-content/70 mb-1">No members found</h3>
-                <p class="text-base-content/50 text-sm">Try a different search term.</p>
+                <h3 class="text-lg font-bold text-base-content/70 mb-1">{{ __('No members found') }}</h3>
+                <p class="text-base-content/50 text-sm">{{ __('Try a different search term.') }}</p>
             </div>
         @endif
     </div>

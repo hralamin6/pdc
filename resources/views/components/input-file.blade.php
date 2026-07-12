@@ -63,18 +63,18 @@
 
     {{-- Preview (newly selected) --}}
     <template x-if="preview">
-      <img :src="preview" alt="Preview" class="w-full h-full object-cover rounded-xl shadow" />
+      <img :src="preview" alt="{{ __('Preview') }}" class="w-full h-full object-cover rounded-xl shadow" />
     </template>
 
     {{-- Existing src (shows only if no preview) --}}
     @if($src)
-      <img x-show="!preview" src="{{ $src }}" alt="Existing" class="w-full h-full object-cover rounded-xl shadow" />
+      <img x-show="!preview" src="{{ $src }}" alt="{{ __('Existing') }}" class="w-full h-full object-cover rounded-xl shadow" />
     @endif
 
     {{-- Placeholder when neither preview nor src --}}
     <div x-show="!preview && !@js($src)" class="flex flex-col items-center text-center text-sm text-gray-500 pointer-events-none">
       <x-icon name="o-photo" class="w-10 h-10 opacity-50" />
-      <span class="mt-2">Drop image or click to upload</span>
+      <span class="mt-2">{{ __('Drop image or click to upload') }}</span>
     </div>
 
     {{-- Loading overlay for Livewire file upload --}}

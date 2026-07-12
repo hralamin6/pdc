@@ -35,7 +35,7 @@
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="text-xl font-bold text-base-content flex items-center gap-2">
                         <x-icon name="o-chat-bubble-left-right" class="w-6 h-6 text-primary" />
-                        Messages
+                        {{ __('Messages') }}
                     </h2>
                     <button wire:click="$set('showNewChatModal', true)" class="btn btn-primary btn-sm btn-circle shadow-lg">
                         <x-icon name="o-plus" class="w-5 h-5" />
@@ -45,7 +45,7 @@
                 {{-- Conversation Search --}}
                 <x-input
                     wire:model.live.debounce.300ms="search"
-                    placeholder="Search conversations..."
+                    :placeholder="__('Search conversations...')"
                     icon="o-magnifying-glass"
                     class="input-sm"
                 />
@@ -106,9 +106,9 @@
                                                     @endif
                                                 </span>
                                             @endif
-                                            {{ Str::limit($latestMessage->body ?? '📎 Attachment', 35) }}
+                                            {{ Str::limit($latestMessage->body ?? __('📎 Attachment'), 35) }}
                                         @else
-                                            <span class="text-base-content/50 italic">No messages yet</span>
+                                            <span class="text-base-content/50 italic">{{ __('No messages yet') }}</span>
                                         @endif
                                     </p>
                                 </div>
@@ -126,9 +126,9 @@
                     {{-- Empty State --}}
                     <div class="flex flex-col items-center justify-center h-full p-8 text-center">
                         <x-icon name="o-chat-bubble-left-right" class="w-16 h-16 text-base-content/30 mb-4" />
-                        <p class="text-base-content/60 mb-4">No conversations yet</p>
+                        <p class="text-base-content/60 mb-4">{{ __('No conversations yet') }}</p>
                         <button wire:click="$set('showNewChatModal', true)" class="btn btn-primary btn-sm">
-                            Start a conversation
+                            {{ __('Start a conversation') }}
                         </button>
                     </div>
                 @endforelse
@@ -158,11 +158,11 @@
                                 <p class="text-xs text-base-content/60 flex items-center gap-1">
                                     @if($otherUser->isOnline())
                                         <span class="w-2 h-2 bg-success rounded-full"></span>
-                                        Active now
+                                        {{ __('Active now') }}
                                     @elseif($otherUser->last_seen)
-                                        Last seen {{ $otherUser->last_seen->diffForHumans() }}
+                                        {{ __('Last seen') }} {{ $otherUser->last_seen->diffForHumans() }}
                                     @else
-                                        Offline
+                                        {{ __('Offline') }}
                                     @endif
                                 </p>
                             </div>
@@ -182,13 +182,13 @@
                                     <div class="card-body">
                                         <x-input
                                             wire:model.live.debounce.300ms="messageSearch"
-                                            placeholder="Search messages..."
+                                            :placeholder="__('Search messages...')"
                                             icon="o-magnifying-glass"
                                             class="input-sm"
                                         />
                                         @if($messageSearch)
                                             <button wire:click="$set('messageSearch', '')" class="btn btn-ghost btn-xs mt-2">
-                                                Clear search
+                                                {{ __('Clear search') }}
                                             </button>
                                         @endif
                                     </div>
@@ -202,13 +202,13 @@
                                     <li>
                                         <button class="text-sm">
                                             <x-icon name="o-bell" class="w-4 h-4" />
-                                            Mute notifications
+                                            {{ __('Mute notifications') }}
                                         </button>
                                     </li>
                                     <li>
                                         <button class="text-sm">
                                             <x-icon name="o-archive-box" class="w-4 h-4" />
-                                            Archive conversation
+                                            {{ __('Archive conversation') }}
                                         </button>
                                     </li>
                                     <div class="divider my-0"></div>
@@ -216,18 +216,18 @@
                                         <li>
                                             <button wire:click="unblockUser" class="text-sm text-success">
                                                 <x-icon name="o-check-circle" class="w-4 h-4" />
-                                                Unblock {{ $otherUser->name }}
+                                                {{ __('Unblock') }} {{ $otherUser->name }}
                                             </button>
                                         </li>
                                     @else
                                         <li>
                                             <button
                                                 wire:click="blockUser"
-                                                wire:confirm="Are you sure you want to block {{ $otherUser->name }}?"
+                                                wire:confirm="{{ __('Are you sure you want to block') }} {{ $otherUser->name }}?"
                                                 class="text-sm text-warning"
                                             >
                                                 <x-icon name="o-no-symbol" class="w-4 h-4" />
-                                                Block {{ $otherUser->name }}
+                                                {{ __('Block') }} {{ $otherUser->name }}
                                             </button>
                                         </li>
                                     @endif
@@ -235,11 +235,11 @@
                                     <li>
                                         <button
                                             wire:click="deleteConversation"
-                                            wire:confirm="Are you sure you want to delete this conversation? This action cannot be undone."
+                                            wire:confirm="{{ __('Are you sure you want to delete this conversation? This action cannot be undone.') }}"
                                             class="text-sm text-error"
                                         >
                                             <x-icon name="o-trash" class="w-4 h-4" />
-                                            Delete conversation
+                                            {{ __('Delete conversation') }}
                                         </button>
                                     </li>
                                 </ul>
@@ -263,7 +263,7 @@
                     @if($messageSearch)
                         <div class="alert alert-info shadow-lg mb-4">
                             <x-icon name="o-magnifying-glass" class="w-5 h-5" />
-                            <span>Searching for: <strong>{{ $messageSearch }}</strong></span>
+                            <span>{{ __('Searching for:') }} <strong>{{ $messageSearch }}</strong></span>
                             <button wire:click="$set('messageSearch', '')" class="btn btn-ghost btn-sm btn-circle">
                                 <x-icon name="o-x-mark" class="w-4 h-4" />
                             </button>
@@ -301,7 +301,7 @@
                     >
                         <div class="flex items-center gap-2 text-sm text-base-content/60">
                             <span class="loading loading-spinner loading-sm"></span>
-                            <span>Loading older messages...</span>
+                            <span>{{ __('Loading older messages...') }}</span>
                         </div>
                     </div>
 
@@ -320,9 +320,9 @@
                             <div class="flex items-center justify-center my-4">
                                 <div class="px-3 py-1 bg-base-200 rounded-full text-xs text-base-content/70 font-medium shadow-sm">
                                     @if($message->created_at->isToday())
-                                        Today
+                                        {{ __('Today') }}
                                     @elseif($message->created_at->isYesterday())
-                                        Yesterday
+                                        {{ __('Yesterday') }}
                                     @else
                                         {{ $message->created_at->format('l, F j, Y') }}
                                     @endif
@@ -350,7 +350,7 @@
                                     @if($message->parent)
                                         <div class="text-xs text-base-content/60 px-3 py-1 bg-base-200 rounded-lg border-l-2 border-primary">
                                             <span class="font-semibold">{{ $message->parent->user->name }}</span>:
-                                            {{ Str::limit($message->parent->body ?? 'Attachment', 50) }}
+                                            {{ Str::limit($message->parent->body ?? __('Attachment'), 50) }}
                                         </div>
                                     @endif
 
@@ -420,18 +420,18 @@
                                                     {{ messengerTime($message->created_at) }}
                                                 </span>
                                                 @if($isEdited)
-                                                    <span class="text-xs opacity-60 italic">edited</span>
+                                                    <span class="text-xs opacity-60 italic">{{ __('edited') }}</span>
                                                 @endif
                                                 @if($isOwn)
                                                     @if($message->read_at)
-                                                        <span class="text-xs text-blue-500" title="Read at {{ $message->read_at->format('g:i A') }}">
+                                                        <span class="text-xs text-blue-500" title="{{ __('Read at') }} {{ $message->read_at->format('g:i A') }}">
                                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
                                                                 <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" transform="translate(4, 0)"/>
                                                             </svg>
                                                         </span>
                                                     @else
-                                                        <span class="text-xs opacity-50" title="Sent">
+                                                        <span class="text-xs opacity-50" title="{{ __('Sent') }}">
                                                             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path d="M0 11l2-2 5 5L18 3l2 2L7 18z"/>
                                                             </svg>
@@ -449,42 +449,42 @@
                                             <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-300">
                                                 <li>
                                                     <button @click="addReaction({{ $message->id }}, '👍')" class="text-sm">
-                                                        <span class="text-lg">👍</span> Like
+                                                        <span class="text-lg">👍</span> {{ __('Like') }}
                                                     </button>
                                                 </li>
                                                 <li>
                                                     <button @click="addReaction({{ $message->id }}, '❤️')" class="text-sm">
-                                                        <span class="text-lg">❤️</span> Love
+                                                        <span class="text-lg">❤️</span> {{ __('Love') }}
                                                     </button>
                                                 </li>
                                                 <li>
                                                     <button @click="addReaction({{ $message->id }}, '😂')" class="text-sm">
-                                                        <span class="text-lg">😂</span> Haha
+                                                        <span class="text-lg">😂</span> {{ __('Haha') }}
                                                     </button>
                                                 </li>
                                                 <div class="divider my-0"></div>
                                                 <li>
                                                     <button wire:click="setReplyingTo({{ $message->id }})" class="text-sm">
                                                         <x-icon name="o-arrow-uturn-left" class="w-4 h-4" />
-                                                        Reply
+                                                        {{ __('Reply') }}
                                                     </button>
                                                 </li>
                                                 @if($isOwn)
                                                     <li>
                                                         <button wire:click="editMessage({{ $message->id }})" class="text-sm">
                                                             <x-icon name="o-pencil" class="w-4 h-4" />
-                                                            Edit
+                                                            {{ __('Edit') }}
                                                         </button>
                                                     </li>
                                                     <div class="divider my-0"></div>
                                                     <li>
                                                         <button
                                                             wire:click="deleteMessage({{ $message->id }})"
-                                                            wire:confirm="Delete this message?"
+                                                            wire:confirm="{{ __('Delete this message?') }}"
                                                             class="text-sm text-error"
                                                         >
                                                             <x-icon name="o-trash" class="w-4 h-4" />
-                                                            Delete
+                                                            {{ __('Delete') }}
                                                         </button>
                                                     </li>
                                                 @endif
@@ -498,7 +498,7 @@
                         {{-- Empty State --}}
                         <div class="flex flex-col items-center justify-center h-full text-center">
                             <x-icon name="o-chat-bubble-left-right" class="w-16 h-16 text-base-content/20 mb-4" />
-                            <p class="text-base-content/60">No messages yet. Start the conversation!</p>
+                            <p class="text-base-content/60">{{ __('No messages yet. Start the conversation!') }}</p>
                         </div>
                     @endforelse
 
@@ -511,7 +511,7 @@
                         <button 
                             @click="scrollToBottom($refs.messageContainer); showGoToLatest = false"
                             class="btn btn-primary btn-circle shadow-lg"
-                            title="Go to latest messages"
+                            title="{{ __('Go to latest messages') }}"
                         >
                             <x-icon name="o-chevron-down" class="w-5 h-5" />
                         </button>
@@ -536,11 +536,11 @@
                             <x-icon name="o-no-symbol" class="w-5 h-5" />
                             <div>
                                 @if($isBlocked)
-                                    <p class="font-semibold">You have blocked this conversation</p>
-                                    <p class="text-sm">Unblock to send messages</p>
+                                    <p class="font-semibold">{{ __('You have blocked this conversation') }}</p>
+                                    <p class="text-sm">{{ __('Unblock to send messages') }}</p>
                                 @else
-                                    <p class="font-semibold">You cannot send messages</p>
-                                    <p class="text-sm">This user has blocked you</p>
+                                    <p class="font-semibold">{{ __('You cannot send messages') }}</p>
+                                    <p class="text-sm">{{ __('This user has blocked you') }}</p>
                                 @endif
                             </div>
                         </div>
@@ -551,7 +551,7 @@
                         <div class="mb-2 p-2 bg-warning/10 border-l-4 border-warning rounded-lg flex items-center justify-between">
                             <div class="flex items-center gap-2 text-sm">
                                 <x-icon name="o-pencil" class="w-4 h-4 text-warning" />
-                                <span class="text-base-content/70">Editing message</span>
+                                <span class="text-base-content/70">{{ __('Editing message') }}</span>
                             </div>
                             <button wire:click="cancelEdit" class="btn btn-ghost btn-xs btn-circle">
                                 <x-icon name="o-x-mark" class="w-4 h-4" />
@@ -569,8 +569,8 @@
                                 <div class="flex items-center gap-2 text-sm">
                                     <x-icon name="o-arrow-uturn-left" class="w-4 h-4 text-primary" />
                                     <span class="text-base-content/70">
-                                        Replying to <span class="font-semibold">{{ $replyMessage->user->name }}</span>:
-                                        {{ Str::limit($replyMessage->body ?? 'Attachment', 50) }}
+                                        {{ __('Replying to') }} <span class="font-semibold">{{ $replyMessage->user->name }}</span>:
+                                        {{ Str::limit($replyMessage->body ?? __('Attachment'), 50) }}
                                     </span>
                                 </div>
                                 <button wire:click="cancelReply" class="btn btn-ghost btn-xs btn-circle">
@@ -587,7 +587,7 @@
                                     @if(str_starts_with($attachment->getMimeType(), 'image/'))
                                         <img
                                             src="{{ $attachment->temporaryUrl() }}"
-                                            alt="Preview"
+                                            alt="{{ __('Preview') }}"
                                             class="w-20 h-20 object-cover rounded-lg"
                                         />
                                     @else
@@ -624,7 +624,7 @@
                         <div class="flex-1">
                             <textarea
                                 wire:model="body"
-                                placeholder="@if($isBlocked || $otherUserBlocked) Cannot send messages @else Type a message... @endif"
+                                placeholder="@if($isBlocked || $otherUserBlocked){{ __('Cannot send messages') }}@else{{ __('Type a message...') }}@endif"
                                 rows="1"
                                 class="textarea textarea-bordered w-full resize-none"
                                 @keydown.enter="if (!$event.shiftKey) { $event.preventDefault(); $wire.sendMessage(); }"
@@ -667,11 +667,11 @@
     @if($showNewChatModal)
         <div class="modal modal-open">
             <div class="modal-box">
-                <h3 class="font-bold text-lg mb-4">Start New Conversation</h3>
+                <h3 class="font-bold text-lg mb-4">{{ __('Start New Conversation') }}</h3>
 
                 <x-input
                     wire:model.live.debounce.300ms="search"
-                    placeholder="Search users..."
+                    :placeholder="__('Search users...')"
                     icon="o-magnifying-glass"
                     class="mb-4"
                 />
@@ -693,12 +693,12 @@
                             </div>
                         </div>
                     @empty
-                        <p class="text-center text-base-content/60 py-8">No users found</p>
+                        <p class="text-center text-base-content/60 py-8">{{ __('No users found') }}</p>
                     @endforelse
                 </div>
 
                 <div class="modal-action">
-                    <button wire:click="$set('showNewChatModal', false)" class="btn">Close</button>
+                    <button wire:click="$set('showNewChatModal', false)" class="btn">{{ __('Close') }}</button>
                 </div>
             </div>
             <div class="modal-backdrop" wire:click="$set('showNewChatModal', false)"></div>

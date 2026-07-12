@@ -119,4 +119,65 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
 
         $this->success("Auto-confirmed {$count} high-confidence answers.");
     }
+
+    public function evaluatePendingWithAi()
+    {
+        $answers = QuizAnswer::with('question')
+            ->whereHas('question', fn ($q) => $q->where('type', 'short_text'))
+            ->whereNull('admin_grade')
+            ->whereNull('ai_grade')
+            ->get();
+
+        if ($answers->isEmpty()) {
+            $this->warning('No pending un-evaluated answers found.');
+            return;
+        }
+
+        $count = 0;
+        $aiService = app(\App\Services\QuizAiService::class);
+
+        foreach ($answers as $answer) {
+            try {
+                $result = $aiService->gradeShortText($answer->question, $answer->text_answer ?? '');
+                $answer->ai_grade = $result['grade'];
+                $answer->ai_grade_reason = $result['reason'];
+                $answer->save();
+                $count++;
+            } catch (\Exception $e) {
+                // Keep evaluating others
+            }
+        }
+
+        $this->success("AI evaluated {$count} pending answers.");
+    }
+
+    public function reevaluateAllWithAi()
+    {
+        $answers = QuizAnswer::with('question')
+            ->whereHas('question', fn ($q) => $q->where('type', 'short_text'))
+            ->whereNull('admin_grade')
+            ->get();
+
+        if ($answers->isEmpty()) {
+            $this->warning('No pending answers found to re-evaluate.');
+            return;
+        }
+
+        $count = 0;
+        $aiService = app(\App\Services\QuizAiService::class);
+
+        foreach ($answers as $answer) {
+            try {
+                $result = $aiService->gradeShortText($answer->question, $answer->text_answer ?? '');
+                $answer->ai_grade = $result['grade'];
+                $answer->ai_grade_reason = $result['reason'];
+                $answer->save();
+                $count++;
+            } catch (\Exception $e) {
+                // Keep evaluating others
+            }
+        }
+
+        $this->success("AI re-evaluated {$count} answers.");
+    }
 };

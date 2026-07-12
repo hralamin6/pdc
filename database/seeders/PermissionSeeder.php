@@ -50,6 +50,9 @@ class PermissionSeeder extends Seeder
             'halaqahs' => [
                 'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
             ],
+            'quiz' => [
+                'quiz.view', 'quiz.manage', 'quiz.create', 'quiz.grade', 'quiz.attempt', 'quiz.live.host',
+            ],
             'expenses' => [
                 'expenses.view',                  // member: see published monthly summary
                 'expenses.manage',                // accountant: full CRUD expenses
@@ -64,6 +67,9 @@ class PermissionSeeder extends Seeder
             ],
             'gallery' => [
                 'gallery.manage', 'gallery.view',
+            ],
+            'donations' => [
+                'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
             ],
         ];
 
@@ -105,6 +111,8 @@ class PermissionSeeder extends Seeder
             'expenses.manage', 'expenses.categories.manage', 'expenses.bank-accounts.manage', 'expenses.transfers.manage', 'expenses.reports.manage', 'expenses.reports.view',
             'feedback.manage', 'feedback.view',
             'gallery.manage', 'gallery.view',
+            'quiz.view', 'quiz.manage', 'quiz.create', 'quiz.grade', 'quiz.attempt', 'quiz.live.host',
+            'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
         ])->get();
         $admin->syncPermissions($adminPerms);
 
@@ -116,6 +124,7 @@ class PermissionSeeder extends Seeder
             'expenses.view', 'expenses.manage',
             'expenses.transfers.manage',
             'expenses.reports.view',
+            'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
         ])->get();
         $accountant->syncPermissions($accountantPerms);
 
@@ -130,6 +139,7 @@ class PermissionSeeder extends Seeder
             'posts.delete-own',
             'expenses.view',          // members see financial summary
             'expenses.reports.view',  // members see published reports
+            'quiz.view', 'quiz.attempt',
         ])->get();
         $user->syncPermissions($userPerms);
 
@@ -139,6 +149,7 @@ class PermissionSeeder extends Seeder
             'activity.my',
             'halaqahs.view', 'halaqahs.create', 'halaqahs.update', 'halaqahs.delete', 'halaqahs.manage-attendance',
             'expenses.view', 'expenses.reports.view',
+            'quiz.view', 'quiz.attempt', 'quiz.live.host',
         ])->get();
         $mentor->syncPermissions($mentorPerms);
 

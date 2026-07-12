@@ -87,15 +87,6 @@ class extends Component
     public string $openaiApiKey = '';
     public string $openaiOrg = '';
     public string $openaiBaseUrl = '';
-
-    // Payment / Donations
-    public string $paymentBkashNo = '';
-    public string $paymentNagadNo = '';
-    public string $paymentBankName = '';
-    public string $paymentBankAccountNo = '';
-    public string $paymentBankBranch = '';
-    public string $paymentBankHolder = '';
-
   public $output = '';
   public $selectedCommand = '';
   public $availableCommands = [];
@@ -187,14 +178,6 @@ class extends Component
         $this->openaiApiKey = (string) (setting('ai.openai.api_key', env('OPENAI_API_KEY', '')) ?? '');
         $this->openaiOrg = (string) (setting('ai.openai.org', env('OPENAI_ORG', '')) ?? '');
         $this->openaiBaseUrl = (string) (setting('ai.openai.base_url', env('OPENAI_BASE_URL', 'https://api.openai.com/v1')) ?? '');
-
-        // Load payments
-        $this->paymentBkashNo = (string) (setting('payment.bkash_no', '') ?? '');
-        $this->paymentNagadNo = (string) (setting('payment.nagad_no', '') ?? '');
-        $this->paymentBankName = (string) (setting('payment.bank_name', '') ?? '');
-        $this->paymentBankAccountNo = (string) (setting('payment.bank_account_no', '') ?? '');
-        $this->paymentBankBranch = (string) (setting('payment.bank_branch', '') ?? '');
-        $this->paymentBankHolder = (string) (setting('payment.bank_holder', '') ?? '');
     }
 
     public function saveGeneral(): void
@@ -488,29 +471,6 @@ $extension = pathinfo(parse_url($this->logoImageUrl, PHP_URL_PATH), PATHINFO_EXT
         ]);
 
         $this->success('App settings saved.', position: 'toast-bottom');
-    }
-
-    public function savePayment(): void
-    {
-        $this->authorize('settings.update');
-
-        $this->validate([
-            'paymentBkashNo' => ['nullable', 'string', 'max:50'],
-            'paymentNagadNo' => ['nullable', 'string', 'max:50'],
-            'paymentBankName' => ['nullable', 'string', 'max:255'],
-            'paymentBankAccountNo' => ['nullable', 'string', 'max:100'],
-            'paymentBankBranch' => ['nullable', 'string', 'max:255'],
-            'paymentBankHolder' => ['nullable', 'string', 'max:255'],
-        ]);
-
-        SettingModel::set('payment.bkash_no', $this->paymentBkashNo);
-        SettingModel::set('payment.nagad_no', $this->paymentNagadNo);
-        SettingModel::set('payment.bank_name', $this->paymentBankName);
-        SettingModel::set('payment.bank_account_no', $this->paymentBankAccountNo);
-        SettingModel::set('payment.bank_branch', $this->paymentBankBranch);
-        SettingModel::set('payment.bank_holder', $this->paymentBankHolder);
-
-        $this->success('Payment & Donation settings saved.', position: 'toast-bottom');
     }
 
     /**

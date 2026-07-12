@@ -36,6 +36,18 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                 ->get(),
             'latestBooks' => Book::with('author')->latest()->take(3)->get(),
             'activeQuiz' => Quiz::whereIn('status', ['published', 'live'])->latest()->first(),
+            'activeLiveQuiz' => Quiz::where('mode', 'live')
+                ->where(function($q) {
+                    $q->where('status', 'live')
+                      ->orWhere(function($q2) {
+                          $q2->where('status', 'published')
+                             ->whereNotNull('available_from')
+                             ->where('available_from', '<=', now()->addHour())
+                             ->where('available_until', '>=', now());
+                      });
+                })
+                ->orderBy('available_from', 'asc')
+                ->first(),
             'stats' => [
                 'members' => User::count(),
                 'sessions' => Halaqah::where('status', 'completed')->count(),
@@ -223,7 +235,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <h3 class="text-3xl md:text-4xl font-black tracking-tight">{{ __('Community Fund') }}</h3>
                         <p class="text-white/70 text-sm mt-2 max-w-sm font-medium">{{ __('Open records of all donations and expenses to ensure trust.') }}</p>
                     </div>
-                    <a href="{{ route('app.donations') }}" class="btn btn-circle btn-ghost bg-white/10 hover:bg-white/20 border border-white/10 shrink-0">
+                    <a href="{{ route('app.donations.campaigns') }}" class="btn btn-circle btn-ghost bg-white/10 hover:bg-white/20 border border-white/10 shrink-0">
                         <x-icon name="o-arrow-right" class="w-5 h-5 text-white"/>
                     </a>
                 </div>
@@ -258,7 +270,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                 </div>
 
                 <div class="mt-10 relative z-10">
-                    <a href="{{ route('app.quiz.take', $activeQuiz) }}" class="btn bg-white text-orange-600 hover:bg-orange-50 hover:scale-105 border-none rounded-2xl w-full font-black text-lg shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-transform h-14">
+                    <a href="{{ route('web.quiz.take', $activeQuiz) }}" class="btn bg-white text-orange-600 hover:bg-orange-50 hover:scale-105 border-none rounded-2xl w-full font-black text-lg shadow-[0_10px_20px_rgba(0,0,0,0.2)] transition-transform h-14">
                         {{ __('Play & Earn XP') }}
                     </a>
                 </div>
@@ -274,7 +286,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         </div>
                         {{ __('Grimoires (Library)') }}
                     </h3>
-                    <a href="{{ route('app.books') }}" class="text-indigo-500 dark:text-indigo-400 text-sm font-bold hover:underline">{{ __('All Books') }}</a>
+                    <a href="{{ route('web.library') }}" class="text-indigo-500 dark:text-indigo-400 text-sm font-bold hover:underline">{{ __('All Books') }}</a>
                 </div>
 
                 <div class="space-y-4">
@@ -282,7 +294,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     <div class="flex items-center gap-5 group cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30 p-2 -mx-2 rounded-2xl transition-colors">
                         <div class="w-14 h-20 bg-slate-200 dark:bg-slate-700 rounded-xl overflow-hidden shrink-0 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all">
                             @if($book->cover_url)
-                                <img src="{{ $book->cover_url }}" class="w-full h-full object-cover" alt="Cover">
+                                <img src="{{ $book->cover_url }}" class="w-full h-full object-cover" alt="{{ __('Cover') }}">
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-indigo-100 dark:bg-indigo-900/50 text-indigo-500"><x-icon name="o-book-open" class="w-6 h-6"/></div>
                             @endif
@@ -316,7 +328,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <div class="flex items-center gap-4">
                             <div class="flex -space-x-3">
                                 @foreach($mentors->take(3) as $mentor)
-                                    <img class="w-12 h-12 rounded-full border-2 border-teal-500 shadow-lg object-cover" src="{{ $mentor->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($mentor->name).'&background=fff&color=14b8a6' }}" alt="Mentor">
+                                    <img class="w-12 h-12 rounded-full border-2 border-teal-500 shadow-lg object-cover" src="{{ $mentor->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($mentor->name).'&background=fff&color=14b8a6' }}" alt="{{ __('Mentor') }}">
                                 @endforeach
                             </div>
                             <div class="text-xs font-bold leading-tight">
@@ -451,7 +463,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             </div>
                         </div>
 
-                        <a href="{{ route('app.donations') }}" wire:navigate class="btn bg-rose-500 hover:bg-rose-600 text-white btn-block rounded-xl font-black text-lg shadow-[0_10px_20px_rgba(244,63,94,0.3)] h-14">
+                        <a href="{{ route('app.donations.campaigns') }}" wire:navigate class="btn bg-rose-500 hover:bg-rose-600 text-white btn-block rounded-xl font-black text-lg shadow-[0_10px_20px_rgba(244,63,94,0.3)] h-14">
                             {{ __('Contribute Now') }}
                         </a>
                     </div>
@@ -582,5 +594,59 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
         </div>
     </section>
     @endguest
+
+    {{-- ===== FLOATING LIVE QUIZ BUTTON ===== --}}
+    @if($activeLiveQuiz)
+        <div class="fixed bottom-6 right-6 z-[100]">
+            @php 
+                $isLive = $activeLiveQuiz->status === 'live' || ($activeLiveQuiz->available_from && $activeLiveQuiz->available_from <= now());
+            @endphp
+            <a href="{{ route('web.quizzes.show', $activeLiveQuiz) }}" wire:navigate
+               class="group relative flex items-center gap-3 bg-gradient-to-r from-rose-500 to-orange-500 p-1.5 pl-5 rounded-full shadow-[0_10px_25px_rgba(244,63,94,0.4)] hover:scale-105 hover:shadow-[0_15px_35px_rgba(244,63,94,0.5)] transition-all duration-300 border border-white/20 overflow-hidden cursor-pointer">
+                
+                {{-- Shine effect --}}
+                <div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
+
+                <div class="relative z-10 flex flex-col justify-center py-1">
+                    <div class="flex items-center gap-2">
+                        <span class="relative flex h-2.5 w-2.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-white"></span>
+                        </span>
+                        <span class="text-[10px] font-black uppercase tracking-widest text-white/90">
+                            @if($isLive)
+                                {{ __('Live Now') }}
+                            @else
+                                {{ __('Starts Soon') }}
+                            @endif
+                        </span>
+                    </div>
+                    <span class="text-sm font-black text-white leading-tight mt-1 line-clamp-1 max-w-[140px] sm:max-w-[200px]">{{ $activeLiveQuiz->title }}</span>
+                </div>
+
+                @if(!$isLive && $activeLiveQuiz->available_from)
+                    <div class="relative z-10 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2 text-white font-mono font-black text-sm border border-white/10"
+                         x-data="{ 
+                            end: new Date('{{ $activeLiveQuiz->available_from->toIso8601String() }}').getTime(),
+                            now: new Date().getTime(),
+                            format() {
+                                let d = Math.max(0, this.end - this.now) / 1000;
+                                if (d <= 0) { window.location.reload(); return '00:00'; }
+                                let m = Math.floor(d / 60);
+                                let s = Math.floor(d % 60);
+                                return String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+                            }
+                         }"
+                         x-init="setInterval(() => now = new Date().getTime(), 1000)">
+                        <span x-text="format()"></span>
+                    </div>
+                @else
+                    <div class="relative z-10 bg-white text-rose-600 rounded-full w-10 h-10 flex items-center justify-center font-black shrink-0 shadow-inner group-hover:bg-rose-50 transition-colors">
+                        <x-icon name="o-arrow-right" class="w-5 h-5" />
+                    </div>
+                @endif
+            </a>
+        </div>
+    @endif
 
 </div>

@@ -284,6 +284,11 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
         return $this->hasMany(BookCopy::class, 'owner_id');
     }
 
+    public function booksAdded()
+    {
+        return $this->hasMany(BookCopy::class, 'added_by');
+    }
+
     public function borrowRequests()
     {
         return $this->hasMany(BorrowRequest::class, 'borrower_id');

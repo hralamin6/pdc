@@ -5,7 +5,7 @@
     {{-- ══════════════════════════════════════════ --}}
     <div class="relative h-64 md:h-80 overflow-hidden bg-slate-900">
         @if($user->banner_url)
-            <img src="{{ $user->banner_url }}" class="w-full h-full object-cover opacity-60" alt="Banner">
+            <img src="{{ $user->banner_url }}" class="w-full h-full object-cover opacity-60" alt="{{ __('Banner') }}">
         @else
             @php
                 $gradients = [
@@ -44,7 +44,7 @@
                 </div>
                 {{-- Level Badge --}}
                 <div class="absolute -bottom-3 -right-3 bg-gradient-to-br from-amber-400 to-orange-500 text-white text-xs font-black px-2.5 py-1.5 rounded-xl shadow-lg border-2 border-white dark:border-slate-900">
-                    LVL {{ $this->level }}
+                    {{ __('LVL') }} {{ $this->level }}
                 </div>
             </div>
 
@@ -239,7 +239,7 @@
                                 @foreach($this->reportHeatmap as $date => $active)
                                 <div class="flex-1 flex flex-col items-center">
                                     <div class="w-full h-8 rounded-lg border transition-colors {{ $active ? 'bg-emerald-500 border-emerald-600' : 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700' }}"
-                                         title="{{ \Carbon\Carbon::parse($date)->format('M d, Y') }}: {{ $active ? 'Submitted' : 'Missed' }}"></div>
+                                         title="{{ \Carbon\Carbon::parse($date)->format('M d, Y') }}: {{ $active ? __('Submitted') : __('Missed') }}"></div>
                                     <span class="text-[9px] font-bold text-slate-400 mt-1">{{ \Carbon\Carbon::parse($date)->format('D') }}</span>
                                 </div>
                                 @endforeach
@@ -456,7 +456,7 @@
                             <div class="flex items-center gap-4 p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 hover:border-purple-400 transition-all">
                                 <div class="w-14 h-14 rounded-2xl bg-{{ $color }}-100 dark:bg-{{ $color }}-900/30 flex flex-col items-center justify-center shrink-0 border border-{{ $color }}-200 dark:border-{{ $color }}-800">
                                     <span class="text-lg font-black text-{{ $color }}-600 dark:text-{{ $color }}-400 leading-none">{{ $pct }}%</span>
-                                    <span class="text-[9px] text-{{ $color }}-500 font-bold uppercase">{{ $attempt->passed ? 'Pass' : 'Fail' }}</span>
+                                    <span class="text-[9px] text-{{ $color }}-500 font-bold uppercase">{{ $attempt->passed ? __('Pass') : __('Fail') }}</span>
                                 </div>
                                 <div class="flex-1 min-w-0">
                                     <div class="font-black text-slate-900 dark:text-white line-clamp-1">{{ $attempt->quiz_title }}</div>

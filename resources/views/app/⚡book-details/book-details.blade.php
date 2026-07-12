@@ -1,7 +1,7 @@
 <div class="max-w-6xl mx-auto pb-12">
     {{-- Header / Breadcrumbs --}}
     <div class="mb-6 flex items-center gap-2 text-sm text-base-content/60">
-        <a href="{{ route('app.books') }}" class="hover:text-primary transition-colors" wire:navigate>Library</a>
+        <a href="{{ route('web.library') }}" class="hover:text-primary transition-colors" wire:navigate>Library</a>
         <x-icon name="o-chevron-right" class="w-3 h-3" />
         <span class="text-base-content">{{ $book->title }}</span>
     </div>

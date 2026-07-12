@@ -113,7 +113,7 @@
                     {{-- Banner image --}}
                     <div class="relative w-full h-48 md:h-64 rounded-2xl overflow-hidden bg-gradient-to-r from-primary/10 to-secondary/10 border border-slate-200/40 dark:border-slate-800">
                         @if($bannerUrl)
-                            <img src="{{ $bannerUrl }}" alt="Banner" class="w-full h-full object-cover" />
+                            <img src="{{ $bannerUrl }}" alt="{{ __('Banner') }}" class="w-full h-full object-cover" />
                         @endif
                     </div>
 
@@ -212,7 +212,7 @@
                                             <x-icon name="o-map" class="w-4 h-4 text-slate-450 mt-0.5" />
                                             <div>
                                                 <p class="text-xs text-slate-450 dark:text-slate-400 font-bold uppercase tracking-wider">{{ __('Division') }}</p>
-                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->division->name ?? 'N/A' }}</p>
+                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->division->name ?? __('N/A') }}</p>
                                             </div>
                                         </div>
                                     @endif
@@ -221,7 +221,7 @@
                                             <x-icon name="o-map" class="w-4 h-4 text-slate-455 mt-0.5" />
                                             <div>
                                                 <p class="text-xs text-slate-455 dark:text-slate-400 font-bold uppercase tracking-wider">{{ __('District') }}</p>
-                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->district->name ?? 'N/A' }}</p>
+                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->district->name ?? __('N/A') }}</p>
                                             </div>
                                         </div>
                                     @endif
@@ -230,7 +230,7 @@
                                             <x-icon name="o-map" class="w-4 h-4 text-slate-455 mt-0.5" />
                                             <div>
                                                 <p class="text-xs text-slate-455 dark:text-slate-400 font-bold uppercase tracking-wider">{{ __('Upazila') }}</p>
-                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->upazila->name ?? 'N/A' }}</p>
+                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->upazila->name ?? __('N/A') }}</p>
                                             </div>
                                         </div>
                                     @endif
@@ -239,7 +239,7 @@
                                             <x-icon name="o-map" class="w-4 h-4 text-slate-455 mt-0.5" />
                                             <div>
                                                 <p class="text-xs text-slate-455 dark:text-slate-400 font-bold uppercase tracking-wider">{{ __('Union') }}</p>
-                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->union->name ?? 'N/A' }}</p>
+                                                <p class="font-bold text-slate-800 dark:text-slate-200">{{ $user->detail->union->name ?? __('N/A') }}</p>
                                             </div>
                                         </div>
                                     @endif
@@ -327,12 +327,12 @@
 
                     <form wire:submit="saveGeneral" class="space-y-5 max-w-xl">
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Display Name *</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Display Name') }} *</label>
                             <input type="text" wire:model="name" required class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Email Address *</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Email Address') }} *</label>
                             <input type="email" wire:model="email" required class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
@@ -358,43 +358,43 @@
                     <form wire:submit="saveDetails" class="space-y-5 max-w-xl">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Phone Number</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Phone Number') }}</label>
                                 <input type="tel" wire:model="phone" placeholder="017xxxxxxxx" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Date of Birth</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Date of Birth') }}</label>
                                 <input type="date" wire:model="date_of_birth" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Gender</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Gender') }}</label>
                             <select wire:model="gender" class="select select-bordered w-full rounded-2xl text-xs bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-350">
-                                <option value="">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="other">Other</option>
+                                <option value="">{{ __('Select Gender') }}</option>
+                                <option value="male">{{ __('Male') }}</option>
+                                <option value="female">{{ __('Female') }}</option>
+                                <option value="other">{{ __('Other') }}</option>
                             </select>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Occupation</label>
-                            <input type="text" wire:model="occupation" placeholder="e.g. Student, Developer" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Occupation') }}</label>
+                            <input type="text" wire:model="occupation" placeholder="{{ __('e.g. Student, Developer') }}" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Street Address</label>
-                            <textarea wire:model="address" rows="2" placeholder="House/Road, Sector..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350 resize-none"></textarea>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Street Address') }}</label>
+                            <textarea wire:model="address" rows="2" placeholder="{{ __('House/Road, Sector...') }}" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350 resize-none"></textarea>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Postal Code</label>
-                            <input type="text" wire:model="postal_code" placeholder="Postal Code" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Postal Code') }}</label>
+                            <input type="text" wire:model="postal_code" placeholder="{{ __('Postal Code') }}" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Bio / Short Description</label>
-                            <textarea wire:model="bio" rows="4" placeholder="Tell the community about yourself..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350 resize-none"></textarea>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Bio / Short Description') }}</label>
+                            <textarea wire:model="bio" rows="4" placeholder="{{ __('Tell the community about yourself...') }}" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350 resize-none"></textarea>
                         </div>
 
                         <div class="flex gap-3 pt-2">
@@ -418,39 +418,39 @@
 
                     <form wire:submit="saveSocialMedia" class="space-y-5 max-w-xl">
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Website</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Website') }}</label>
                             <input type="url" wire:model="website" placeholder="https://website.com" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Facebook URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Facebook URL') }}</label>
                                 <input type="url" wire:model="facebook" placeholder="https://facebook.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Twitter URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Twitter URL') }}</label>
                                 <input type="url" wire:model="twitter" placeholder="https://twitter.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Instagram URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Instagram URL') }}</label>
                                 <input type="url" wire:model="instagram" placeholder="https://instagram.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">LinkedIn URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('LinkedIn URL') }}</label>
                                 <input type="url" wire:model="linkedin" placeholder="https://linkedin.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">YouTube Channel URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('YouTube Channel URL') }}</label>
                                 <input type="url" wire:model="youtube" placeholder="https://youtube.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">GitHub Profile URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('GitHub Profile URL') }}</label>
                                 <input type="url" wire:model="github" placeholder="https://github.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
@@ -476,24 +476,24 @@
 
                     <form wire:submit="saveAddress" class="space-y-5 max-w-xl">
                         <x-choices
-                            label="Division"
+                            label="{{ __('Division') }}"
                             wire:model.live="division_id"
                             :options="$divisions"
                             option-label="name"
                             option-value="id"
-                            placeholder="Search Division..."
+                            placeholder="{{ __('Search Division...') }}"
                             single
                             searchable
                         />
 
                         @if(count($districts) > 0)
                             <x-choices
-                                label="District"
+                                label="{{ __('District') }}"
                                 wire:model.live="district_id"
                                 :options="$districts"
                                 option-label="name"
                                 option-value="id"
-                                placeholder="Search District..."
+                                placeholder="{{ __('Search District...') }}"
                                 single
                                 searchable
                             />
@@ -501,12 +501,12 @@
 
                         @if(count($upazilas) > 0)
                             <x-choices
-                                label="Upazila"
+                                label="{{ __('Upazila') }}"
                                 wire:model.live="upazila_id"
                                 :options="$upazilas"
                                 option-label="name"
                                 option-value="id"
-                                placeholder="Search Upazila..."
+                                placeholder="{{ __('Search Upazila...') }}"
                                 single
                                 searchable
                             />
@@ -514,12 +514,12 @@
 
                         @if(count($unions) > 0)
                             <x-choices
-                                label="Union"
+                                label="{{ __('Union') }}"
                                 wire:model.live="union_id"
                                 :options="$unions"
                                 option-label="name"
                                 option-value="id"
-                                placeholder="Search Union..."
+                                placeholder="{{ __('Search Union...') }}"
                                 single
                                 searchable
                             />
@@ -553,7 +553,7 @@
 
                         <div class="space-y-4 max-w-xl">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Avatar Image URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Avatar Image URL') }}</label>
                                 <input type="url" wire:model="image_url" placeholder="https://example.com/avatar.jpg" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             
@@ -569,7 +569,7 @@
                                     {{ __('Reset Form') }}
                                 </button>
                                 @if($avatarUrl && !str_contains($avatarUrl, 'ui-avatars.com'))
-                                    <button type="button" wire:click="removePhoto" wire:confirm="Delete your profile avatar?" class="btn btn-ghost text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl font-bold ml-auto">
+                                    <button type="button" wire:click="removePhoto" wire:confirm="{{ __('Delete your profile avatar?') }}" class="btn btn-ghost text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl font-bold ml-auto">
                                         {{ __('Delete Avatar') }}
                                     </button>
                                 @endif
@@ -589,7 +589,7 @@
 
                         <div class="space-y-4 max-w-xl">
                             <div>
-                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Banner Image URL</label>
+                                <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Banner Image URL') }}</label>
                                 <input type="url" wire:model="banner_url" placeholder="https://example.com/banner.jpg" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             
@@ -599,11 +599,11 @@
 
                             @if($banner_photo)
                                 <div class="mt-2 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden h-36">
-                                    <img src="{{ $banner_photo->temporaryUrl() }}" alt="Banner Preview" class="w-full h-full object-cover" />
+                                    <img src="{{ $banner_photo->temporaryUrl() }}" alt="{{ __('Banner Preview') }}" class="w-full h-full object-cover" />
                                 </div>
                             @elseif($bannerUrl)
                                 <div class="mt-2 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden h-36">
-                                    <img src="{{ $bannerUrl }}" alt="Banner Current" class="w-full h-full object-cover" />
+                                    <img src="{{ $bannerUrl }}" alt="{{ __('Banner Current') }}" class="w-full h-full object-cover" />
                                 </div>
                             @endif
 
@@ -615,7 +615,7 @@
                                     {{ __('Reset Form') }}
                                 </button>
                                 @if($bannerUrl)
-                                    <button type="button" wire:click="removeBanner" wire:confirm="Delete your banner image?" class="btn btn-ghost text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl font-bold ml-auto">
+                                    <button type="button" wire:click="removeBanner" wire:confirm="{{ __('Delete your banner image?') }}" class="btn btn-ghost text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-xl font-bold ml-auto">
                                         {{ __('Delete Banner') }}
                                     </button>
                                 @endif
@@ -637,18 +637,18 @@
 
                     <form wire:submit="savePassword" class="space-y-5 max-w-xl">
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Current Password *</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Current Password') }} *</label>
                             <input type="password" wire:model="current_password" required class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">New Password *</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('New Password') }} *</label>
                             <input type="password" wire:model="password" required class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
-                            <span class="text-[10px] text-slate-400 font-semibold mt-1 block">Minimum 8 characters</span>
+                            <span class="text-[10px] text-slate-400 font-semibold mt-1 block">{{ __('Minimum 8 characters') }}</span>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">Confirm New Password *</label>
+                            <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Confirm New Password') }} *</label>
                             <input type="password" wire:model="password_confirmation" required class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
@@ -710,8 +710,8 @@
                                 </div>
 
                                 @if(!$session->is_current)
-                                    <button wire:click="logoutSession('{{ $session->id }}')" wire:confirm="Terminating session? You will be logged out of that device." class="btn btn-ghost btn-xs text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg px-2">
-                                        Logout
+                                    <button wire:click="logoutSession('{{ $session->id }}')" wire:confirm="{{ __('Terminating session? You will be logged out of that device.') }}" class="btn btn-ghost btn-xs text-xs font-black text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-950/20 rounded-lg px-2">
+                                        {{ __('Logout') }}
                                     </button>
                                 @endif
                             </div>
@@ -726,7 +726,7 @@
                                 <h4 class="font-black text-slate-800 dark:text-slate-100 text-sm mb-1">{{ __('Logout All Other Sessions') }}</h4>
                                 <p class="text-xs text-slate-500 dark:text-slate-450 font-medium">{{ __('Terminates authentication access on all devices except your current browser.') }}</p>
                             </div>
-                            <button wire:click="logoutAllOtherSessions" wire:confirm="Log out of all other sessions? This session will remain logged in." class="btn btn-error btn-sm rounded-xl font-bold shadow-lg shadow-error/20">
+                            <button wire:click="logoutAllOtherSessions" wire:confirm="{{ __('Log out of all other sessions? This session will remain logged in.') }}" class="btn btn-error btn-sm rounded-xl font-bold shadow-lg shadow-error/20">
                                 {{ __('Logout Others') }}
                             </button>
                         </div>

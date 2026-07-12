@@ -41,4 +41,4 @@ $config = [
         'contextmenu' => 'link image table spellchecker',
     ]
 )
-<x-editor wire:model.defer="details" label="Description" hint="The full description" :config="$config" />
+<x-editor wire:model.defer="details" :label="__('Description')" :hint="__('The full description')" :config="$config" />

@@ -49,7 +49,7 @@ class LiveQuizWidget extends Component
                             </div>
                         </div>
                         <div class="w-full md:w-auto shrink-0 flex gap-3">
-                            <a href="{{ route('app.quiz.live', $activeQuiz) }}" wire:navigate class="btn bg-white hover:bg-gray-100 text-red-700 border-none rounded-xl flex-1 md:flex-none shadow-lg px-8 text-base shadow-red-900/50 hover:scale-105 transition-all">
+                            <a href="{{ route('web.quiz.live', $activeQuiz) }}" wire:navigate class="btn bg-white hover:bg-gray-100 text-red-700 border-none rounded-xl flex-1 md:flex-none shadow-lg px-8 text-base shadow-red-900/50 hover:scale-105 transition-all">
                                 Join Quiz
                             </a>
                         </div>

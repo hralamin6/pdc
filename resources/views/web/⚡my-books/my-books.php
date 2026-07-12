@@ -37,6 +37,7 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
     public ?int $selectedBookId = null;
     public string $condition = 'Good';
     public bool $is_borrowable = true;
+    public ?int $giftToHubId = null;
 
     // Custom Book Creation
     public bool $isCustom = false;
@@ -55,6 +56,12 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
     public function mount(): void
     {
         // Init properties if needed
+    }
+
+    #[Computed]
+    public function activeHubs(): Collection
+    {
+        return \App\Models\LibraryHub::where('is_active', true)->orderBy('name')->get();
     }
 
     #[Computed]
@@ -110,7 +117,7 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
     #[Computed]
     public function outgoingRequests(): Collection
     {
-        return BorrowRequest::with(['bookCopy.owner', 'bookCopy.book'])
+        return BorrowRequest::with(['bookCopy.owner', 'bookCopy.libraryHub', 'bookCopy.book'])
             ->where('borrower_id', auth()->id())
             ->latest('updated_at')
             ->get();
@@ -142,6 +149,7 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
         $this->selectedBookId = null;
         $this->condition = 'Good';
         $this->is_borrowable = true;
+        $this->giftToHubId = null;
         $this->isCustom = false;
         $this->customTitle = '';
         $this->customAuthor = '';
@@ -214,15 +222,28 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
             }
         }
 
-        BookCopy::create([
-            'book_id' => $bookId,
-            'owner_id' => auth()->id(),
-            'status' => 'available',
-            'is_borrowable' => $this->is_borrowable,
-            'condition' => $this->condition,
-        ]);
+        if ($this->giftToHubId) {
+            BookCopy::create([
+                'book_id' => $bookId,
+                'library_hub_id' => $this->giftToHubId,
+                'added_by' => auth()->id(),
+                'status' => 'available',
+                'is_borrowable' => true,
+                'condition' => $this->condition,
+            ]);
+            $this->success('Thank you! Book successfully gifted to the hub.');
+        } else {
+            BookCopy::create([
+                'book_id' => $bookId,
+                'owner_id' => auth()->id(),
+                'added_by' => auth()->id(),
+                'status' => 'available',
+                'is_borrowable' => $this->is_borrowable,
+                'condition' => $this->condition,
+            ]);
+            $this->success('Book successfully added to your shelf!');
+        }
 
-        $this->success('Book successfully added to your shelf!');
         $this->addModal = false;
         unset($this->myCopies);
     }

@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Ai\Agents\QuizQuestionGenerator;
+use App\Ai\Agents\QuizTextAgent;
 use App\Models\Book;
 use App\Models\Halaqah;
 use App\Models\QuizQuestion;
@@ -54,11 +55,11 @@ class QuizAiService
             ."- For MCQ: provide 4 options, exactly 1 is correct\n"
             ."- For true_false: provide exactly 2 options: 'True' and 'False'\n"
             ."- For multi_select: provide 4-5 options, 2-3 can be correct\n"
-            ."- For short_text: options array must be empty []\n"
+            ."- For short_text: options array must be empty [] and you must provide an 'ideal_answer'\n"
             ."- Each question must have a clear, concise explanation of the correct answer\n"
             ."- Questions must be directly relevant to the provided source content\n"
             ."- Return ONLY valid JSON, no extra text.\n\n"
-            .'Expected JSON format: {"questions": [{"question_text": "...", "type": "'.$type.'", "marks": '.$marksPerQuestion.', "explanation": "...", "options": [{"option_text": "...", "is_correct": true/false}]}]}';
+            .'Expected JSON format: {"questions": [{"question_text": "...", "type": "'.$type.'", "marks": '.$marksPerQuestion.', "ideal_answer": "...", "explanation": "...", "options": [{"option_text": "...", "is_correct": true/false}]}]}';
 
         $agent = QuizQuestionGenerator::make();
 
@@ -108,17 +109,30 @@ class QuizAiService
         string $provider = '',
         string $model = ''
     ): string {
-        $correctOptions = $question->options()->where('is_correct', true)->pluck('option_text')->join(', ');
-        $allOptions = $question->options()->get()->map(fn ($o) => ($o->is_correct ? '✓ ' : '✗ ').$o->option_text)->join(', ');
+        $options = $question->options;
+        $correctOptions = $options->where('is_correct', true)->pluck('option_text')->join(', ');
+        $allOptions = $options->map(fn ($o) => ($o->is_correct ? '✓ ' : '✗ ').$o->option_text)->join(', ');
 
-        $prompt = "Write a clear, concise explanation (2-4 sentences) for the following quiz question.\n\n"
-            ."Question: {$question->question_text}\n"
-            .($question->type !== 'short_text' ? "Options: {$allOptions}\n" : '')
-            .($correctOptions ? "Correct Answer(s): {$correctOptions}\n" : '')
-            ."\nThe explanation should help a student understand WHY the correct answer is correct and what concept it tests. "
-            .'Be educational, not just descriptive. Return only the explanation text, no labels or JSON.';
+        $prompt = "Write a clear, concise explanation (2-4 sentences) for the following quiz question. "
+            ."Respond directly in the SAME LANGUAGE as the question.\n\n"
+            ."Question: {$question->question_text}\n";
 
-        $agent = QuizQuestionGenerator::make();
+        if ($question->type === 'short_text') {
+            if ($question->ideal_answer) {
+                $prompt .= "Ideal Answer: {$question->ideal_answer}\n\n";
+            }
+            $prompt .= "The explanation should help a student understand WHY the ideal answer is correct and what concept it tests. ";
+        } else {
+            $prompt .= "Options: {$allOptions}\n";
+            if ($correctOptions) {
+                $prompt .= "Correct Answer(s): {$correctOptions}\n\n";
+            }
+            $prompt .= "The explanation should briefly tell why the correct option is correct, and why the other options are incorrect. ";
+        }
+
+        $prompt .= "Be educational, direct, and concise. Do not use conversational filler. Return only the explanation text, no labels or JSON.";
+
+        $agent = QuizTextAgent::make();
         if ($provider) {
             $agent = $this->applyProviderToAgent($agent, $provider, $model);
         }
@@ -150,7 +164,8 @@ class QuizAiService
 
         $prompt = "You are grading a student's short-text answer for a quiz question.\n\n"
             ."Question: {$question->question_text}\n"
-            .($question->ai_explanation ? "Model Answer / Key Concept: {$question->ai_explanation}\n" : '')
+            .($question->ideal_answer ? "Ideal / Correct Answer: {$question->ideal_answer}\n" : '')
+            .($question->ai_explanation ? "Key Concept / Explanation: {$question->ai_explanation}\n" : '')
             ."Student's Answer: {$studentAnswer}\n\n"
             ."Grade this answer on a scale of 0.0 to 1.0 where:\n"
             ."- 1.0 = Fully correct and complete\n"
@@ -160,7 +175,7 @@ class QuizAiService
             ."- 0.0 = Completely wrong or irrelevant\n\n"
             .'Return ONLY a valid JSON object: {"grade": 0.75, "reason": "brief explanation of the grade"}';
 
-        $agent = QuizQuestionGenerator::make();
+        $agent = QuizTextAgent::make();
         if ($provider) {
             $agent = $this->applyProviderToAgent($agent, $provider, $model);
         }

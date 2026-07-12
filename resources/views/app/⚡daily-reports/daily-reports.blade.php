@@ -13,12 +13,12 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <x-button icon="o-cog-6-tooth" :link="route('app.daily-reports.settings')" wire:navigate class="btn-ghost btn-circle" tooltip="Tracking Settings" />
+            <x-button icon="o-cog-6-tooth" :link="route('app.daily-reports.settings')" wire:navigate class="btn-ghost btn-circle" tooltip="{{ __('Tracking Settings') }}" />
             @if(auth()->user()->hasRole(['mentor', 'admin', 'super-admin']))
-                <x-button icon="o-shield-check" :link="route('app.daily-reports.admin')" wire:navigate class="btn-outline btn-primary rounded-xl font-bold" label="Admin Portal" />
+                <x-button icon="o-shield-check" :link="route('app.daily-reports.admin')" wire:navigate class="btn-outline btn-primary rounded-xl font-bold" :label="__('Admin Portal')" />
             @endif
-            <x-button 
-                :label="$todayReport && $todayReport->status === 'submitted' ? 'Edit Today\'s Log' : 'Fill Today\'s Report'" 
+            <x-button
+                :label="$todayReport && $todayReport->status === 'submitted' ? __('Edit Today\'s Log') : __('Fill Today\'s Report')"
                 icon="o-pencil-square" 
                 class="btn-primary rounded-xl px-6 font-bold shadow-lg shadow-primary/20" 
                 :link="route('app.daily-reports.form')" 
@@ -34,12 +34,12 @@
         <div class="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-base-100 rounded-3xl p-6 border border-orange-500/20 shadow-sm flex flex-col justify-between relative overflow-hidden">
             <div class="flex items-start justify-between">
                 <div>
-                    <span class="text-xs font-extrabold text-orange-500 uppercase tracking-wider bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">Active Streak</span>
+                    <span class="text-xs font-extrabold text-orange-500 uppercase tracking-wider bg-orange-500/10 px-3 py-1 rounded-full border border-orange-500/20">{{ __('Active Streak') }}</span>
                     <div class="flex items-baseline gap-2 mt-3">
                         <span class="text-5xl font-black text-base-content">{{ $streak->current_streak }}</span>
-                        <span class="text-lg font-bold text-base-content/60">Days</span>
+                        <span class="text-lg font-bold text-base-content/60">{{ __('Days') }}</span>
                     </div>
-                    <p class="text-xs text-base-content/50 mt-1">Personal Best: <strong class="text-base-content/80">{{ $streak->longest_streak }} days</strong></p>
+                    <p class="text-xs text-base-content/50 mt-1">{{ __('Personal Best:') }} <strong class="text-base-content/80">{{ $streak->longest_streak }} {{ __('days') }}</strong></p>
                 </div>
                 <div class="p-4 bg-orange-500 text-white rounded-2xl shadow-lg shadow-orange-500/30 animate-pulse">
                     <x-icon name="o-fire" class="w-8 h-8" />
@@ -48,7 +48,7 @@
 
             {{-- Milestone Badges Row --}}
             <div class="mt-6 pt-4 border-t border-orange-500/10">
-                <p class="text-xs font-semibold text-base-content/60 mb-2">Milestone Achievements</p>
+                <p class="text-xs font-semibold text-base-content/60 mb-2">{{ __('Milestone Achievements') }}</p>
                 <div class="flex items-center gap-2 overflow-x-auto pb-1">
                     @foreach($milestones as $badge)
                         <div 
@@ -67,19 +67,19 @@
         <div class="bg-base-100 rounded-3xl p-6 border border-base-content/5 shadow-sm flex flex-col justify-between">
             <div class="flex items-start justify-between">
                 <div>
-                    <span class="text-xs font-extrabold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">Today's Reflection</span>
+                    <span class="text-xs font-extrabold text-primary uppercase tracking-wider bg-primary/10 px-3 py-1 rounded-full border border-primary/20">{{ __("Today's Reflection") }}</span>
                     <h3 class="text-xl font-extrabold text-base-content mt-3">
                         @if($todayReport && $todayReport->status === 'submitted')
-                            🎉 Today's Log Complete!
+                            {{ __('🎉 Today\'s Log Complete!') }}
                         @else
-                            ⌛ Pending Today's Log
+                            {{ __('⌛ Pending Today\'s Log') }}
                         @endif
                     </h3>
                     <p class="text-xs text-base-content/60 mt-1">
                         @if($todayReport && $todayReport->status === 'submitted')
-                            You have completed {{ $todayReport->completed_count }} out of {{ $todayReport->total_items_count }} tracked items ({{ $todayReport->completion_percentage }}%).
+                            {{ __('You have completed') }} {{ $todayReport->completed_count }} {{ __('out of') }} {{ $todayReport->total_items_count }} {{ __('tracked items') }} ({{ $todayReport->completion_percentage }}%).
                         @else
-                            Take a few minutes before the day ends to reflect and log your progress.
+                            {{ __('Take a few minutes before the day ends to reflect and log your progress.') }}
                         @endif
                     </p>
                 </div>
@@ -95,9 +95,9 @@
             </div>
 
             <div class="mt-6 pt-4 border-t border-base-content/5 flex items-center justify-between text-xs text-base-content/60">
-                <span>Date: <strong>{{ now()->format('M j, Y') }}</strong></span>
+                <span>{{ __('Date:') }} <strong>{{ now()->format('M j, Y') }}</strong></span>
                 <a href="{{ route('app.daily-reports.form') }}" wire:navigate class="text-primary font-bold hover:underline flex items-center gap-1">
-                    {{ $todayReport && $todayReport->status === 'submitted' ? 'Review & Edit' : 'Log Now' }}
+                    {{ $todayReport && $todayReport->status === 'submitted' ? __('Review & Edit') : __('Log Now') }}
                     <x-icon name="o-arrow-right" class="w-3.5 h-3.5" />
                 </a>
             </div>
@@ -106,10 +106,10 @@
         {{-- 30-Day Overview --}}
         <div class="bg-base-100 rounded-3xl p-6 border border-base-content/5 shadow-sm flex flex-col justify-between">
             <div>
-                <span class="text-xs font-extrabold text-secondary uppercase tracking-wider bg-secondary/10 px-3 py-1 rounded-full border border-secondary/20">30-Day Consistency</span>
+                <span class="text-xs font-extrabold text-secondary uppercase tracking-wider bg-secondary/10 px-3 py-1 rounded-full border border-secondary/20">{{ __('30-Day Consistency') }}</span>
                 <div class="flex items-baseline gap-2 mt-3">
                     <span class="text-5xl font-black text-base-content">{{ $overall30DayRate }}%</span>
-                    <span class="text-sm font-semibold text-base-content/60">Submission Rate</span>
+                    <span class="text-sm font-semibold text-base-content/60">{{ __('Submission Rate') }}</span>
                 </div>
                 <div class="w-full bg-base-200 rounded-full h-2.5 mt-3 overflow-hidden">
                     <div class="bg-secondary h-2.5 rounded-full transition-all duration-500" style="width: {{ $overall30DayRate }}%"></div>
@@ -117,8 +117,8 @@
             </div>
 
             <div class="mt-6 pt-4 border-t border-base-content/5 flex items-center justify-between text-xs text-base-content/60">
-                <span>Tracking active items daily</span>
-                <span class="badge badge-sm badge-ghost font-bold">Past 30 Days</span>
+                <span>{{ __('Tracking active items daily') }}</span>
+                <span class="badge badge-sm badge-ghost font-bold">{{ __('Past 30 Days') }}</span>
             </div>
         </div>
     </div>
@@ -129,14 +129,14 @@
             <div>
                 <h3 class="text-lg font-bold text-base-content flex items-center gap-2">
                     <x-icon name="o-calendar" class="w-5 h-5 text-primary" />
-                    <span>30-Day History & Reflection Log</span>
+                    <span>{{ __('30-Day History & Reflection Log') }}</span>
                 </h3>
-                <p class="text-xs text-base-content/60">Click on any past date to view full report entries and reflection notes.</p>
+                <p class="text-xs text-base-content/60">{{ __('Click on any past date to view full report entries and reflection notes.') }}</p>
             </div>
             <div class="flex items-center gap-3 text-xs">
-                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-success"></span> Submitted</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-warning"></span> Draft</span>
-                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-base-200"></span> Missed</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-success"></span> {{ __('Submitted') }}</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-warning"></span> {{ __('Draft') }}</span>
+                <span class="flex items-center gap-1"><span class="w-3 h-3 rounded-md bg-base-200"></span> {{ __('Missed') }}</span>
             </div>
         </div>
 
@@ -163,7 +163,7 @@
                     @if($day['status'] === 'submitted')
                         <span class="text-[10px] font-bold text-success">{{ $day['completion_percentage'] }}%</span>
                     @elseif($day['is_today'])
-                        <span class="text-[10px] font-bold text-primary">Today</span>
+                        <span class="text-[10px] font-bold text-primary">{{ __('Today') }}</span>
                     @else
                         <span class="text-[10px] font-medium text-base-content/40">-</span>
                     @endif
@@ -177,9 +177,9 @@
         <div>
             <h3 class="text-lg font-bold text-base-content flex items-center gap-2">
                 <x-icon name="o-list-bullet" class="w-5 h-5 text-secondary" />
-                <span>Category Consistency (Last 30 Days)</span>
+                <span>{{ __('Category Consistency (Last 30 Days)') }}</span>
             </h3>
-            <p class="text-xs text-base-content/60">Completion rate broken down by activity area.</p>
+            <p class="text-xs text-base-content/60">{{ __('Completion rate broken down by activity area.') }}</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -201,8 +201,8 @@
                     </div>
 
                     <div class="flex justify-between items-center text-[11px] text-base-content/50">
-                        <span>Completed: <strong>{{ $cat['completed'] }}</strong></span>
-                        <span>Tracked: <strong>{{ $cat['total'] }}</strong></span>
+                        <span>{{ __('Completed:') }} <strong>{{ $cat['completed'] }}</strong></span>
+                        <span>{{ __('Tracked:') }} <strong>{{ $cat['total'] }}</strong></span>
                     </div>
                 </div>
             @endforeach
@@ -210,18 +210,18 @@
     </div>
 
     {{-- Report Inspection Modal --}}
-    <x-modal wire:model="selectedReportId" title="Report Reflection Log" class="backdrop-blur">
+    <x-modal wire:model="selectedReportId" :title="__('Report Reflection Log')" class="backdrop-blur">
         @if($selectedReportDetails)
             <div class="space-y-6">
                 {{-- Header summary --}}
                 <div class="flex items-center justify-between p-4 rounded-2xl bg-base-200/50 border border-base-content/5">
                     <div>
-                        <p class="text-xs font-semibold text-base-content/50 uppercase">Log Date</p>
+                        <p class="text-xs font-semibold text-base-content/50 uppercase">{{ __('Log Date') }}</p>
                         <h4 class="text-lg font-extrabold text-base-content">{{ $selectedReportDetails['date'] }}</h4>
                     </div>
                     <div class="text-right">
                         <span class="badge badge-success font-bold">{{ strtoupper($selectedReportDetails['status']) }}</span>
-                        <p class="text-xs text-base-content/60 mt-1">Privacy: <strong class="capitalize">{{ str_replace('_', ' ', $selectedReportDetails['privacy_level']) }}</strong></p>
+                        <p class="text-xs text-base-content/60 mt-1">{{ __('Privacy:') }} <strong class="capitalize">{{ str_replace('_', ' ', $selectedReportDetails['privacy_level']) }}</strong></p>
                     </div>
                 </div>
 
@@ -232,8 +232,8 @@
                             {{ $selectedReportDetails['completion_percentage'] }}%
                         </div>
                         <div>
-                            <p class="font-bold text-base-content text-sm">Completion Rate</p>
-                            <p class="text-xs text-base-content/60">{{ $selectedReportDetails['completed_count'] }} of {{ $selectedReportDetails['total_items_count'] }} items completed</p>
+                            <p class="font-bold text-base-content text-sm">{{ __('Completion Rate') }}</p>
+                            <p class="text-xs text-base-content/60">{{ $selectedReportDetails['completed_count'] }} {{ __('of') }} {{ $selectedReportDetails['total_items_count'] }} {{ __('items completed') }}</p>
                         </div>
                     </div>
                 </div>
@@ -272,7 +272,7 @@
                 {{-- Notes / Reflection --}}
                 @if(!empty($selectedReportDetails['notes']))
                     <div class="p-4 rounded-2xl bg-base-200/50 border border-base-content/5 space-y-1">
-                        <p class="text-xs font-bold text-base-content/50 uppercase">Personal Reflection / Notes</p>
+                        <p class="text-xs font-bold text-base-content/50 uppercase">{{ __('Personal Reflection / Notes') }}</p>
                         <p class="text-sm text-base-content italic">"{{ $selectedReportDetails['notes'] }}"</p>
                     </div>
                 @endif
@@ -280,7 +280,7 @@
         @endif
 
         <x-slot:actions>
-            <x-button label="Close" wire:click="closeReportModal" class="btn-ghost rounded-xl" />
+            <x-button :label="__('Close')" wire:click="closeReportModal" class="btn-ghost rounded-xl" />
         </x-slot:actions>
     </x-modal>
 </div>

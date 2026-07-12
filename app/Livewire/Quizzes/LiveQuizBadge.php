@@ -24,7 +24,7 @@ class LiveQuizBadge extends Component
         return <<<'HTML'
         <div wire:poll.30s="checkForLiveQuiz">
             @if($activeQuiz)
-                <a href="{{ route('app.quiz.live', $activeQuiz) }}" wire:navigate class="flex items-center justify-between px-4 py-2 mt-2 mx-4 rounded-xl bg-error/10 text-error hover:bg-error/20 transition-all font-bold text-sm group border border-error/20 cursor-pointer">
+                <a href="{{ route('web.quiz.live', $activeQuiz) }}" wire:navigate class="flex items-center justify-between px-4 py-2 mt-2 mx-4 rounded-xl bg-error/10 text-error hover:bg-error/20 transition-all font-bold text-sm group border border-error/20 cursor-pointer">
                     <div class="flex items-center gap-2">
                         <span class="relative flex h-3 w-3">
                             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-error opacity-75"></span>

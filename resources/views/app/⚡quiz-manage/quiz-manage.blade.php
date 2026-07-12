@@ -128,9 +128,16 @@
                                     @endif
                                 </div>
                             @else
-                                <div class="p-3 rounded-xl bg-info/10 border border-info/20 text-sm text-info flex items-center gap-2">
-                                    <x-icon name="o-information-circle" class="w-4 h-4 flex-shrink-0" />
-                                    Students will type their answer. It will be graded by AI and reviewed by admin.
+                                <div class="space-y-2">
+                                    <label class="text-xs font-bold uppercase text-base-content/40 mb-1 block">Ideal / Correct Answer</label>
+                                    <textarea wire:model="questions.{{ $qi }}.ideal_answer"
+                                        rows="2"
+                                        placeholder="Enter the correct or expected answer here..."
+                                        class="textarea textarea-bordered w-full rounded-xl resize-none text-sm"></textarea>
+                                    <div class="p-3 rounded-xl bg-info/10 border border-info/20 text-sm text-info flex items-center gap-2">
+                                        <x-icon name="o-information-circle" class="w-4 h-4 flex-shrink-0" />
+                                        Students will type their answer. It will be graded by AI against this ideal answer, and reviewed by admin.
+                                    </div>
                                 </div>
                             @endif
 
@@ -280,10 +287,10 @@
                                 @if($quiz->isAvailable() || $quiz->status === 'live' || $quiz->status === 'closed')
                                     @if($quiz->mode === 'live')
                                         <x-button label="{{ $quiz->status === 'closed' ? 'Results' : 'Join Live Quiz' }}" icon="{{ $quiz->status === 'closed' ? 'o-clipboard-document-check' : 'o-signal' }}" class="btn-primary btn-sm flex-1 {{ $quiz->status === 'live' ? 'animate-pulse' : '' }}"
-                                            :href="route('app.quiz.live', $quiz)" wire:navigate />
+                                            :href="route('web.quiz.live', $quiz)" wire:navigate />
                                     @else
                                         <x-button label="{{ $quiz->status === 'closed' ? 'Results' : 'Take Quiz' }}" icon="{{ $quiz->status === 'closed' ? 'o-clipboard-document-check' : 'o-play' }}" class="btn-success btn-sm flex-1"
-                                            :href="route('app.quiz.take', $quiz)" wire:navigate />
+                                            :href="route('web.quiz.take', $quiz)" wire:navigate />
                                     @endif
                                 @else
                                     <span class="btn btn-ghost btn-sm flex-1 btn-disabled">{{ ucfirst($quiz->status) }}</span>
@@ -512,7 +519,7 @@
                                     </div>
                                     <p class="text-sm font-medium mb-2">{{ $aiQ['question_text'] }}</p>
                                     @if(!empty($aiQ['options']))
-                                        <div class="flex flex-wrap gap-1">
+                                        <div class="flex flex-wrap gap-1 mb-2">
                                             @foreach($aiQ['options'] as $aiOpt)
                                                 <span class="text-xs px-2 py-0.5 rounded-full {{ $aiOpt['is_correct'] ? 'bg-success/20 text-success font-bold' : 'bg-base-200 text-base-content/50' }}">
                                                     {{ $aiOpt['is_correct'] ? '✓ ' : '' }}{{ Str::limit($aiOpt['option_text'], 35) }}
@@ -520,8 +527,14 @@
                                             @endforeach
                                         </div>
                                     @endif
+                                    @if($aiQ['type'] === 'short_text' && !empty($aiQ['ideal_answer']))
+                                        <div class="mb-2 p-2 bg-success/5 border border-success/10 rounded-lg">
+                                            <p class="text-[10px] font-bold text-success uppercase mb-0.5">Ideal Answer</p>
+                                            <p class="text-xs font-medium">{{ $aiQ['ideal_answer'] }}</p>
+                                        </div>
+                                    @endif
                                     @if(!empty($aiQ['explanation']))
-                                        <p class="text-xs text-base-content/40 mt-1.5 italic line-clamp-2">{{ $aiQ['explanation'] }}</p>
+                                        <p class="text-xs text-base-content/40 italic line-clamp-2">{{ $aiQ['explanation'] }}</p>
                                     @endif
                                 </div>
                                 <div class="flex-shrink-0">

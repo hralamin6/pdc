@@ -21,7 +21,8 @@ class extends Component
     // Donation form fields
     public $amount = '500';
     public $customAmount = '';
-    public $paymentMethod = 'bkash';
+    public $paymentMethod = '';
+    public $bankAccountId = null;
     public $transactionId = '';
     public $note = '';
     public bool $isAnonymous = false;
@@ -57,6 +58,13 @@ class extends Component
     public function bankAccounts()
     {
         return BankAccount::where('is_active', true)->get();
+    }
+    
+    #[Computed]
+    public function filteredBankAccounts()
+    {
+        if (!$this->paymentMethod) return collect();
+        return $this->bankAccounts->where('type', $this->paymentMethod);
     }
 
     /** Recent Donors (Non-anonymous, confirmed) */
@@ -119,16 +127,25 @@ class extends Component
             $this->redirectRoute('login');
             return;
         }
-
-        $this->validate([
+        
+        $rules = [
             'amount' => 'required_without:customAmount',
             'customAmount' => 'required_without:amount|nullable|numeric|min:10',
             'paymentMethod' => 'required|in:cash,bkash,nagad,bank,other',
-            'transactionId' => 'required_if:paymentMethod,bkash,nagad,bank|nullable|string|min:4',
+            'transactionId' => 'nullable|string',
             'note' => 'nullable|string|max:500',
-        ], [
-            'transactionId.required_if' => 'Please enter the transaction reference ID for your digital transfer.'
-        ]);
+        ];
+        
+        if ($this->filteredBankAccounts->isNotEmpty()) {
+            $rules['bankAccountId'] = 'required';
+        }
+
+        $this->validate($rules);
+        
+        if (in_array($this->paymentMethod, ['bkash', 'nagad', 'bank']) && empty($this->transactionId)) {
+            $this->addError('transactionId', 'Please enter the transaction reference ID for your digital transfer.');
+            return;
+        }
 
         $finalAmount = $this->customAmount ?: $this->amount;
 
@@ -138,6 +155,7 @@ class extends Component
             'type' => 'campaign',
             'campaign_id' => $this->campaign->id,
             'payment_method' => $this->paymentMethod,
+            'bank_account_id' => $this->filteredBankAccounts->isNotEmpty() ? $this->bankAccountId : null,
             'transaction_id' => $this->transactionId,
             'note' => $this->note,
             'is_anonymous' => $this->isAnonymous,

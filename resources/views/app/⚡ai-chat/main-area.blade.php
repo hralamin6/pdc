@@ -14,7 +14,7 @@
                     </p>
                 </div>
                 <div class="text-xs md:text-sm text-base-content/60">
-                    {{ $this->selectedConversation->messages->count() }} messages
+                    {{ $this->selectedConversation->messages->count() }} {{ __('messages') }}
                 </div>
             </div>
         </div>
@@ -33,8 +33,8 @@
                         <svg class="w-12 md:w-16 h-12 md:h-16 mx-auto mb-4 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                         </svg>
-                        <p class="text-base md:text-lg font-medium">Start a conversation</p>
-                        <p class="text-sm mt-1">Send a message to begin chatting with AI</p>
+                        <p class="text-base md:text-lg font-medium">{{ __('Start a conversation') }}</p>
+                        <p class="text-sm mt-1">{{ __('Send a message to begin chatting with AI') }}</p>
                     </div>
                 </div>
             @endforelse
@@ -69,13 +69,13 @@
                 <svg class="w-16 md:w-20 h-16 md:h-20 mx-auto mb-4 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                 </svg>
-                <h3 class="text-lg md:text-xl font-semibold mb-2 text-base-content">Welcome to AI Chat</h3>
-                <p class="mb-4 text-sm md:text-base">Select a conversation or start a new one to begin</p>
+                <h3 class="text-lg md:text-xl font-semibold mb-2 text-base-content">{{ __('Welcome to AI Chat') }}</h3>
+                <p class="mb-4 text-sm md:text-base">{{ __('Select a conversation or start a new one to begin') }}</p>
                 <button
                     wire:click="createNewConversation"
                     class="btn btn-primary"
                 >
-                    Start New Conversation
+                    {{ __('Start New Conversation') }}
                 </button>
             </div>
         </div>

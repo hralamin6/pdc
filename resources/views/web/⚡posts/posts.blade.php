@@ -28,7 +28,7 @@
                             <span class="font-bold text-slate-400 uppercase text-xs">{{ __('Active Filters:') }}</span>
                             @if($search)
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
-                                    Search: "{{ $search }}"
+                                    {{ __('Search:') }} "{{ $search }}"
                                     <button wire:click="$set('search', '')" class="text-slate-400 hover:text-slate-600">
                                         <x-icon name="o-x-mark" class="w-3.5 h-3.5" />
                                     </button>
@@ -36,7 +36,7 @@
                             @endif
                             @if($category)
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
-                                    Category: {{ \App\Models\Category::find($category)?->name }}
+                                    {{ __('Category:') }} {{ \App\Models\Category::find($category)?->name }}
                                     <button wire:click="$set('category', null)" class="text-slate-400 hover:text-slate-600">
                                         <x-icon name="o-x-mark" class="w-3.5 h-3.5" />
                                     </button>
@@ -44,7 +44,7 @@
                             @endif
                             @if($tag)
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
-                                    Tag: #{{ $tag }}
+                                    {{ __('Tag:') }} #{{ $tag }}
                                     <button wire:click="$set('tag', null)" class="text-slate-400 hover:text-slate-600">
                                         <x-icon name="o-x-mark" class="w-3.5 h-3.5" />
                                     </button>
@@ -52,7 +52,7 @@
                             @endif
                             @if($sortBy !== 'latest')
                                 <span class="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-lg text-xs font-semibold">
-                                    Sorted by: {{ ucfirst($sortBy) }}
+                                    {{ __('Sorted by:') }} {{ ucfirst($sortBy) }}
                                     <button wire:click="$set('sortBy', 'latest')" class="text-slate-400 hover:text-slate-600">
                                         <x-icon name="o-x-mark" class="w-3.5 h-3.5" />
                                     </button>
@@ -93,7 +93,7 @@
                                     <div class="flex items-center gap-2 mb-1.5 text-xs text-slate-400 font-medium">
                                         <span>{{ $post->published_at?->format('M d, Y') }}</span>
                                         <span>•</span>
-                                        <span>{{ ceil(str_word_count(strip_tags($post->content)) / 200) }} min read</span>
+                                        <span>{{ ceil(str_word_count(strip_tags($post->content)) / 200) }} {{ __('min read') }}</span>
                                     </div>
                                     
                                     <a wire:navigate href="{{ route('web.post', $post->slug) }}" class="block group/link">
@@ -118,7 +118,7 @@
                                             @endif
                                         </div>
                                         <span class="text-xs font-bold text-slate-600 dark:text-slate-300">
-                                            {{ Str::limit($post->user->name ?? 'Anonymous', 16) }}
+                                            {{ Str::limit($post->user->name ?? __('Anonymous'), 16) }}
                                         </span>
                                     </a>
 
@@ -143,7 +143,7 @@
                             <h3 class="font-black text-slate-800 dark:text-slate-200">{{ __('No articles found') }}</h3>
                             <p class="text-sm text-slate-400 mt-1 max-w-xs mx-auto">{{ __('Try adjusting your filter keywords or browse another category.') }}</p>
                             @if($search || $category || $tag)
-                                <x-button label="Clear Filters" class="btn-primary btn-sm rounded-xl mt-4" wire:click="resetFilters" />
+                                <x-button label="{{ __('Clear Filters') }}" class="btn-primary btn-sm rounded-xl mt-4" wire:click="resetFilters" />
                             @endif
                         </div>
                     @endforelse
@@ -167,7 +167,7 @@
                     </h4>
                     <div class="relative">
                         <x-icon name="o-magnifying-glass" class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                        <input type="text" wire:model.live.debounce.500ms="search" placeholder="Search keywords..."
+                        <input type="text" wire:model.live.debounce.500ms="search" placeholder="{{ __('Search keywords...') }}"
                             class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-300" />
                     </div>
                 </div>
@@ -178,9 +178,9 @@
                         {{ __('Sort Articles') }}
                     </h4>
                     <select wire:model.live="sortBy" class="select select-sm select-bordered w-full rounded-xl text-xs bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800">
-                        <option value="latest">Latest</option>
-                        <option value="popular">Most Popular</option>
-                        <option value="oldest">Oldest</option>
+                        <option value="latest">{{ __('Latest') }}</option>
+                        <option value="popular">{{ __('Most Popular') }}</option>
+                        <option value="oldest">{{ __('Oldest') }}</option>
                     </select>
                 </div>
 

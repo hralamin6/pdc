@@ -10,18 +10,18 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <x-button 
-                label="Reset Defaults" 
-                icon="o-arrow-path" 
-                wire:click="resetDefaults" 
-                wire:confirm="Are you sure you want to reset your tracked items to system defaults?" 
-                class="btn-ghost btn-sm rounded-xl text-base-content/60" 
+            <x-button
+                :label="__('Reset Defaults')"
+                icon="o-arrow-path"
+                wire:click="resetDefaults"
+                wire:confirm="{{ __('Are you sure you want to reset your tracked items to system defaults?') }}"
+                class="btn-ghost btn-sm rounded-xl text-base-content/60"
             />
-            <x-button 
-                label="Add Custom Item" 
-                icon="o-plus" 
-                wire:click="$set('showCustomModal', true)" 
-                class="btn-primary btn-sm rounded-xl font-bold" 
+            <x-button
+                :label="__('Add Custom Item')"
+                icon="o-plus"
+                wire:click="$set('showCustomModal', true)"
+                class="btn-primary btn-sm rounded-xl font-bold"
             />
         </div>
     </div>
@@ -31,9 +31,9 @@
         <div class="flex items-center justify-between border-b border-base-content/5 pb-3">
             <h2 class="text-lg font-bold text-base-content flex items-center gap-2">
                 <x-icon name="o-list-bullet" class="w-5 h-5 text-primary" />
-                <span>System Standard Items</span>
+                <span>{{ __('System Standard Items') }}</span>
             </h2>
-            <span class="text-xs text-base-content/50">Toggle to enable or disable from your daily form</span>
+            <span class="text-xs text-base-content/50">{{ __('Toggle to enable or disable from your daily form') }}</span>
         </div>
 
         @php
@@ -54,7 +54,7 @@
                             <div class="flex items-center gap-3">
                                 <div>
                                     <p class="font-bold text-sm text-base-content">{{ $template['title'] }}</p>
-                                    <p class="text-xs text-base-content/50 capitalize">Input: {{ $template['type'] }}</p>
+                                    <p class="text-xs text-base-content/50 capitalize">{{ __('Input:') }} {{ $template['type'] }}</p>
                                 </div>
                             </div>
                             <x-toggle 
@@ -74,13 +74,13 @@
         <div class="flex items-center justify-between border-b border-base-content/5 pb-3">
             <h2 class="text-lg font-bold text-base-content flex items-center gap-2">
                 <x-icon name="o-sparkles" class="w-5 h-5 text-secondary" />
-                <span>Personal Custom Items</span>
+                <span>{{ __('Personal Custom Items') }}</span>
             </h2>
-            <x-button 
-                icon="o-plus" 
-                class="btn-xs btn-outline btn-secondary rounded-lg" 
-                label="Create New" 
-                wire:click="$set('showCustomModal', true)" 
+            <x-button
+                icon="o-plus"
+                class="btn-xs btn-outline btn-secondary rounded-lg"
+                :label="__('Create New')"
+                wire:click="$set('showCustomModal', true)"
             />
         </div>
 
@@ -91,8 +91,8 @@
         @if($customs->isEmpty())
             <div class="text-center py-8 bg-base-200/20 rounded-2xl border border-dashed border-base-content/10 space-y-2">
                 <x-icon name="o-sparkles" class="w-8 h-8 text-base-content/30 mx-auto" />
-                <p class="text-sm font-semibold text-base-content/60">No personal custom items added yet.</p>
-                <p class="text-xs text-base-content/40">You can create custom goals like "Read 5 pages of Seerah" or "Drink 2L Water".</p>
+                <p class="text-sm font-semibold text-base-content/60">{{ __('No personal custom items added yet.') }}</p>
+                <p class="text-xs text-base-content/40">{{ __('You can create custom goals like "Read 5 pages of Seerah" or "Drink 2L Water".') }}</p>
             </div>
         @else
             <div class="space-y-2">
@@ -104,7 +104,7 @@
                                     type="button" 
                                     wire:click="moveUp({{ $custom['id'] }})" 
                                     class="p-1 hover:bg-base-200 rounded text-base-content/40 hover:text-base-content" 
-                                    title="Move Up"
+                                    title="{{ __('Move Up') }}"
                                 >
                                     <x-icon name="o-chevron-up" class="w-3.5 h-3.5" />
                                 </button>
@@ -112,14 +112,14 @@
                                     type="button" 
                                     wire:click="moveDown({{ $custom['id'] }})" 
                                     class="p-1 hover:bg-base-200 rounded text-base-content/40 hover:text-base-content" 
-                                    title="Move Down"
+                                    title="{{ __('Move Down') }}"
                                 >
                                     <x-icon name="o-chevron-down" class="w-3.5 h-3.5" />
                                 </button>
                             </div>
                             <div>
                                 <p class="font-bold text-sm text-base-content">{{ $custom['custom_title'] }}</p>
-                                <p class="text-xs text-base-content/50 capitalize">Type: {{ $custom['type'] }}</p>
+                                <p class="text-xs text-base-content/50 capitalize">{{ __('Type:') }} {{ $custom['type'] }}</p>
                             </div>
                         </div>
 
@@ -132,9 +132,9 @@
                             <button 
                                 type="button" 
                                 wire:click="deleteCustomItem({{ $custom['id'] }})" 
-                                wire:confirm="Delete this custom item permanently?" 
-                                class="btn btn-ghost btn-circle btn-xs text-error" 
-                                title="Delete Item"
+                                wire:confirm="{{ __('Delete this custom item permanently?') }}"
+                                class="btn btn-ghost btn-circle btn-xs text-error"
+                                title="{{ __('Delete Item') }}"
                             >
                                 <x-icon name="o-trash" class="w-4 h-4" />
                             </button>
@@ -146,31 +146,31 @@
     </div>
 
     {{-- Modal for Custom Items --}}
-    <x-modal wire:model="showCustomModal" title="Create Personal Trackable" class="backdrop-blur">
+    <x-modal wire:model="showCustomModal" :title="__('Create Personal Trackable')" class="backdrop-blur">
         <div class="space-y-4 pt-2">
-            <x-input 
-                label="Activity Title" 
-                wire:model="customTitle" 
-                placeholder="e.g. Read 5 pages of Seerah, Nafl Charity, Morning Jog" 
+            <x-input
+                :label="__('Activity Title')"
+                wire:model="customTitle"
+                :placeholder="__('e.g. Read 5 pages of Seerah, Nafl Charity, Morning Jog')"
                 class="rounded-xl border-base-content/10"
             />
 
-            <x-select 
-                label="Input Format" 
-                wire:model="customType" 
+            <x-select
+                :label="__('Input Format')"
+                wire:model="customType"
                 :options="[
-                    ['id' => 'boolean', 'name' => 'Checkbox (Done / Not Done)'],
-                    ['id' => 'number', 'name' => 'Numeric Stepper (Amount / Pages / Minutes)'],
-                    ['id' => 'text', 'name' => 'Text Field (Reflection / Journal Note)'],
-                    ['id' => 'mixed', 'name' => 'Checkbox + Text Note'],
-                ]" 
+                    ['id' => 'boolean', 'name' => __('Checkbox (Done / Not Done)')],
+                    ['id' => 'number', 'name' => __('Numeric Stepper (Amount / Pages / Minutes)')],
+                    ['id' => 'text', 'name' => __('Text Field (Reflection / Journal Note)')],
+                    ['id' => 'mixed', 'name' => __('Checkbox + Text Note')],
+                ]"
                 class="rounded-xl border-base-content/10"
             />
         </div>
 
         <x-slot:actions>
-            <x-button label="Cancel" wire:click="$set('showCustomModal', false)" class="btn-ghost rounded-xl" />
-            <x-button label="Save Trackable" wire:click="saveCustomItem" class="btn-primary rounded-xl font-bold" spinner />
+            <x-button :label="__('Cancel')" wire:click="$set('showCustomModal', false)" class="btn-ghost rounded-xl" />
+            <x-button :label="__('Save Trackable')" wire:click="saveCustomItem" class="btn-primary rounded-xl font-bold" spinner />
         </x-slot:actions>
     </x-modal>
 </div>

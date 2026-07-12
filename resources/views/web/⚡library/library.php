@@ -2,6 +2,7 @@
 
 use App\Models\Book;
 use App\Models\BookCategory;
+use App\Models\LibraryHub;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -69,6 +70,24 @@ class extends Component
         return BookCategory::whereHas('books', fn ($q) => $q->where('status', 'approved'))
             ->withCount(['books' => fn ($q) => $q->where('status', 'approved')])
             ->orderByDesc('books_count')
+            ->get();
+    }
+
+    #[Computed]
+    public function hubs()
+    {
+        return LibraryHub::where('is_active', true)->withCount('bookCopies')->orderBy('name')->get();
+    }
+
+    #[Computed]
+    public function topUsers()
+    {
+        return \App\Models\User::withCount(['bookCopies' => function ($q) {
+                $q->where('is_borrowable', true);
+            }])
+            ->having('book_copies_count', '>', 0)
+            ->orderByDesc('book_copies_count')
+            ->take(10)
             ->get();
     }
 

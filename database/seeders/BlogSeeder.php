@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Post;
+use App\Models\Comment;
+use App\Models\PostReaction;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -13,27 +15,25 @@ class BlogSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::role(['super-admin', 'admin', 'mentor'])->get();
-        if ($users->isEmpty()) {
-            $users = User::limit(5)->get();
-        }
+        $users = User::all();
         if ($users->isEmpty()) {
             $this->command->warn('No users found. Run UserSeeder first.');
             return;
         }
 
-        // 1. Create Blog Categories
+        // 1. Create Blog Categories (bilingual names)
         $categories = [
-            ['name' => 'Quranic Tafseer', 'slug' => Str::slug('Quranic Tafseer'), 'is_active' => true],
-            ['name' => 'Hadith & Sunnah', 'slug' => Str::slug('Hadith & Sunnah'), 'is_active' => true],
-            ['name' => 'Seerah of Prophet (PBUH)', 'slug' => Str::slug('Seerah of Prophet PBUH'), 'is_active' => true],
-            ['name' => 'Fiqh & Rulings', 'slug' => Str::slug('Fiqh & Rulings'), 'is_active' => true],
-            ['name' => 'Islamic Finance', 'slug' => Str::slug('Islamic Finance'), 'is_active' => true],
-            ['name' => 'Daily Reflections', 'slug' => Str::slug('Daily Reflections'), 'is_active' => true],
+            ['name' => 'কুরআন ও তাফসীর (Quran & Tafseer)', 'slug' => 'quran-tafseer', 'is_active' => true],
+            ['name' => 'হাদীস ও সুন্নাহ (Hadith & Sunnah)', 'slug' => 'hadith-sunnah', 'is_active' => true],
+            ['name' => 'সীরাতুন্নবী সাঃ (Prophet\'s Seerah)', 'slug' => 'prophets-seerah', 'is_active' => true],
+            ['name' => 'ফিকহ ও ফতোয়া (Fiqh & Rulings)', 'slug' => 'fiqh-rulings', 'is_active' => true],
+            ['name' => 'ইসলামী অর্থনীতি (Islamic Economics)', 'slug' => 'islamic-economics', 'is_active' => true],
+            ['name' => 'দৈনিক আত্মউপলব্ধি (Daily Reflections)', 'slug' => 'daily-reflections', 'is_active' => true],
+            ['name' => 'অনুপ্রেরণা ও দাওয়াহ (Inspiration & Dawah)', 'slug' => 'inspiration-dawah', 'is_active' => true],
         ];
 
         foreach ($categories as $cat) {
-            Category::firstOrCreate(['slug' => $cat['slug']], $cat);
+            Category::updateOrCreate(['slug' => $cat['slug']], $cat);
         }
 
         $allCategories = Category::all();
@@ -41,57 +41,160 @@ class BlogSeeder extends Seeder
         // 2. Create Blog Posts
         $postsData = [
             [
-                'title' => 'Understanding the Wisdom Behind Patience (Sabr)',
-                'excerpt' => 'Patience is not just waiting; it is how we behave while we are waiting. Explore the Quranic perspective on Sabr.',
-                'content' => 'Patience (Sabr) is one of the most emphasized virtues in Islam. Allah says in the Quran: "O you who have believed, seek help through patience and prayer. Indeed, Allah is with the patient." (Quran 2:153)...',
+                'title' => 'ধৈর্য বা সবরের ফজিলত এবং আমাদের করণীয়',
+                'category_slug' => 'daily-reflections',
+                'excerpt' => 'ধৈর্য কেবল অপেক্ষা করার নাম নয়, বরং কঠিন পরিস্থিতিতেও আল্লাহর প্রতি সন্তুষ্ট থাকা এবং ভালো আচরণ বজায় রাখার নামই সবর।',
+                'content' => "ধৈর্য (সবর) ইসলামের অন্যতম গুরুত্বপূর্ণ একটি গুণ। আল্লাহ তাআলা পবিত্র কুরআনে বলেছেন:\n\n> \"হে মুমিনগণ! তোমরা ধৈর্য ও সালাতের মাধ্যমে সাহায্য প্রার্থনা করো। নিশ্চয়ই আল্লাহ ধৈর্যশীলদের সাথে আছেন।\" (সূরা আল-বাকারাহ: ১৫৩)\n\nজীবনের প্রতিটি পদক্ষেপে পরীক্ষা ও দুঃখ-কষ্ট আসবেই। রাসূলুল্লাহ (সাঃ) বলেছেন, \"মুমিনের ব্যাপারটি কতই না চমৎকার! তার প্রতিটি কাজই কল্যাণময়। যদি সে সুখ পায় তবে শোকর করে, যা তার জন্য কল্যাণকর। আর যদি দুঃখ পায় তবে সবর করে, তাও তার জন্য কল্যাণকর।\"\n\n**সবরের প্রকারভেদ:**\n১. ইবাদত ও আল্লাহর হুকুম পালনে ধৈর্য ধারণ করা।\n২. পাপাচার ও আল্লাহর নিষেধাজ্ঞা থেকে দূরে থাকতে ধৈর্য ধারণ করা।\n৩. যেকোনো মুসিবত বা দুঃখ-কষ্টে আল্লাহর ওপর আস্থা রেখে ধৈর্য ধারণ করা।",
                 'is_featured' => true,
             ],
             [
-                'title' => 'The Etiquettes of Seeking Knowledge',
-                'excerpt' => 'Knowledge without proper etiquette is dangerous. Learn how the early scholars approached learning.',
-                'content' => 'Imam Malik advised his student: "Learn etiquette before you learn knowledge." This profound advice highlights that knowledge must be accompanied by humility, sincerity, and respect for teachers...',
+                'title' => 'ইলম অর্জনের গুরুত্ব ও আদবসমূহ',
+                'category_slug' => 'quran-tafseer',
+                'excerpt' => 'আদব ছাড়া জ্ঞানার্জন বিপজ্জনক হতে পারে। প্রাচীন যুগের মণীষী ও ইমামগণ জ্ঞান অর্জনের চেয়ে তার শিষ্টাচার শেখাকে অগ্রাধিক দিতেন।',
+                'content' => "জ্ঞান অর্জন করা প্রত্যেক মুসলিমের ওপর ফরয। তবে শুধু তথ্য সংগ্রহ করাই ইলম নয়, বরং সেই ইলম অনুযায়ী আমল করা এবং নম্রতা অর্জন করাই আসল উদ্দেশ্য।\n\nইমাম মালিক (রঃ) তাঁর ছাত্রকে উদ্দেশ্য করে বলেছিলেন, \"তুমি ইলম অর্জনের পূর্বে আদব বা শিষ্টাচার শিক্ষা করো।\" এই মূল্যবান উপদেশ প্রমাণ করে যে নম্রতা, বিনয় এবং শিক্ষকের প্রতি সম্মান প্রদর্শন ছাড়া প্রকৃত জ্ঞান অর্জন সম্ভব নয়।\n\n**ইলম অর্জনের প্রধান আদবসমূহ:**\n* **নিয়ত পরিষ্কার করা:** শুধুমাত্র আল্লাহর সন্তুষ্টির জন্য এবং নিজের অজ্ঞতা দূর করার জন্য ইলম অর্জন করা। দুনিয়াবী সম্মান বা তর্কের উদ্দেশ্যে ইলম অর্জন করা হারাম।\n* **বিনয় প্রদর্শন:** শিক্ষকের সামনে বিনীত হওয়া এবং নিজেকে সবসময় একজন শিক্ষার্থীর আসনে রাখা।\n* **আমল করা:** যে ইলম অর্জন করা হয়েছে, তা নিজের জীবনে প্রয়োগ করা। আমলহীন ইলমের কোনো মূল্য নেই।",
                 'is_featured' => false,
             ],
             [
-                'title' => 'Why Islamic Finance is the Future',
-                'excerpt' => 'Interest (Riba) destroys societies. Understand the ethical foundations of Islamic banking and finance.',
-                'content' => 'Islamic finance is fundamentally based on risk-sharing and asset-backed transactions. Unlike conventional banking which relies on renting money (interest/riba), Islamic economics focuses on trade and real economic activity...',
+                'title' => 'ইসলামী অর্থনীতি ও সুদবিহীন সমাজ গঠন',
+                'category_slug' => 'islamic-economics',
+                'excerpt' => 'সুদ একটি সমাজকে ধ্বংসের দিকে নিয়ে যায়। আসুন ইসলামী অর্থ ব্যবস্থার মৌলিক ভিত্তি ও এর প্রয়োজনীয়তা সম্পর্কে জানি।',
+                'content' => "আধুনিক বিশ্বে অর্থ ব্যবস্থার সবচেয়ে বড় ব্যাধি হলো সুদ (রিবা)। এটি মানুষের সম্পদ কুক্ষিগত করে এবং সমাজে বৈষম্য তৈরি করে। মহান আল্লাহ তাআলা সুদকে কঠোরভাবে হারাম করেছেন এবং ব্যবসাকে করেছেন হালাল।\n\nইসলামী অর্থ ব্যবস্থা মূলত অংশীদারিত্ব (Risk-Sharing) এবং বাস্তব সম্পদ-ভিত্তিক লেনদেনের ওপর প্রতিষ্ঠিত। এখানে টাকা দিয়ে টাকা কেনাবেচা করা যায় না।\n\n**ইসলামী অর্থ ব্যবস্থার কিছু সৌন্দর্য:**\n১. **মুদারাবা ও মুশারাকা:** ব্যবসায়ী ও বিনিয়োগকারীর যৌথ উদ্যোগ ও লাভ-ক্ষতির অংশীদারিত্ব।\n২. **যাকাত ও সাদাকাহ:** ধনীদের সম্পদ থেকে নির্দিষ্ট অংশ দরিদ্রদের মধ্যে বিতরণ করে অর্থনৈতিক ভারসাম্য রক্ষা করা।\n৩. **করজে হাসানা:** কোনো অতিরিক্ত সুদ ছাড়া শুধুমাত্র আল্লাহর সন্তুষ্টির উদ্দেশ্যে ঋণ প্রদান।",
                 'is_featured' => true,
             ],
             [
-                'title' => 'Lessons from the Battle of Badr',
-                'excerpt' => 'A small group can overcome a large army with faith and trust in Allah. Key lessons from Badr.',
-                'content' => 'The Battle of Badr was a turning point in Islamic history. Despite being heavily outnumbered, the Muslims were granted victory through their unwavering reliance on Allah (Tawakkul) and strategic planning...',
+                'title' => 'বদর যুদ্ধের কিছু অমর শিক্ষা ও উপদেশ',
+                'category_slug' => 'prophets-seerah',
+                'excerpt' => 'অল্প সংখ্যক লোকও ঈমান ও আল্লাহর ওপর ভরসা রেখে বিশাল বাহিনীকে পরাজিত করতে পারে। বদরের যুদ্ধ থেকে আমাদের জন্য সেরা শিক্ষা।',
+                'content' => "১৭ রমজান, ২ হিজরিতে সংঘটিত হওয়া বদরের যুদ্ধ ইসলামের ইতিহাসের অন্যতম প্রধান মোড় পরিবর্তনকারী ঘটনা। এই যুদ্ধে মুসলিমদের সংখ্যা ছিল মাত্র ৩১৩ জন, অন্যদিকে কুরাইশদের সুসজ্জিত বাহিনীতে ছিল ১০০০ জনেরও বেশি সৈন্য।\n\nবাহ্যিক উপকরণের ঘাটতি থাকা সত্ত্বেও মুসলিমরা বিজয়ী হয়েছিলেন কারণ তাদের সাথে ছিল আল্লাহর বিশেষ সাহায্য এবং তাওহীদের প্রতি অগাধ বিশ্বাস (তাওয়াক্কুল)।\n\n**বদর যুদ্ধ থেকে আমাদের শিক্ষা:**\n* **তাওয়াক্কুল বা আল্লাহর ওপর ভরসা:** মানুষ যখন তার সর্বোচ্চ চেষ্টা করার পর আল্লাহর ওপর পূর্ণ ভরসা রাখে, তখন আল্লাহ তাকে এমন উৎস থেকে সাহায্য করেন যা সে কল্পনাও করতে পারে না।\n* **নেতৃত্বের আনুগত্য:** সেনাপতি হিসেবে রাসূলুল্লাহ (সাঃ)-এর প্রতিটি কৌশলী সিদ্ধান্তের প্রতি সাহাবীদের বিনাবাক্যে আনুগত্য প্রকাশ করাই ছিল বিজয়ের অন্যতম মূল চাবিকাঠি।\n* **ঐক্য ও শৃঙ্খল:** যুদ্ধের মাঠে সকলে এক সীসাঢালা প্রাচীরের মতো ঐক্যবদ্ধ ছিলেন।",
                 'is_featured' => false,
             ],
             [
-                'title' => 'How to Maximize Your Time for Ibadah',
-                'excerpt' => 'Time management from an Islamic perspective. Stop wasting time and start earning rewards.',
-                'content' => 'Prophet Muhammad (PBUH) said: "There are two blessings which many people lose: health and free time." To make the most of our day, we must prioritize Salah, block out time for Quran, and avoid mindless scrolling...',
+                'title' => 'দৈনিক সময়ের গুরুত্ব ও সময় ব্যবস্থাপনা',
+                'category_slug' => 'daily-reflections',
+                'excerpt' => 'ইসলামের দৃষ্টিতে সময়ের ব্যবস্থাপনা। সোশ্যাল মিডিয়া ও অপ্রয়োজনীয় কাজে সময় নষ্ট না করে কীভাবে আখেরাতের ফায়দা লুটা যায়।',
+                'content' => "রাসূলুল্লাহ (সাঃ) বলেছেন: \"দুটি নেয়ামতের ব্যাপারে অধিকাংশ মানুষ ধোঁকায় পড়ে থাকে, তা হলো সুস্থতা ও অবসর সময়।\" (সহীহ বুখারী)\n\nআমাদের জীবন সীমিত আর প্রতিটি সেকেন্ড আমাদের আখেরাতের পুঁজি। তাই সময়ের সঠিক ব্যবহার করা মুমিনের অন্যতম দায়িত্ব।\n\n**সময় ব্যবস্থাপনার কিছু কার্যকরী টিপস:**\n১. **সালাতের সময় অনুযায়ী দিন পরিকল্পনা:** আপনার প্রাত্যহিক কাজের রুটিন পাঁচ ওয়াক্ত সালাতের সময়ের সাথে মিল রেখে সাজান।\n২. **সোশ্যাল মিডিয়া ব্যবহারে নিয়ন্ত্রণ:** প্রতিদিন স্ক্রিন টাইম নির্দিষ্ট করুন এবং অপ্রয়োজনীয় স্ক্রলিং বন্ধ করুন।\n৩. **সকাল বেলার বারাকাহ:** সকালের সময়টাতে আল্লাহ তাআলা বারাকাহ রেখেছেন। ফজরের পর ঘুমানোর অভ্যাস পরিহার করে কাজ শুরু করুন।",
+                'is_featured' => false,
+            ],
+            [
+                'title' => 'সমাজ সংস্কারে তরুণ সমাজের ভূমিকা',
+                'category_slug' => 'inspiration-dawah',
+                'excerpt' => 'তরুণরাই দেশের মেরুদণ্ড এবং সমাজ পরিবর্তনের প্রধান চালিকাশক্তি। ইসলাম কীভাবে যুবসমাজকে সৎ কাজের পথে উদ্বুদ্ধ করে।',
+                'content' => "যেকোনো সমাজ সংস্কারে যুবসমাজের ভূমিকা সবচেয়ে বেশি। রাসূলুল্লাহ (সাঃ)-এর পাশে দাঁড়ানো এবং ইসলামের বাণী প্রথম গ্রহণকারীদের মধ্যে অধিকাংশই ছিলেন তরুণ সাহাবী।\n\nহাশরের ময়দানে যে সাত শ্রেণীর মানুষকে আল্লাহর আরশের নিচে ছায়া দেওয়া হবে, তাদের মধ্যে অন্যতম হচ্ছে: \"ঐ যুবক যার যৌবনকাল কেটেছে আল্লাহর ইবাদতে।\"\n\n**তরুণদের দায়িত্ব ও কর্তব্য:**\n* নিজের চরিত্র সংশোধন করা ও অশ্লীলতা থেকে বেঁচে থাকা।\n* সোশ্যাল মিডিয়া ব্যবহার করে মানুষের মাঝে দ্বীনি দাওয়াত ও কল্যাণকর বার্তা ছড়িয়ে দেওয়া।\n* মাদক, আড্ডা এবং অনর্থক কাজ ছেড়ে দিয়ে গঠনমূলক শিক্ষা ও সমাজসেবামূলক কাজে আত্মনিয়োগ করা।",
+                'is_featured' => false,
+            ],
+            [
+                'title' => 'কুরআন নিয়মিত পাঠ ও অনুধাবনের ফযীলত',
+                'category_slug' => 'quran-tafseer',
+                'excerpt' => 'কুরআন শুধুমাত্র সুর করে পড়ার বই নয়, বরং এটি আমাদের জীবনের পথপ্রদর্শক। প্রতিদিন কুরআন তিলাওয়াতের বিশেষ ফায়দা।',
+                'content' => "পবিত্র কুরআন আল্লাহ তাআলার কালাম। এটি পাঠ করা এবং এর অর্থ বুঝে নিজের জীবনে বাস্তবায়ন করাই হলো হিদায়াত পাওয়ার একমাত্র পথ।\n\nরাসূলুল্লাহ (সাঃ) বলেছেন, \"তোমাদের মধ্যে সর্বোত্তম সেই ব্যক্তি যে নিজে কুরআন শেখে এবং অন্যকে তা শেখায়।\" (সহীহ বুখারী)\n\n**প্রতিদিন কুরআন পড়ার ফায়দা:**\n১. **প্রতি হরফে ১০ নেকী:** কুরআন তিলাওয়াতের প্রতি অক্ষরের বিনিময়ে ১০টি করে নেকী বা সওয়াব লাভ করা যায়।\n২. **কলবের প্রশান্তি:** আল্লাহ তাআলা বলেন, \"জেনে রেখো, আল্লাহর যিকিরের মাধ্যমেই দিলসমূহ প্রশান্তি লাভ করে।\"\n৩. **কিয়ামতের দিনে সুপারিশকারী:** কুরআন কিয়ামতের দিন তার পাঠকদের জন্য আল্লাহর দরবারে জোরালো সুপারিশ করবে।",
+                'is_featured' => true,
+            ],
+            [
+                'title' => 'সুন্নাহ অনুযায়ী জীবন গড়ার সঠিক উপায়',
+                'category_slug' => 'hadith-sunnah',
+                'excerpt' => 'আমাদের জীবনের ছোট-বড় সকল কাজে রাসূলুল্লাহ (সাঃ) এর সুন্নাহ অনুসরণের মাধ্যমে কীভাবে ইবাদতে রূপান্তর করা যায়।',
+                'content' => "রাসূলুল্লাহ (সাঃ)-এর সুন্নাহ হলো আমাদের যাপিত জীবনের বাস্তব গাইডলাইন। আমাদের খাওয়া, পরা, ঘুমানো এমনকি টয়লেটে যাওয়ার মতো সাধারণ কাজগুলোও যদি সুন্নাহ অনুযায়ী হয়, তবে তা ইবাদত হিসেবে গণ্য হবে।\n\nআল্লাহ তাআলা বলেন, \"বলুন, তোমরা যদি আল্লাহকে ভালোবাসো, তবে আমার অনুসরণ করো; আল্লাহ তোমাদের ভালোবাসবেন এবং তোমাদের পাপসমূহ ক্ষমা করে দেবেন।\" (সূরা আল-ইমরান: ৩১)\n\n**দৈনন্দিন জীবনের গুরুত্বপূর্ণ কিছু সুন্নাহ:**\n* ঘুমানোর আগে অজু করা ও ডান কাতে শোয়া।\n* খাওয়ার শুরুতে বিসমিল্লাহ বলা ও ডান হাত দিয়ে খাওয়া।\n* পথ চলার সময় পরিচিত-অপরিচিত সকলকে সালাম দেওয়া।\n* সদা হাস্যোজ্জ্বল মুখে কথা বলা, কেননা মুচকি হাসাও একটি সাদাকাহ।",
                 'is_featured' => false,
             ]
         ];
 
-        foreach ($postsData as $idx => $pd) {
+        // Seed posts
+        $seededPosts = [];
+        foreach ($postsData as $pd) {
+            $category = $allCategories->where('slug', $pd['category_slug'])->first();
+            $categoryId = $category ? $category->id : $allCategories->random()->id;
+            
             $title = $pd['title'];
             $slug = Str::slug($title);
-            
-            $post = Post::firstOrNew(['slug' => $slug]);
-            if (!$post->exists) {
-                $post->fill([
-                    'user_id' => $users->random()->id,
-                    'category_id' => $allCategories->random()->id,
-                    'title' => $title,
-                    'excerpt' => $pd['excerpt'],
-                    'content' => $pd['content'],
-                    'is_featured' => $pd['is_featured'],
-                    'published_at' => Carbon::now()->subDays(rand(1, 30)),
-                    'views_count' => rand(10, 500),
+
+            // Fetch a random author (prefer superadmin, admin, or mentor roles)
+            $author = User::role(['super-admin', 'admin', 'mentor'])->get()->random();
+
+            $post = Post::updateOrCreate(['slug' => $slug], [
+                'user_id' => $author->id,
+                'category_id' => $categoryId,
+                'title' => $title,
+                'excerpt' => $pd['excerpt'],
+                'content' => $pd['content'],
+                'is_featured' => $pd['is_featured'],
+                'published_at' => Carbon::now()->subDays(rand(1, 30)),
+                'views_count' => rand(150, 1200),
+                'meta_title' => $title,
+                'meta_description' => $pd['excerpt'],
+                'meta_keywords' => 'ইসলাম, সুন্নাহ, হালাল, দ্বীন, দাওয়াহ, ' . ($category ? $category->name : 'জ্ঞান'),
+            ]);
+
+            $seededPosts[] = $post;
+        }
+
+        // 3. Create Comments & Nested Replies
+        $commentTexts = [
+            'মা-শা-আল্লাহ! অত্যন্ত চমৎকার ও সময়োপযোগী লেখা। আমাদের সবারই এই গুণগুলো অর্জন করা উচিত।',
+            'জাযাকাল্লাহু খাইরান লেখককে। বিষয়টিকে অত্যন্ত সুন্দরভাবে গুছিয়ে উপস্থাপন করা হয়েছে।',
+            'পোস্টটি পড়ে অনেক কিছু নতুন করে শিখলাম। আমাদের বন্ধুদের মাঝে শেয়ার করা উচিত লেখাটি।',
+            'আল্লাহ আমাদের সবাইকে এই কথাগুলো বুঝে নিজের জীবনে আমল করার তাওফীক দান করুন। আমীন।',
+            'দারুণ বিশ্লেষণ! বিশেষ করে বাস্তব জীবনের উদাহরণগুলো দারুণ ছিল। অনেক ধন্যবাদ।',
+            'খুবই সুন্দর আলোচনা। এই ধরনের লেখা আমাদের ঈমানকে রিচার্জ করতে সাহায্য করে।',
+            'অসাধারণ পোস্ট ভাই। আপনার কাছ থেকে এমন আরও লেখা আশা করছি।',
+            'পড়ে হৃদয় জুড়িয়ে গেল। আল্লাহ আপনাকে উত্তম প্রতিদান দান করুন।',
+        ];
+
+        $replyTexts = [
+            'ওয়া ইয়্যাকুম ভাই! আপনার মন্তব্যের জন্য ধন্যবাদ।',
+            'আমীন ইয়া রাব্বাল আলামীন। আল্লাহ কবুল করুন।',
+            'জি ভাই, সহমত। আমাদের প্রত্যেকেরই আমল করা উচিত।',
+            'নিশ্চয়ই! বন্ধুদের সাথে শেয়ার করলে দ্বীন প্রচারের সওয়াবও পাওয়া যাবে।',
+            'ধন্যবাদ আপনার মূল্যবান মতামতের জন্য। অনুপ্রাণিত হলাম।',
+        ];
+
+        foreach ($seededPosts as $post) {
+            // Pick 5 to 8 random users to comment
+            $commenters = $users->random(rand(5, 8));
+
+            foreach ($commenters as $commenter) {
+                $comment = Comment::create([
+                    'user_id' => $commenter->id,
+                    'post_id' => $post->id,
+                    'parent_id' => null,
+                    'content' => collect($commentTexts)->random(),
+                    'status' => 'approved',
+                    'is_pinned' => rand(1, 100) <= 15, // 15% chance to pin the comment
+                    'created_at' => $post->published_at->addHours(rand(1, 48)),
                 ]);
-                $post->save();
+
+                // 50% chance to generate a reply
+                if (rand(1, 100) <= 50) {
+                    $replier = $users->where('id', '!=', $commenter->id)->random();
+                    Comment::create([
+                        'user_id' => $replier->id,
+                        'post_id' => $post->id,
+                        'parent_id' => $comment->id,
+                        'content' => collect($replyTexts)->random(),
+                        'status' => 'approved',
+                        'is_pinned' => false,
+                        'created_at' => $comment->created_at->addHours(rand(1, 12)),
+                    ]);
+                }
             }
         }
 
-        $this->command->info('Blog Categories and Posts seeded successfully!');
+        // 4. Create Post Reactions (like, love, insightful, inspiring)
+        $reactionTypes = ['like', 'love', 'insightful', 'inspiring'];
+
+        foreach ($seededPosts as $post) {
+            // 10 to 18 random users will react to each post
+            $reactors = $users->random(rand(10, min(18, $users->count())));
+
+            foreach ($reactors as $reactor) {
+                PostReaction::updateOrCreate([
+                    'user_id' => $reactor->id,
+                    'post_id' => $post->id,
+                ], [
+                    'type' => collect($reactionTypes)->random(),
+                ]);
+            }
+        }
+
+        $this->command->info('Community Feed & Blog system (posts, comments, replies, reactions) seeded successfully in Bangla!');
     }
 }

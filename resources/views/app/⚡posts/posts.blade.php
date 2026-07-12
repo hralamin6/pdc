@@ -378,7 +378,7 @@
                       $post = \App\Models\Post::find($selectedId);
                     @endphp
                     @if($post && $post->featured_image_url)
-                      <img src="{{ $post->featured_image_url }}" class="w-full h-full object-cover" alt="Featured" />
+                      <img src="{{ $post->featured_image_url }}" class="w-full h-full object-cover" alt="{{ __('Featured') }}" />
                     @endif
                   @endif
                 </div>

@@ -214,7 +214,7 @@
                                         </div>
                                         <div class="text-sm text-gray-500 dark:text-gray-400">
                                             {{ ucfirst($backup->type) }} •
-                                            {{ is_array($backup->includes) ? implode(', ', $backup->includes) : 'Full' }}
+                                            {{ is_array($backup->includes) ? implode(', ', $backup->includes) : __('Full') }}
                                         </div>
                                     </div>
                                 </div>

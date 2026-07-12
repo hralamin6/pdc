@@ -22,32 +22,11 @@
         <x-menu-item :title="__('Pusher')" icon="o-bell" wire:click="$set('tab', 'pusher')" :active="$tab === 'pusher'" />
         <x-menu-item :title="__('AI')" icon="o-sparkles" wire:click="$set('tab', 'ai')" :active="$tab === 'ai'" />
         <x-menu-item :title="__('Image & Branding')" icon="o-photo" wire:click="$set('tab', 'image')" :active="$tab === 'image'" />
-        <x-menu-item :title="__('Payment & Donations')" icon="o-credit-card" wire:click="$set('tab', 'payment')" :active="$tab === 'payment'" />
         <x-menu-item :title="__('App')" icon="o-wrench-screwdriver" wire:click="$set('tab', 'app')" :active="$tab === 'app'" />
       </x-menu>
     </div>
 
     <div class="lg:col-span-3 space-y-6">
-      @if($tab === 'payment')
-        <x-card>
-          <x-header :title="__('Payment & Donations')" :subtitle="__('Configure mobile banking and bank transfer details for community donations.')" class="mb-5" />
-          <form wire:submit="savePayment" class="space-y-5">
-            <div class="grid md:grid-cols-2 gap-4">
-              <x-input :label="__('bKash Number')" wire:model.defer="paymentBkashNo" :placeholder="__('e.g. 017xxxxxxxx')" />
-              <x-input :label="__('Nagad Number')" wire:model.defer="paymentNagadNo" :placeholder="__('e.g. 018xxxxxxxx')" />
-              <x-input :label="__('Bank Name')" wire:model.defer="paymentBankName" :placeholder="__('e.g. Dutch Bangla Bank PLC')" />
-              <x-input :label="__('Bank Account Number')" wire:model.defer="paymentBankAccountNo" :placeholder="__('e.g. 123-456-7890123')" />
-              <x-input :label="__('Bank Branch')" wire:model.defer="paymentBankBranch" :placeholder="__('e.g. PSTU Branch')" />
-              <x-input :label="__('Account Holder Name')" wire:model.defer="paymentBankHolder" :placeholder="__('e.g. PSTU Dawah Community')" />
-            </div>
-            @can('settings.update')
-              <div class="flex gap-2">
-                <x-button type="submit" spinner="savePayment" class="btn-primary" icon="o-check">{{ __('Save') }}</x-button>
-              </div>
-            @endcan
-          </form>
-        </x-card>
-      @endif
 
       @if($tab === 'general')
         <x-card>

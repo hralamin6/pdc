@@ -20,6 +20,7 @@ class DonationPledge extends Model
             'ends_at' => 'datetime',
             'is_active' => 'boolean',
             'last_donated_at' => 'datetime',
+            'next_due_at' => 'datetime',
         ];
     }
 

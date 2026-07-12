@@ -15,9 +15,9 @@
             
             {{-- Breadcrumb --}}
             <nav class="flex flex-wrap items-center gap-2 text-xs font-black uppercase tracking-wider text-slate-400">
-                <a wire:navigate href="{{ route('web.home') }}" class="hover:text-primary transition-colors">Home</a>
+                <a wire:navigate href="{{ route('web.home') }}" class="hover:text-primary transition-colors">{{ __('Home') }}</a>
                 <span>/</span>
-                <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-primary transition-colors">Articles</a>
+                <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-primary transition-colors">{{ __('Articles') }}</a>
                 @if($this->post->category)
                     <span>/</span>
                     <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="hover:text-primary transition-colors">
@@ -46,7 +46,7 @@
                             <div class="flex items-center gap-2 text-xs text-slate-400 font-bold">
                                 <span>{{ $this->post->published_at?->format('M d, Y') }}</span>
                                 <span>•</span>
-                                <span>{{ ceil(str_word_count(strip_tags($this->post->content)) / 200) }} min read</span>
+                                <span>{{ ceil(str_word_count(strip_tags($this->post->content)) / 200) }} {{ __('min read') }}</span>
                             </div>
                         </div>
 
@@ -66,7 +66,7 @@
                             </a>
                             <div>
                                 <a wire:navigate href="{{ route('web.user', $this->post->user->username ?? $this->post->user->id) }}" class="text-sm font-bold text-slate-800 dark:text-slate-200 hover:text-primary transition-colors block">
-                                    {{ $this->post->user->name ?? 'Anonymous' }}
+                                    {{ $this->post->user->name ?? __('Anonymous') }}
                                 </a>
                                 <span class="text-[10px] text-slate-400 block font-bold uppercase">{{ __('Article Author') }}</span>
                             </div>
@@ -90,10 +90,10 @@
                                 {{-- Reaction Popover Panel --}}
                                 <div x-cloak x-show="open" @click.outside="open = false" 
                                      class="absolute bottom-full left-0 mb-2 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/90 shadow-xl rounded-full p-1.5 flex gap-3 z-30 transition-all">
-                                    <button @click="open = false" wire:click="react('like')" class="hover:scale-125 transition text-2xl" title="Like">👍</button>
-                                    <button @click="open = false" wire:click="react('love')" class="hover:scale-125 transition text-2xl" title="Love">❤️</button>
-                                    <button @click="open = false" wire:click="react('insightful')" class="hover:scale-125 transition text-2xl" title="Insightful">💡</button>
-                                    <button @click="open = false" wire:click="react('inspiring')" class="hover:scale-125 transition text-2xl" title="Inspiring">🌟</button>
+                                    <button @click="open = false" wire:click="react('like')" class="hover:scale-125 transition text-2xl" title="{{ __('Like') }}">👍</button>
+                                    <button @click="open = false" wire:click="react('love')" class="hover:scale-125 transition text-2xl" title="{{ __('Love') }}">❤️</button>
+                                    <button @click="open = false" wire:click="react('insightful')" class="hover:scale-125 transition text-2xl" title="{{ __('Insightful') }}">💡</button>
+                                    <button @click="open = false" wire:click="react('inspiring')" class="hover:scale-125 transition text-2xl" title="{{ __('Inspiring') }}">🌟</button>
                                 </div>
                                 
                                 {{-- Main Trigger Button --}}
@@ -122,10 +122,10 @@
                             @if($reactCounts['total'] > 0)
                                 <div class="flex items-center gap-2.5 bg-slate-50 dark:bg-slate-950/45 px-3.5 py-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/60 shadow-sm">
                                     <div class="flex -space-x-1.5">
-                                        @if($reactCounts['like'] > 0) <span class="text-sm select-none" title="Like">👍</span> @endif
-                                        @if($reactCounts['love'] > 0) <span class="text-sm select-none" title="Love">❤️</span> @endif
-                                        @if($reactCounts['insightful'] > 0) <span class="text-sm select-none" title="Insightful">💡</span> @endif
-                                        @if($reactCounts['inspiring'] > 0) <span class="text-sm select-none" title="Inspiring">🌟</span> @endif
+                                        @if($reactCounts['like'] > 0) <span class="text-sm select-none" title="{{ __('Like') }}">👍</span> @endif
+                                        @if($reactCounts['love'] > 0) <span class="text-sm select-none" title="{{ __('Love') }}">❤️</span> @endif
+                                        @if($reactCounts['insightful'] > 0) <span class="text-sm select-none" title="{{ __('Insightful') }}">💡</span> @endif
+                                        @if($reactCounts['inspiring'] > 0) <span class="text-sm select-none" title="{{ __('Inspiring') }}">🌟</span> @endif
                                     </div>
                                     <span class="text-xs font-bold text-slate-500 dark:text-slate-400">
                                         {{ $reactCounts['total'] }} {{ trans_choice('reaction|reactions', $reactCounts['total']) }}
@@ -173,19 +173,19 @@
                                 @if($author->detail)
                                     <div class="flex items-center gap-2">
                                         @if($author->detail->website)
-                                            <a href="{{ $author->detail->website }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Website"><x-icon name="o-globe-alt" class="w-4 h-4" /></a>
+                                            <a href="{{ $author->detail->website }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="{{ __('Website') }}"><x-icon name="o-globe-alt" class="w-4 h-4" /></a>
                                         @endif
                                         @if($author->detail->facebook)
-                                            <a href="{{ $author->detail->facebook }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Facebook"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                            <a href="{{ $author->detail->facebook }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="{{ __('Facebook') }}"><x-icon name="o-link" class="w-4 h-4" /></a>
                                         @endif
                                         @if($author->detail->twitter)
-                                            <a href="{{ $author->detail->twitter }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="Twitter"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                            <a href="{{ $author->detail->twitter }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="{{ __('Twitter') }}"><x-icon name="o-link" class="w-4 h-4" /></a>
                                         @endif
                                         @if($author->detail->linkedin)
-                                            <a href="{{ $author->detail->linkedin }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="LinkedIn"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                            <a href="{{ $author->detail->linkedin }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="{{ __('LinkedIn') }}"><x-icon name="o-link" class="w-4 h-4" /></a>
                                         @endif
                                         @if($author->detail->github)
-                                            <a href="{{ $author->detail->github }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="GitHub"><x-icon name="o-link" class="w-4 h-4" /></a>
+                                            <a href="{{ $author->detail->github }}" target="_blank" rel="noopener" class="w-7 h-7 rounded-lg border border-slate-200 dark:border-slate-800 flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-colors" title="{{ __('GitHub') }}"><x-icon name="o-link" class="w-4 h-4" /></a>
                                         @endif
                                     </div>
                                 @endif
@@ -215,13 +215,13 @@
                         {{-- Add comment form --}}
                         @auth
                             <div class="space-y-3">
-                                <x-textarea wire:model.defer="newCommentContent" placeholder="Share your thoughts about this article..." rows="3" required />
-                                <x-button label="Post Comment" class="btn-primary btn-sm rounded-xl font-black uppercase text-xs" wire:click="submitComment" spinner="submitComment" />
+                                <x-textarea wire:model.defer="newCommentContent" placeholder="{{ __('Share your thoughts about this article...') }}" rows="3" required />
+                                <x-button label="{{ __('Post Comment') }}" class="btn-primary btn-sm rounded-xl font-black uppercase text-xs" wire:click="submitComment" spinner="submitComment" />
                             </div>
                         @else
                             <div class="bg-slate-50 dark:bg-slate-950 p-4 text-center rounded-2xl border border-slate-200/30 dark:border-slate-800/80">
                                 <p class="text-sm text-slate-500 dark:text-slate-400">
-                                    Please <a href="{{ route('login') }}" class="text-primary font-black hover:underline">log in</a> to participate in the discussion.
+                                    {{ __('Please') }} <a href="{{ route('login') }}" class="text-primary font-black hover:underline">{{ __('log in') }}</a> {{ __('to participate in the discussion.') }}
                                 </p>
                             </div>
                         @endauth
@@ -242,7 +242,7 @@
                                                 @endif
                                             </div>
                                             <div>
-                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $comment->user->name ?? 'Member' }}</span>
+                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $comment->user->name ?? __('Member') }}</span>
                                                 <span class="text-[10px] text-slate-405 font-bold block">{{ $comment->created_at->diffForHumans() }}</span>
                                             </div>
                                         </div>
@@ -254,7 +254,7 @@
                                                 </button>
                                             @endauth
                                             @if(auth()->check() && ($comment->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
-                                                <button wire:click="deleteComment({{ $comment->id }})" confirm="Are you sure you want to delete this comment?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                <button wire:click="deleteComment({{ $comment->id }})" confirm="{{ __('Are you sure you want to delete this comment?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                     <x-icon name="o-trash" class="w-3.5 h-3.5" />
                                                 </button>
                                             @endif
@@ -268,10 +268,10 @@
                                     {{-- Inline Replying Form --}}
                                     @if($replyingToId === $comment->id)
                                         <div class="pl-4 border-l-2 border-primary space-y-2 mt-2">
-                                            <x-textarea wire:model.defer="newReplyContent" placeholder="Type your reply here..." rows="2" />
+                                            <x-textarea wire:model.defer="newReplyContent" placeholder="{{ __('Type your reply here...') }}" rows="2" />
                                             <div class="flex items-center gap-2">
-                                                <x-button label="Post Reply" class="btn-primary btn-xs" wire:click="submitReply({{ $comment->id }})" spinner="submitReply({{ $comment->id }})" />
-                                                <x-button label="Cancel" class="btn-ghost btn-xs" wire:click="setReplyingTo(null)" />
+                                                <x-button label="{{ __('Post Reply') }}" class="btn-primary btn-xs" wire:click="submitReply({{ $comment->id }})" spinner="submitReply({{ $comment->id }})" />
+                                                <x-button label="{{ __('Cancel') }}" class="btn-ghost btn-xs" wire:click="setReplyingTo(null)" />
                                             </div>
                                         </div>
                                     @endif
@@ -291,12 +291,12 @@
                                                                 @endif
                                                             </div>
                                                             <div>
-                                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $reply->user->name ?? 'Member' }}</span>
+                                                                <span class="text-xs font-black text-slate-800 dark:text-slate-200 block">{{ $reply->user->name ?? __('Member') }}</span>
                                                                 <span class="text-[9px] text-slate-400 font-bold block">{{ $reply->created_at->diffForHumans() }}</span>
                                                             </div>
                                                         </div>
                                                         @if(auth()->check() && ($reply->user_id === auth()->id() || auth()->user()->hasAnyRole(['super-admin', 'admin'])))
-                                                            <button wire:click="deleteComment({{ $reply->id }})" confirm="Are you sure you want to delete this reply?" class="text-rose-500 hover:text-rose-700 transition-colors">
+                                                            <button wire:click="deleteComment({{ $reply->id }})" confirm="{{ __('Are you sure you want to delete this reply?') }}" class="text-rose-500 hover:text-rose-700 transition-colors">
                                                                 <x-icon name="o-trash" class="w-3 h-3" />
                                                             </button>
                                                         @endif
@@ -331,7 +331,7 @@
                         <div class="space-y-2.5 text-xs font-bold text-slate-650 dark:text-slate-350">
                             <div class="flex justify-between items-center">
                                 <span class="text-slate-400">{{ __('Category') }}</span>
-                                <span class="text-primary">{{ $this->post->category->name ?? 'Uncategorized' }}</span>
+                                <span class="text-primary">{{ $this->post->category->name ?? __('Uncategorized') }}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-slate-400">{{ __('Published') }}</span>
@@ -339,11 +339,11 @@
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-slate-400">{{ __('Views') }}</span>
-                                <span>{{ number_format($this->post->views_count) }} views</span>
+                                <span>{{ number_format($this->post->views_count) }} {{ __('views') }}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-slate-400">{{ __('Comments') }}</span>
-                                <span>{{ count($this->comments) }} discussion threads</span>
+                                <span>{{ count($this->comments) }} {{ __('discussion threads') }}</span>
                             </div>
                         </div>
                     </div>
@@ -374,7 +374,7 @@
                                 <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Telegram
                             </a>
                             <a href="mailto:?subject={{ $this->shareText }}&body={{ $this->shareText }}%0A%0A{{ $this->shareUrl }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-gray-450"></span> Email
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-450"></span> {{ __('Email') }}
                             </a>
                             <a href="https://www.pinterest.com/pin/create/button/?url={{ $this->shareUrl }}&description={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pinterest
@@ -387,12 +387,12 @@
                                 if (navigator.share) {
                                   navigator.share({ title, text: title, url }).catch(()=>{});
                                 } else {
-                                  alert('Sharing not supported on this browser.');
+                                  alert('{{ __('Sharing not supported on this browser.') }}');
                                 }
                               "
                               class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 col-span-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold justify-center"
                             >
-                              <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Device Share
+                              <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> {{ __('Device Share') }}
                             </button>
                         </div>
                     </div>

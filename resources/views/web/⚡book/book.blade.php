@@ -37,11 +37,11 @@
                         <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">{{ $book->category->name }}</span>
                     @endif
                     @if($book->type === 'ebook')
-                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-800">eBook</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-fuchsia-100 text-fuchsia-700 dark:bg-fuchsia-900/30 dark:text-fuchsia-400 border border-fuchsia-200 dark:border-fuchsia-800">{{ __('eBook') }}</span>
                     @elseif($book->type === 'physical')
-                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800">Physical</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 border border-amber-200 dark:border-amber-800">{{ __('Physical') }}</span>
                     @elseif($book->type === 'both')
-                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">Digital + Physical</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-violet-100 text-violet-700 dark:bg-violet-900/30 dark:text-violet-400 border border-violet-200 dark:border-violet-800">{{ __('Digital + Physical') }}</span>
                     @endif
                 </div>
 
@@ -65,7 +65,7 @@
 
                 {{-- Reading Shelf --}}
                 <div class="flex flex-wrap gap-2 mb-5">
-                    @foreach(['want_to_read' => '📖 Want to Read', 'reading' => '⚡ Reading', 'completed' => '✅ Finished'] as $status => $label)
+                    @foreach(['want_to_read' => __('📖 Want to Read'), 'reading' => __('⚡ Reading'), 'completed' => __('✅ Finished')] as $status => $label)
                     <button wire:click="setStatus('{{ $status }}')"
                         class="px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all border-2
                             {{ $reading_status === $status

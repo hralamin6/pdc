@@ -192,8 +192,8 @@
 
     {{-- Page Header --}}
     <div>
-        <h1 class="text-3xl font-extrabold text-base-content">Dashboard</h1>
-        <p class="text-base-content/50 italic text-sm mt-1">"Waste no more time arguing what a good man should be, be one." — Marcus Aurelius</p>
+        <h1 class="text-3xl font-extrabold text-base-content">{{ __('Dashboard') }}</h1>
+        <p class="text-base-content/50 italic text-sm mt-1">{{ __('"Waste no more time arguing what a good man should be, be one." — Marcus Aurelius') }}</p>
     </div>
 
     {{-- Prayer Times Card --}}
@@ -211,13 +211,13 @@
                         <svg class="w-4 h-4 text-white/60 group-hover:text-white shrink-0 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span class="text-xs font-bold text-white/70 group-hover:text-white uppercase tracking-widest truncate transition-colors" x-text="locationName"></span>
                     </button>
-                    <button @click="showModal = true" class="p-1.5 rounded-xl hover:bg-white/15 transition-colors text-white/60 hover:text-white" title="Settings">
+                    <button @click="showModal = true" class="p-1.5 rounded-xl hover:bg-white/15 transition-colors text-white/60 hover:text-white" title="{{ __('Settings') }}">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     </button>
                 </div>
 
                 <div>
-                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/50 mb-2">Upcoming Prayer</p>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.25em] text-white/50 mb-2">{{ __('Upcoming Prayer') }}</p>
                     <div class="flex items-baseline gap-2 flex-wrap">
                         <span class="text-4xl md:text-5xl font-black tracking-tight" x-text="nextName"></span>
                         <span class="text-xl font-bold text-white/70" x-text="nextTime"></span>
@@ -228,7 +228,7 @@
                     <div x-show="isLoading" class="loading loading-spinner loading-sm text-white/70"></div>
                     <svg x-show="!isLoading" class="w-4 h-4 text-white/50 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span class="font-mono text-xl font-extrabold tracking-widest" x-text="countdown"></span>
-                    <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">left</span>
+                    <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">{{ __('left') }}</span>
                 </div>
             </div>
 
@@ -258,53 +258,53 @@
     <div class="modal" :class="{'modal-open': showModal}">
         <div class="modal-box rounded-3xl max-w-md">
 
-            <h3 class="font-bold text-xl mb-1">⚙️ Prayer Settings</h3>
-            <p class="text-sm text-base-content/50 mb-6">Customize your location and calculation method</p>
+            <h3 class="font-bold text-xl mb-1">{{ __('⚙️ Prayer Settings') }}</h3>
+            <p class="text-sm text-base-content/50 mb-6">{{ __('Customize your location and calculation method') }}</p>
 
             <div class="space-y-6">
 
                 {{-- Location --}}
                 <div class="space-y-3">
-                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 border-b border-base-content/10 pb-2">📍 Location</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 border-b border-base-content/10 pb-2">📍 {{ __('Location') }}</p>
 
                     <div class="grid grid-cols-2 gap-2">
-                        <button @click="forceGPS()" class="btn btn-primary btn-sm rounded-xl">🛰 Use GPS</button>
-                        <button @click="fromIP()" class="btn btn-outline btn-sm rounded-xl">🌐 Auto (IP)</button>
+                        <button @click="forceGPS()" class="btn btn-primary btn-sm rounded-xl">{{ __('🛰 Use GPS') }}</button>
+                        <button @click="fromIP()" class="btn btn-outline btn-sm rounded-xl">{{ __('🌐 Auto (IP)') }}</button>
                     </div>
 
-                    <div class="divider text-xs text-base-content/30">or search manually</div>
+                    <div class="divider text-xs text-base-content/30">{{ __('or search manually') }}</div>
 
                     <div class="flex gap-2">
-                        <input type="text" x-model="searchQ" @keydown.enter="searchLocation()" placeholder="e.g. Dhaka, Bangladesh" class="input input-bordered input-sm flex-1 rounded-xl text-sm" />
+                        <input type="text" x-model="searchQ" @keydown.enter="searchLocation()" placeholder="{{ __('e.g. Dhaka, Bangladesh') }}" class="input input-bordered input-sm flex-1 rounded-xl text-sm" />
                         <button @click="searchLocation()" class="btn btn-secondary btn-sm rounded-xl px-4" :disabled="searching">
-                            <span x-show="!searching">Go</span>
+                            <span x-show="!searching">{{ __('Go') }}</span>
                             <span x-show="searching" class="loading loading-spinner loading-xs"></span>
                         </button>
                     </div>
                     <p class="text-xs text-error" x-show="searchErr" x-text="searchErr"></p>
 
                     <div class="text-xs font-semibold text-base-content/60 bg-base-200 rounded-xl px-3 py-2">
-                        Current: <span class="text-primary" x-text="locationName"></span>
+                        {{ __('Current:') }} <span class="text-primary" x-text="locationName"></span>
                     </div>
                 </div>
 
                 {{-- Calculation Engine --}}
                 <div class="space-y-3">
-                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 border-b border-base-content/10 pb-2">🧮 Calculation</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 border-b border-base-content/10 pb-2">{{ __('🧮 Calculation') }}</p>
 
                     <div class="grid grid-cols-2 gap-2">
                         <label class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all" :class="calcSource==='api' ? 'border-primary bg-primary/10' : 'border-base-content/10'">
                             <input type="radio" name="pr_src" value="api" x-model="calcSource" class="radio radio-primary radio-sm" />
-                            <div><p class="text-sm font-bold">API</p><p class="text-[10px] text-base-content/40">Aladhan, online</p></div>
+                            <div><p class="text-sm font-bold">{{ __('API') }}</p><p class="text-[10px] text-base-content/40">{{ __('Aladhan, online') }}</p></div>
                         </label>
                         <label class="flex items-center gap-3 p-3 rounded-xl border cursor-pointer transition-all" :class="calcSource==='local' ? 'border-primary bg-primary/10' : 'border-base-content/10'">
                             <input type="radio" name="pr_src" value="local" x-model="calcSource" class="radio radio-primary radio-sm" />
-                            <div><p class="text-sm font-bold">Local</p><p class="text-[10px] text-base-content/40">JS, offline</p></div>
+                            <div><p class="text-sm font-bold">{{ __('Local') }}</p><p class="text-[10px] text-base-content/40">{{ __('JS, offline') }}</p></div>
                         </label>
                     </div>
 
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text text-sm font-bold">Calculation Method</span></label>
+                        <label class="label py-1"><span class="label-text text-sm font-bold">{{ __('Calculation Method') }}</span></label>
                         <select x-model="calcMethod" class="select select-bordered select-sm rounded-xl">
                             <option value="Karachi">Univ. of Islamic Sciences, Karachi</option>
                             <option value="MuslimWorldLeague">Muslim World League</option>
@@ -322,18 +322,18 @@
                     </div>
 
                     <div class="form-control">
-                        <label class="label py-1"><span class="label-text text-sm font-bold">Asr Time (Madhab)</span></label>
+                        <label class="label py-1"><span class="label-text text-sm font-bold">{{ __('Asr Time (Madhab)') }}</span></label>
                         <select x-model="madhab" class="select select-bordered select-sm rounded-xl">
-                            <option value="hanafi">Hanafi (later Asr)</option>
-                            <option value="shafi">Shafi / Maliki / Hanbali</option>
+                            <option value="hanafi">{{ __('Hanafi (later Asr)') }}</option>
+                            <option value="shafi">{{ __('Shafi / Maliki / Hanbali') }}</option>
                         </select>
                     </div>
                 </div>
             </div>
 
             <div class="modal-action mt-6">
-                <button @click="showModal = false" class="btn btn-ghost btn-sm rounded-xl">Cancel</button>
-                <button @click="applySettings()" class="btn btn-primary btn-sm rounded-xl px-6">Apply & Reload</button>
+                <button @click="showModal = false" class="btn btn-ghost btn-sm rounded-xl">{{ __('Cancel') }}</button>
+                <button @click="applySettings()" class="btn btn-primary btn-sm rounded-xl px-6">{{ __('Apply & Reload') }}</button>
             </div>
         </div>
         <div class="modal-backdrop" @click="showModal = false"><button>close</button></div>
@@ -349,13 +349,13 @@
                 <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
             </div>
             <div>
-                <h2 class="text-2xl font-bold mb-1">Community Fund</h2>
-                <p class="text-base-content/70">Support our Halaqahs and community activities through your generous donations. Consistency is loved by Allah.</p>
+                <h2 class="text-2xl font-bold mb-1">{{ __('Community Fund') }}</h2>
+                <p class="text-base-content/70">{{ __('Support our Halaqahs and community activities through your generous donations. Consistency is loved by Allah.') }}</p>
             </div>
         </div>
         <div class="flex gap-3 w-full md:w-auto shrink-0">
-            <a href="{{ route('app.donations') }}" wire:navigate class="btn btn-outline rounded-xl flex-1 md:flex-none">My Record</a>
-            <a href="{{ route('app.donations') }}" wire:navigate class="btn btn-primary rounded-xl flex-1 md:flex-none">Donate Now</a>
+            <a href="{{ route('app.donations.campaigns') }}" wire:navigate class="btn btn-outline rounded-xl flex-1 md:flex-none">{{ __('My Record') }}</a>
+            <a href="{{ route('app.donations.campaigns') }}" wire:navigate class="btn btn-primary rounded-xl flex-1 md:flex-none">{{ __('Donate Now') }}</a>
         </div>
     </div>
 </div>

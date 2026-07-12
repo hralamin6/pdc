@@ -127,11 +127,11 @@
                                 x-model="selectPage"
                                 wire:model.live="selectPageRows" />
                         </th>
-                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'title'">@lang('title')</x-field>
-                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'slug'">@lang('slug')</x-field>
-                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'status'">@lang('status')</x-field>
-                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'updated_at'">@lang('last update')</x-field>
-                      <x-field>@lang('action')</x-field>
+                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'title'">{{ __('title') }}</x-field>
+                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'slug'">{{ __('slug') }}</x-field>
+                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'status'">{{ __('status') }}</x-field>
+                      <x-field :OB="$orderBy" :OD="$orderDirection" :field="'updated_at'">{{ __('last update') }}</x-field>
+                      <x-field>{{ __('action') }}</x-field>
                     </tr>
                 </thead>
                 <tbody>

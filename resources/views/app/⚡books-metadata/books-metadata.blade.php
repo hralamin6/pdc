@@ -1,15 +1,15 @@
 <div>
-    <x-header title="Library Metadata" subtitle="Manage authors, publications, and categories" separator>
+    <x-header :title="__('Library Metadata')" :subtitle="__('Manage authors, publications, and categories')" separator>
         <x-slot:actions>
-            <x-button icon="o-plus" label="Add New" class="bg-gradient-to-r from-primary to-secondary text-white border-none shadow-lg shadow-primary/30 hover:scale-105 transition-transform" wire:click="openModal()" />
+            <x-button icon="o-plus" :label="__('Add New')" class="bg-gradient-to-r from-primary to-secondary text-white border-none shadow-lg shadow-primary/30 hover:scale-105 transition-transform" wire:click="openModal()" />
         </x-slot:actions>
     </x-header>
 
     {{-- Tabs --}}
     <div class="tabs tabs-boxed bg-base-200/50 mb-6 p-2 rounded-2xl border border-base-content/5 inline-flex">
-        <button wire:click="switchTab('authors')" class="tab font-bold {{ $activeTab === 'authors' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">Authors ({{ $authors->count() }})</button>
-        <button wire:click="switchTab('publications')" class="tab font-bold {{ $activeTab === 'publications' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">Publications ({{ $publications->count() }})</button>
-        <button wire:click="switchTab('categories')" class="tab font-bold {{ $activeTab === 'categories' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">Categories ({{ $categories->count() }})</button>
+        <button wire:click="switchTab('authors')" class="tab font-bold {{ $activeTab === 'authors' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">{{ __('Authors') }} ({{ $authors->count() }})</button>
+        <button wire:click="switchTab('publications')" class="tab font-bold {{ $activeTab === 'publications' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">{{ __('Publications') }} ({{ $publications->count() }})</button>
+        <button wire:click="switchTab('categories')" class="tab font-bold {{ $activeTab === 'categories' ? 'tab-active bg-primary text-white rounded-xl' : '' }}">{{ __('Categories') }} ({{ $categories->count() }})</button>
     </div>
 
     {{-- Grids --}}
@@ -23,17 +23,17 @@
                         </div>
                     </div>
                     <h3 class="font-black text-lg text-base-content">{{ $author->name }}</h3>
-                    <p class="text-xs text-base-content/50 mb-3">{{ $author->books_count }} books in library</p>
-                    
+                    <p class="text-xs text-base-content/50 mb-3">{{ $author->books_count }} {{ __('books in library') }}</p>
+
                     <div class="mt-auto pt-4 flex gap-2 justify-center opacity-50 group-hover:opacity-100 transition-opacity border-t border-base-content/5">
-                        <x-button icon="o-pencil" class="btn-ghost btn-xs" wire:click="openModal({{ $author->id }})" tooltip="Edit" />
-                        <x-button icon="o-trash" class="btn-ghost btn-xs text-error" wire:click="delete({{ $author->id }})" wire:confirm="Delete this author?" tooltip="Delete" />
+                        <x-button icon="o-pencil" class="btn-ghost btn-xs" wire:click="openModal({{ $author->id }})" :tooltip="__('Edit')" />
+                        <x-button icon="o-trash" class="btn-ghost btn-xs text-error" wire:click="delete({{ $author->id }})" wire:confirm="{{ __('Delete this author?') }}" :tooltip="__('Delete')" />
                     </div>
                 </div>
             @empty
                 <div class="col-span-full text-center py-12 text-base-content/40">
                     <x-icon name="o-users" class="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p class="font-medium">No authors recorded yet.</p>
+                    <p class="font-medium">{{ __('No authors recorded yet.') }}</p>
                 </div>
             @endforelse
         
@@ -52,19 +52,19 @@
                         </div>
                         <div>
                             <h3 class="font-black text-base-content">{{ $pub->name }}</h3>
-                            <p class="text-xs text-base-content/50">{{ $pub->books_count }} books</p>
+                            <p class="text-xs text-base-content/50">{{ $pub->books_count }} {{ __('books') }}</p>
                         </div>
                     </div>
-                    
+
                     <div class="mt-auto pt-3 flex justify-end opacity-50 group-hover:opacity-100 transition-opacity border-t border-base-content/5">
-                        <x-button icon="o-pencil" class="btn-ghost btn-sm" wire:click="openModal({{ $pub->id }})" tooltip="Edit" />
-                        <x-button icon="o-trash" class="btn-ghost btn-sm text-error" wire:click="delete({{ $pub->id }})" wire:confirm="Delete this publication?" tooltip="Delete" />
+                        <x-button icon="o-pencil" class="btn-ghost btn-sm" wire:click="openModal({{ $pub->id }})" :tooltip="__('Edit')" />
+                        <x-button icon="o-trash" class="btn-ghost btn-sm text-error" wire:click="delete({{ $pub->id }})" wire:confirm="{{ __('Delete this publication?') }}" :tooltip="__('Delete')" />
                     </div>
                 </div>
             @empty
                 <div class="col-span-full text-center py-12 text-base-content/40">
                     <x-icon name="o-building-library" class="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p class="font-medium">No publications recorded yet.</p>
+                    <p class="font-medium">{{ __('No publications recorded yet.') }}</p>
                 </div>
             @endforelse
 
@@ -76,39 +76,39 @@
                     </div>
                     <div class="flex-grow">
                         <h3 class="font-bold text-base-content">{{ $cat->name }}</h3>
-                        <p class="text-xs text-base-content/50">{{ $cat->books_count }} books</p>
+                        <p class="text-xs text-base-content/50">{{ $cat->books_count }} {{ __('books') }}</p>
                     </div>
                     <div class="flex flex-col gap-1 opacity-50 group-hover:opacity-100 transition-opacity">
                         <x-button icon="o-pencil" class="btn-ghost btn-xs" wire:click="openModal({{ $cat->id }})" />
-                        <x-button icon="o-trash" class="btn-ghost btn-xs text-error" wire:click="delete({{ $cat->id }})" wire:confirm="Delete this category?" />
+                        <x-button icon="o-trash" class="btn-ghost btn-xs text-error" wire:click="delete({{ $cat->id }})" wire:confirm="{{ __('Delete this category?') }}" />
                     </div>
                 </div>
             @empty
                 <div class="col-span-full text-center py-12 text-base-content/40">
                     <x-icon name="o-tag" class="w-12 h-12 mx-auto mb-3 opacity-30" />
-                    <p class="font-medium">No categories recorded yet.</p>
+                    <p class="font-medium">{{ __('No categories recorded yet.') }}</p>
                 </div>
             @endforelse
         @endif
     </div>
 
     {{-- Dynamic Modal --}}
-    <x-modal wire:model="modal" title="{{ $editingId ? 'Edit' : 'Add New' }} {{ Str::title(Str::singular($activeTab)) }}" class="backdrop-blur-sm">
+    <x-modal wire:model="modal" title="{{ $editingId ? __('Edit') : __('Add New') }} {{ Str::title(Str::singular($activeTab)) }}" class="backdrop-blur-sm">
         <div class="space-y-4">
             @if($activeTab === 'authors')
-                <x-input wire:model="authorName" label="Author Name *" placeholder="e.g. Ibn Kathir" class="input-bordered rounded-xl" />
-                <x-textarea wire:model="authorBio" label="Biography" rows="3" class="textarea-bordered rounded-xl" />
-                <x-file wire:model="authorPhoto" label="Photo (Optional)" accept="image/*" class="file-input-bordered" />
+                <x-input wire:model="authorName" :label="__('Author Name *')" :placeholder="__('e.g. Ibn Kathir')" class="input-bordered rounded-xl" />
+                <x-textarea wire:model="authorBio" :label="__('Biography')" rows="3" class="textarea-bordered rounded-xl" />
+                <x-file wire:model="authorPhoto" :label="__('Photo (Optional)')" accept="image/*" class="file-input-bordered" />
 
             @elseif($activeTab === 'publications')
-                <x-input wire:model="pubName" label="Publication Name *" placeholder="e.g. Darussalam" class="input-bordered rounded-xl" />
-                <x-textarea wire:model="pubDesc" label="Description" rows="2" class="textarea-bordered rounded-xl" />
-                <x-file wire:model="pubLogo" label="Logo (Optional)" accept="image/*" class="file-input-bordered" />
+                <x-input wire:model="pubName" :label="__('Publication Name *')" :placeholder="__('e.g. Darussalam')" class="input-bordered rounded-xl" />
+                <x-textarea wire:model="pubDesc" :label="__('Description')" rows="2" class="textarea-bordered rounded-xl" />
+                <x-file wire:model="pubLogo" :label="__('Logo (Optional)')" accept="image/*" class="file-input-bordered" />
 
             @elseif($activeTab === 'categories')
-                <x-input wire:model="catName" label="Category Name *" placeholder="e.g. Fiqh" class="input-bordered rounded-xl" />
+                <x-input wire:model="catName" :label="__('Category Name *')" :placeholder="__('e.g. Fiqh')" class="input-bordered rounded-xl" />
                 <div>
-                    <label class="label"><span class="label-text font-semibold">Icon *</span></label>
+                    <label class="label"><span class="label-text font-semibold">{{ __('Icon *') }}</span></label>
                     <div class="grid grid-cols-3 gap-2">
                         @foreach($iconOptions as $icon => $label)
                             <button type="button" wire:click="$set('catIcon', '{{ $icon }}')" class="flex flex-col items-center p-2 rounded-xl border-2 {{ $catIcon === $icon ? 'border-primary bg-primary/10 text-primary' : 'border-base-content/10' }}">
@@ -121,8 +121,8 @@
         </div>
 
         <x-slot:actions>
-            <x-button label="Cancel" wire:click="$set('modal', false)" class="btn-ghost" />
-            <x-button label="{{ $editingId ? 'Update' : 'Save' }}" icon="o-check" wire:click="save" class="btn-primary" spinner="save" />
+            <x-button :label="__('Cancel')" wire:click="$set('modal', false)" class="btn-ghost" />
+            <x-button label="{{ $editingId ? __('Update') : __('Save') }}" icon="o-check" wire:click="save" class="btn-primary" spinner="save" />
         </x-slot:actions>
     </x-modal>
 </div>

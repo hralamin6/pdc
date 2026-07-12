@@ -10,7 +10,7 @@
         </div>
         
         <div class="flex items-center gap-2">
-            <label class="text-xs font-bold text-base-content/60 shrink-0">Log Date:</label>
+            <label class="text-xs font-bold text-base-content/60 shrink-0">{{ __('Log Date:') }}</label>
             <x-select 
                 wire:model.live="date" 
                 :options="$availableDates" 
@@ -39,9 +39,9 @@
         <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
                 <x-icon name="o-sparkles" class="w-5 h-5 text-primary" />
-                <span class="font-extrabold text-sm text-base-content">Overall Progress</span>
+                <span class="font-extrabold text-sm text-base-content">{{ __('Overall Progress') }}</span>
             </div>
-            <span class="text-sm font-black text-primary">{{ $completedCount }} / {{ $totalItems }} Items Completed ({{ $progressPct }}%)</span>
+            <span class="text-sm font-black text-primary">{{ $completedCount }} / {{ $totalItems }} {{ __('Items Completed') }} ({{ $progressPct }}%)</span>
         </div>
 
         <div class="w-full bg-base-200/80 rounded-full h-3 overflow-hidden">
@@ -75,7 +75,7 @@
                         </div>
                         <h3 class="font-extrabold text-lg text-base-content">{{ $category }}</h3>
                     </div>
-                    <span class="badge badge-sm badge-ghost font-semibold">{{ $items->count() }} items</span>
+                    <span class="badge badge-sm badge-ghost font-semibold">{{ $items->count() }} {{ __('items') }}</span>
                 </div>
 
                 <div class="space-y-4 pt-1">
@@ -106,7 +106,7 @@
                                     @endif
                                     <div>
                                         <span class="font-bold text-base-content text-sm sm:text-base {{ $isDone ? 'text-primary' : '' }}">{{ $title }}</span>
-                                        <span class="text-xs text-base-content/40 block capitalize">Type: {{ $type }}</span>
+                                        <span class="text-xs text-base-content/40 block capitalize">{{ __('Type:') }} {{ $type }}</span>
                                     </div>
                                 </div>
 
@@ -138,11 +138,11 @@
                                     {{-- Text Notes for Text / Mixed --}}
                                     @if(in_array($type, ['text', 'mixed']))
                                         <div class="w-full md:w-64">
-                                            <x-input 
-                                                type="text" 
-                                                wire:model.live="entries.{{ $item->id }}.text_value" 
-                                                placeholder="Notes / details..." 
-                                                class="input-sm rounded-xl border-base-content/10 bg-base-100" 
+                                            <x-input
+                                                type="text"
+                                                wire:model.live="entries.{{ $item->id }}.text_value"
+                                                :placeholder="__('Notes / details...')"
+                                                class="input-sm rounded-xl border-base-content/10 bg-base-100"
                                             />
                                         </div>
                                     @endif
@@ -160,29 +160,29 @@
             <div class="border-b border-base-content/5 pb-3">
                 <h3 class="font-extrabold text-lg text-base-content flex items-center gap-2">
                     <x-icon name="o-chat-bubble-bottom-center-text" class="w-5 h-5 text-secondary" />
-                    <span>General Reflection & Privacy</span>
+                    <span>{{ __('General Reflection & Privacy') }}</span>
                 </h3>
             </div>
 
             <div class="space-y-4">
-                <x-textarea 
-                    label="Personal Journal / Notes for the Day" 
-                    wire:model="notes" 
-                    placeholder="Reflect on your struggles, achievements, or intentions today..." 
-                    rows="3" 
-                    class="rounded-2xl border-base-content/10" 
+                <x-textarea
+                    :label="__('Personal Journal / Notes for the Day')"
+                    wire:model="notes"
+                    :placeholder="__('Reflect on your struggles, achievements, or intentions today...')"
+                    rows="3"
+                    class="rounded-2xl border-base-content/10"
                 />
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <x-select 
-                        label="Privacy Setting" 
-                        wire:model="privacy_level" 
+                    <x-select
+                        :label="__('Privacy Setting')"
+                        wire:model="privacy_level"
                         :options="[
-                            ['id' => 'private', 'name' => '🔒 Private (Only Visible to Me)'],
-                            ['id' => 'mentor_only', 'name' => '👥 Mentor Only (Visible to Me & Assigned Mentors)'],
-                            ['id' => 'public', 'name' => '🌐 Public (Community Insights)'],
-                        ]" 
-                        class="rounded-xl border-base-content/10" 
+                            ['id' => 'private', 'name' => __('🔒 Private (Only Visible to Me)')],
+                            ['id' => 'mentor_only', 'name' => __('👥 Mentor Only (Visible to Me & Assigned Mentors)')],
+                            ['id' => 'public', 'name' => __('🌐 Public (Community Insights)')],
+                        ]"
+                        class="rounded-xl border-base-content/10"
                     />
                 </div>
             </div>
@@ -190,9 +190,9 @@
 
         {{-- Submission Controls --}}
         <div class="flex items-center justify-end gap-3 pt-2">
-            <x-button label="Cancel" :link="route('app.daily-reports')" wire:navigate class="btn-ghost rounded-xl" />
-            <x-button 
-                label="Save Reflection Log" 
+            <x-button :label="__('Cancel')" :link="route('app.daily-reports')" wire:navigate class="btn-ghost rounded-xl" />
+            <x-button
+                :label="__('Save Reflection Log')"
                 type="submit" 
                 class="btn-primary rounded-xl px-8 font-extrabold shadow-lg shadow-primary/30" 
                 icon="o-check" 

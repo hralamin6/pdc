@@ -235,19 +235,19 @@
     </x-card>
 
     {{-- Clear Activities Modal --}}
-    <x-modal wire:model="showClearModal" title="Clear Activities" subtitle="Permanently delete activities from the system">
+    <x-modal wire:model="showClearModal" :title="__('Clear Activities')" :subtitle="__('Permanently delete activities from the system')">
         @if($showClearModal)
             <div class="space-y-4">
                 {{-- Stats --}}
                 @if($this->clearStats)
                     <x-alert icon="o-information-circle" class="alert-info">
                         <div class="text-sm">
-                            <div><strong>Total Activities:</strong> {{ number_format($this->clearStats['total']) }}</div>
+                            <div><strong>{{ __('Total Activities:') }}</strong> {{ number_format($this->clearStats['total']) }}</div>
                             @if($this->clearStats['oldest'])
-                                <div><strong>Oldest:</strong> {{ $this->clearStats['oldest']->format('M d, Y H:i') }}</div>
+                                <div><strong>{{ __('Oldest:') }}</strong> {{ $this->clearStats['oldest']->format('M d, Y H:i') }}</div>
                             @endif
                             @if($this->clearStats['newest'])
-                                <div><strong>Newest:</strong> {{ $this->clearStats['newest']->format('M d, Y H:i') }}</div>
+                                <div><strong>{{ __('Newest:') }}</strong> {{ $this->clearStats['newest']->format('M d, Y H:i') }}</div>
                             @endif
                         </div>
                     </x-alert>
@@ -281,14 +281,14 @@
 
                 {{-- Preview Count --}}
                 <x-alert icon="o-exclamation-triangle" class="alert-warning">
-                    <strong>{{ number_format($this->previewCount) }}</strong> activities will be deleted based on current filters.
+                    <strong>{{ number_format($this->previewCount) }}</strong> {{ __('activities will be deleted based on current filters.') }}
                 </x-alert>
 
                 {{-- Confirmation Checkbox --}}
                 <x-checkbox
                     wire:model="confirmDelete"
-                    label="I understand this action cannot be undone"
-                    hint="Please confirm deletion"
+                    :label="__('I understand this action cannot be undone')"
+                    :hint="__('Please confirm deletion')"
                 />
 
                 {{-- Action Buttons --}}
@@ -296,14 +296,14 @@
                     <div class="flex gap-2">
                         <x-button
                             wire:click="clearActivities"
-                            label="Clear Filtered Activities"
+                            :label="__('Clear Filtered Activities')"
                             icon="o-trash"
                             class="btn-error"
                             :disabled="!$confirmDelete || $this->previewCount === 0"
                         />
                         <x-button
                             wire:click="clearAllActivities"
-                            label="Clear All Activities"
+                            :label="__('Clear All Activities')"
                             icon="o-trash"
                             class="btn-error btn-outline"
                             :disabled="!$confirmDelete"
@@ -311,7 +311,7 @@
                     </div>
                     <x-button
                         wire:click="closeClearModal"
-                        label="Cancel"
+                        :label="__('Cancel')"
                         class="btn-ghost"
                     />
                 </div>

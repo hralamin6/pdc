@@ -24,10 +24,29 @@ Route::livewire('/campaigns', 'web::campaigns')->name('web.campaigns');
 Route::livewire('/campaigns/{slug}', 'web::campaign')->name('web.campaign');
 Route::livewire('/members', 'web::members')->name('web.members');
 Route::livewire('/library', 'web::library')->name('web.library');
+Route::livewire('/library/user/{id}', 'web::library-user')->name('web.library.user');
+Route::livewire('/library/hub/{id}', 'web::library-hub')->name('web.library.hub');
 Route::livewire('/library/{slug}', 'web::book')->name('web.book');
 Route::livewire('/showcase', 'web::showcase')->name('web.showcase');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
 Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
+
+Route::livewire('/quizzes', 'web::quizzes')->name('web.quizzes');
+Route::livewire('/courses/{series}', 'web::course-show')->name('web.course.show');
+
+// Web Quiz Routes — accessible without app panel (requires auth)
+Route::middleware('auth')->group(function () {
+    Route::livewire('/my-quizzes', 'web::my-quizzes')->name('web.my-quizzes');
+    
+    Route::livewire('/quizzes/{quiz}/take', 'web::quiz-take')->name('web.quiz.take');
+    Route::livewire('/quizzes/{quiz}/live', 'web::quiz-live')->name('web.quiz.live');
+
+    Route::livewire('/quizzes/leaderboard', 'web::quizzes-leaderboard')->name('web.quizzes.leaderboard');
+    Route::livewire('/quizzes/history', 'web::quizzes-history')->name('web.quizzes.history');
+    Route::livewire('/quizzes/{quiz}/review/{attempt}', 'web::quiz-review')->name('web.quizzes.review');
+});
+
+Route::livewire('/quizzes/{quiz}', 'web::quiz-show')->name('web.quizzes.show');
 
 // Backward compat redirects
 Route::redirect('/posts', '/blog');
@@ -36,6 +55,7 @@ Route::redirect('/posts/{slug}', '/blog/{slug}');
 Route::middleware('auth')->group(function () {
     Route::livewire('/profile', 'web::profile')->name('web.profile');
     Route::livewire('/my-books', 'web::my-books')->name('web.my-books');
+    Route::livewire('/my-donations', 'web::my-donations')->name('web.my-donations');
     Route::livewire('/notifications', 'web::notifications')->name('web.notifications');
     Route::livewire('/chat/{conversation?}', 'web::chat')->name('web.chat');
     Route::livewire('/app/', 'app::dashboard')->name('app.dashboard');
@@ -56,9 +76,12 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/halaqahs/{halaqah}/attendance', 'app::halaqahs-attendance')->name('app.halaqahs.attendance');
     Route::livewire('/app/halaqahs/{halaqah}', 'app::halaqahs-show')->name('app.halaqahs.show');
 
-    // Donations Routes
-    Route::livewire('/app/donations', 'app::donations')->name('app.donations');
-    Route::livewire('/app/donations/admin', 'app::donations-admin')->name('app.donations.admin');
+    Route::livewire('/app/donations/campaigns', 'app::donations-campaigns')->name('app.donations.campaigns');
+    Route::livewire('/app/donations/campaigns/{campaign}', 'app::donations-campaign-details')->name('app.donations.campaign-details');
+    Route::livewire('/app/donations/verify', 'app::donations-verify')->name('app.donations.verify');
+    Route::livewire('/app/donations/pledges', 'app::donations-pledges')->name('app.donations.pledges');
+    Route::livewire('/app/donations/pledges/{pledge}', 'app::donations-pledge-details')->name('app.donations.pledge-details');
+    Route::livewire('/app/donations/transactions', 'app::donations-transactions')->name('app.donations.transactions');
 
     // Treasury / Expense Routes
     Route::livewire('/app/expenses', 'app::expenses')->name('app.expenses');
@@ -69,9 +92,7 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/expenses/treasury-report', 'app::treasury-report')->name('app.treasury-report');
 
     // Library / Books Routes
-    Route::livewire('/app/library', 'app::books')->name('app.books');
-    Route::livewire('/app/library/my-books', 'app::my-books')->name('app.my-books');
-    Route::livewire('/app/library/borrow-requests', 'app::borrow-requests')->name('app.borrow-requests');
+
     Route::livewire('/app/library/hubs', 'app::library-hubs')->name('app.library-hubs');
     Route::livewire('/app/library/{slug}', 'app::book-details')->name('app.book-details');
     Route::livewire('/app/library/{slug}/reader', 'app::book-reader')->name('app.book-reader');
@@ -86,8 +107,6 @@ Route::middleware('auth')->group(function () {
 
     // Quiz Routes
     Route::livewire('/app/quizzes', 'app::quiz-manage')->name('app.quiz.manage');
-    Route::livewire('/app/quizzes/{quiz}/take', 'app::quiz-take')->name('app.quiz.take');
-    Route::livewire('/app/quizzes/{quiz}/live', 'app::quiz-live')->name('app.quiz.live');
     Route::livewire('/app/quizzes/{quiz}/live/host', 'app::quiz-live-host')->name('app.quiz.live.host');
     Route::livewire('/app/quizzes/grade', 'app::quiz-grade')->name('app.quiz.grade');
 

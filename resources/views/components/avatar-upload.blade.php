@@ -31,7 +31,7 @@
             <div class="relative {{ $size }} overflow-hidden rounded-md transition-all duration-200 ring-4 ring-primary/20 group-hover:ring-primary/40 group-hover:scale-105">
                 <img
                     src="{{ $image ?: $defaultPlaceholder }}"
-                    alt="{{ $label ?: 'Preview' }}"
+                    alt="{{ $label ?: __('Preview') }}"
                     class="object-cover w-full h-full"
                 />
 

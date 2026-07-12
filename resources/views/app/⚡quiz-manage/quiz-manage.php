@@ -48,7 +48,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
     public ?int $buildingQuizId = null;
     public ?Quiz $buildingQuiz = null;
 
-    /** @var array<int, array{id: ?int, type: string, question_text: string, marks: float, ai_explanation: string, options: array}> */
+    /** @var array<int, array{id: ?int, type: string, question_text: string, marks: float, ideal_answer: string, ai_explanation: string, options: array}> */
     public array $questions = [];
 
     // ─── AI Generation State ─────────────────────────────────────────────────────
@@ -232,6 +232,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
             'type' => $q->type,
             'question_text' => $q->question_text,
             'marks' => $q->marks,
+            'ideal_answer' => $q->ideal_answer ?? '',
             'ai_explanation' => $q->ai_explanation ?? '',
             'options' => $q->options->map(fn ($o) => [
                 'id' => $o->id,
@@ -248,6 +249,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
             'type' => 'mcq',
             'question_text' => '',
             'marks' => 1.0,
+            'ideal_answer' => '',
             'ai_explanation' => '',
             'options' => [
                 ['id' => null, 'option_text' => '', 'is_correct' => false],
@@ -329,6 +331,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
                     'type' => $qData['type'],
                     'question_text' => $qData['question_text'],
                     'marks' => $qData['marks'],
+                    'ideal_answer' => $qData['ideal_answer'] ?? null,
                     'ai_explanation' => $qData['ai_explanation'] ?: null,
                 ]
             );
@@ -437,6 +440,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
             'type' => $q['type'],
             'question_text' => $q['question_text'],
             'marks' => $q['marks'],
+            'ideal_answer' => $q['ideal_answer'] ?? '',
             'ai_explanation' => $q['explanation'] ?? '',
             'options' => collect($q['options'] ?? [])->map(fn ($o) => [
                 'id' => null,
@@ -458,6 +462,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
                 'type' => $q['type'],
                 'question_text' => $q['question_text'],
                 'marks' => $q['marks'],
+                'ideal_answer' => $q['ideal_answer'] ?? '',
                 'ai_explanation' => $q['explanation'] ?? '',
                 'options' => collect($q['options'] ?? [])->map(fn ($o) => [
                     'id' => null,
@@ -487,6 +492,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
         $question = new QuizQuestion([
             'type' => $q['type'],
             'question_text' => $q['question_text'],
+            'ideal_answer' => $q['ideal_answer'] ?? null,
             'ai_explanation' => $q['ai_explanation'],
         ]);
         $question->setRelation('options', collect($q['options'] ?? [])->map(function ($o) {

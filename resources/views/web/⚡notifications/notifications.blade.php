@@ -109,7 +109,7 @@
                             <div class="flex-shrink-0">
                                 @if($isChatNotification && isset($data['sender_avatar']))
                                     <div class="w-12 h-12 rounded-full overflow-hidden ring-2 ring-primary/20">
-                                        <img src="{{ $data['sender_avatar'] }}" alt="{{ $data['sender_name'] ?? 'User' }}" class="w-full h-full object-cover" />
+                                        <img src="{{ $data['sender_avatar'] }}" alt="{{ $data['sender_name'] ?? __('User') }}" class="w-full h-full object-cover" />
                                     </div>
                                 @else
                                     @php

@@ -145,7 +145,7 @@
             :src="file.preview"
             :alt="file.name"
             src=""
-            alt="Preview"
+            alt="{{ __('Preview') }}"
             class="object-cover w-16 h-16 rounded-lg"
           />
           <div class="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/40 rounded-lg transition-colors">
@@ -230,7 +230,7 @@
         :src="previewSrc"
         src=""
         class="max-w-full max-h-[85vh] rounded-lg shadow-2xl"
-        alt="Preview"
+        alt="{{ __('Preview') }}"
       />
     </div>
   </div>

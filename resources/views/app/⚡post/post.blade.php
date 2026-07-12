@@ -9,9 +9,9 @@
     
     {{-- Breadcrumb --}}
     <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-8">
-      <a wire:navigate href="{{ route('web.home') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Home</a>
+      <a wire:navigate href="{{ route('web.home') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">{{ __('Home') }}</a>
       <span>/</span>
-      <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Articles</a>
+      <a wire:navigate href="{{ route('web.posts') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">{{ __('Articles') }}</a>
       @if($this->post->category)
         <span>/</span>
         <a wire:navigate href="{{ route('web.posts') }}?category={{ $this->post->category->id }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">{{ $this->post->category->name }}</a>
@@ -42,7 +42,7 @@
             {{ substr($this->post->user->name ?? 'A', 0, 1) }}
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $this->post->user->name ?? 'Anonymous' }}</p>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">{{ $this->post->user->name ?? __('Anonymous') }}</p>
             <p class="text-xs">{{ $this->post->published_at?->format('M d, Y') }}</p>
           </div>
         </a>

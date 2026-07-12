@@ -36,6 +36,11 @@ class Donation extends Model
         return $this->belongsTo(DonationCampaign::class);
     }
 
+    public function bankAccount(): BelongsTo
+    {
+        return $this->belongsTo(BankAccount::class);
+    }
+
     public function collector(): BelongsTo
     {
         return $this->belongsTo(User::class, 'collected_by');
