@@ -155,9 +155,9 @@
     {{-- Hub Modal --}}
     <x-modal wire:model="hubModal" title="{{ $editingHubId ? __('Edit Hub') : __('Create Hub') }}" box-class="max-w-md">
         <div class="space-y-4">
-            <x-input label="{{ __('Hub Name') }}" wire:model="hubName" placeholder="e.g. PSTU Central Library" icon="o-building-library" />
-            <x-input label="{{ __('Location / Description') }}" wire:model="hubLocation" placeholder="e.g. Main Campus, 2nd Floor" icon="o-map-pin" />
-            <x-select label="{{ __('Manager') }}" wire:model="hubManagerId" :options="$this->potentialManagers" option-value="id" option-label="name" placeholder="Select a manager" icon="o-user" />
+            <x-input label="{{ __('Hub Name') }}" wire:model="hubName" :placeholder="__('e.g. PSTU Central Library')" icon="o-building-library" />
+            <x-input label="{{ __('Location / Description') }}" wire:model="hubLocation" :placeholder="__('e.g. Main Campus, 2nd Floor')" icon="o-map-pin" />
+            <x-select label="{{ __('Manager') }}" wire:model="hubManagerId" :options="$this->potentialManagers" option-value="id" option-label="name" :placeholder="__('Select a manager')" icon="o-user" />
             <x-toggle label="{{ __('Active') }}" wire:model="hubIsActive" right />
         </div>
         <x-slot:actions>

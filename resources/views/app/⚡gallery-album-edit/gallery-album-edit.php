@@ -31,13 +31,13 @@ new #[Title('Edit Album')] #[Layout('layouts.app')] class extends Component {
         }
 
         $this->photos = [];
-        $this->success('Photos uploaded successfully!');
+        $this->success(__('Photos uploaded successfully!'));
     }
 
     public function deletePhoto($mediaId)
     {
         $media = $this->album->media()->findOrFail($mediaId);
         $media->delete();
-        $this->success('Photo removed.');
+        $this->success(__('Photo removed.'));
     }
 };

@@ -40,10 +40,24 @@
 					{{-- Dashboard --}}
 					<x-menu-item title="{{ __('Dashboard') }}" icon="o-home" :link="route('app.dashboard')" route="app.dashboard" wire:navigate />
 					
-					{{-- Daily Reports --}}
-					<x-menu-item title="{{ __('Daily Reports') }}" icon="o-clipboard-document-check" :link="route('app.daily-reports')" route="app.daily-reports" wire:navigate />
+					{{-- Daily Reports Manager --}}
+					@can('daily-reports.manage')
+						<x-menu-sub title="{{ __('Daily Reports') }}" icon="o-clipboard-document-check">
+							<x-menu-item title="{{ __('Supervision Portal') }}" icon="o-shield-check" :link="route('web.my-report.admin')" route="web.my-report.admin" wire:navigate />
+							<x-menu-item title="{{ __('Community Analytics') }}" icon="o-chart-bar" :link="route('web.my-report.analytics')" route="web.my-report.analytics" wire:navigate />
+							<x-menu-item title="{{ __('Leaderboard & Recognition') }}" icon="o-trophy" :link="route('web.my-report.leaderboard')" route="web.my-report.leaderboard" wire:navigate />
+							<x-menu-item title="{{ __('Report Templates') }}" icon="o-document-duplicate" :link="route('web.my-report.templates')" route="web.my-report.templates" wire:navigate />
+						</x-menu-sub>
+					@endcan
 					{{-- Halaqahs --}}
-					<x-menu-item title="{{ __('Halaqahs') }}" icon="o-book-open" :link="route('app.halaqahs')" route="app.halaqahs" wire:navigate />
+					@can('halaqahs.view')
+						<x-menu-sub title="{{ __('Halaqahs') }}" icon="o-book-open">
+							@can('halaqahs.create')
+								<x-menu-item title="{{ __('Halaqah Series') }}" icon="o-academic-cap" :link="route('app.halaqah-series')" route="app.halaqah-series" wire:navigate />
+							@endcan
+							<x-menu-item title="{{ __('Session Scheduler') }}" icon="o-calendar-days" :link="route('app.halaqahs.schedule')" route="app.halaqahs.schedule" wire:navigate />
+						</x-menu-sub>
+					@endcan
 					
 					{{-- Donations --}}
 					@canany(['donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage'])
@@ -64,7 +78,7 @@
 					@endcanany
 
 					{{-- Treasury --}}
-					<x-menu-item title="{{ __('Financial Summary') }}" icon="o-currency-bangladeshi" :link="route('app.expenses')" route="app.expenses" wire:navigate />
+					
 					@canany(['expenses.manage', 'expenses.transfers.manage', 'expenses.bank-accounts.manage', 'expenses.categories.manage', 'expenses.reports.manage'])
 						<x-menu-sub title="{{ __('Treasury') }}" icon="o-building-library">
 							@can('expenses.manage')

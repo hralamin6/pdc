@@ -256,7 +256,7 @@ class extends Component
             ->value('is_blocked');
 
         if ($isBlockedByMe || $isBlockedByOther) {
-            $this->error('Cannot send message. This conversation is blocked.');
+            $this->error(__('Cannot send message. This conversation is blocked.'));
             return;
         }
 
@@ -393,7 +393,7 @@ class extends Component
             $this->replyingTo = null;
             $this->editingMessageId = null;
 
-            $this->success('Conversation deleted successfully.');
+            $this->success(__('Conversation deleted successfully.'));
         }
     }
 
@@ -412,7 +412,7 @@ class extends Component
                 ->where('user_id', auth()->id())
                 ->update(['is_blocked' => true]);
 
-            $this->success('User blocked successfully.');
+            $this->success(__('User blocked successfully.'));
         }
     }
 
@@ -431,7 +431,7 @@ class extends Component
                 ->where('user_id', auth()->id())
                 ->update(['is_blocked' => false]);
 
-            $this->success('User unblocked successfully.');
+            $this->success(__('User unblocked successfully.'));
         }
     }
 

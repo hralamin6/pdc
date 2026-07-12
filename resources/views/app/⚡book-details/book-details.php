@@ -93,7 +93,7 @@ new #[Layout('layouts.app')] class extends Component
             ]
         );
 
-        $this->success('Saved.', position: 'bottom-right');
+        $this->success(__('Saved.'), position: 'bottom-right');
     }
 
     public function openBorrowModal($copyId)
@@ -104,7 +104,7 @@ new #[Layout('layouts.app')] class extends Component
             ->count();
             
         if ($activeBorrows >= $this->max_borrows) {
-            $this->error("You have reached the maximum limit of {$this->max_borrows} active borrows/requests.");
+            $this->error(__('You have reached the maximum limit of :count active borrows/requests.', ['count' => $this->max_borrows]));
             return;
         }
 
@@ -119,14 +119,14 @@ new #[Layout('layouts.app')] class extends Component
             ->exists();
             
         if ($existingRequestForBook) {
-            $this->error("You already have an active or pending request for a copy of this book.");
+            $this->error(__('You already have an active or pending request for a copy of this book.'));
             return;
         }
 
         // Check if user already owns this book
         $userOwnsCopy = \App\Models\BookCopy::where('book_id', $this->book->id)->where('owner_id', auth()->id())->exists();
         if ($userOwnsCopy) {
-            $this->error("You already own a physical copy of this book.");
+            $this->error(__('You already own a physical copy of this book.'));
             return;
         }
 
@@ -160,7 +160,7 @@ new #[Layout('layouts.app')] class extends Component
             ));
         }
 
-        $this->success('Borrow request sent! The owner will be notified.');
+        $this->success(__('Borrow request sent! The owner will be notified.'));
         $this->borrowModal = false;
     }
 

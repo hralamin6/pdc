@@ -42,7 +42,7 @@ class  extends Component
     {
         // Check permission
         if (!auth()->user()->can('activity.feed')) {
-            abort(403, 'Unauthorized access to activity feed.');
+            abort(403, __('Unauthorized access to activity feed.'));
         }
     }
 
@@ -68,7 +68,7 @@ class  extends Component
     {
         // Check permission
         if (!auth()->user()->can('activity.delete')) {
-            $this->error('Unauthorized access to clear activities.');
+            $this->error(__('Unauthorized access to clear activities.'));
             return;
         }
 
@@ -106,12 +106,12 @@ class  extends Component
     {
         // Check permission
         if (!auth()->user()->can('activity.delete')) {
-            $this->error('Unauthorized access to clear activities.');
+            $this->error(__('Unauthorized access to clear activities.'));
             return;
         }
 
         if (!$this->confirmDelete) {
-            $this->error('Please confirm deletion by checking the box.');
+            $this->error(__('Please confirm deletion by checking the box.'));
             return;
         }
 
@@ -143,7 +143,7 @@ class  extends Component
 
         $this->confirmDelete = false;
         $this->showClearModal = false;
-        $this->success("Successfully deleted {$count} activities!");
+        $this->success(__('Successfully deleted :count activities!', ['count' => $count]));
         $this->resetPage();
     }
 
@@ -151,12 +151,12 @@ class  extends Component
     {
         // Check permission
         if (!auth()->user()->can('activity.delete')) {
-            $this->error('Unauthorized access to clear activities.');
+            $this->error(__('Unauthorized access to clear activities.'));
             return;
         }
 
         if (!$this->confirmDelete) {
-            $this->error('Please confirm deletion by checking the box.');
+            $this->error(__('Please confirm deletion by checking the box.'));
             return;
         }
 
@@ -170,7 +170,7 @@ class  extends Component
 
         $this->confirmDelete = false;
         $this->showClearModal = false;
-        $this->success("Successfully deleted all {$count} activities!");
+        $this->success(__('Successfully deleted all :count activities!', ['count' => $count]));
         $this->resetPage();
     }
 

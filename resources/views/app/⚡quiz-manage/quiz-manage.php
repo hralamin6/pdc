@@ -183,7 +183,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
             'bonus_points_for_rank' => json_decode($this->bonus_points_for_rank, true),
         ]);
 
-        $this->success($this->editingQuizId ? 'Quiz updated.' : 'Quiz created.');
+        $this->success($this->editingQuizId ? __('Quiz updated.') : __('Quiz created.'));
         $this->quizModal = false;
         unset($this->quizzes);
     }
@@ -191,21 +191,21 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
     public function deleteQuiz(int $id): void
     {
         Quiz::findOrFail($id)->delete();
-        $this->warning('Quiz deleted.');
+        $this->warning(__('Quiz deleted.'));
         unset($this->quizzes);
     }
 
     public function publishQuiz(int $id): void
     {
         Quiz::findOrFail($id)->update(['status' => 'published']);
-        $this->success('Quiz published!');
+        $this->success(__('Quiz published!'));
         unset($this->quizzes);
     }
 
     public function closeQuiz(int $id): void
     {
         Quiz::findOrFail($id)->update(['status' => 'closed']);
-        $this->info('Quiz closed.');
+        $this->info(__('Quiz closed.'));
         unset($this->quizzes);
     }
 
@@ -363,7 +363,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
 
         // Reload to sync from DB
         $this->buildingQuiz = Quiz::with(['questions.options'])->findOrFail($this->buildingQuizId);
-        $this->success('Questions saved!');
+        $this->success(__('Questions saved!'));
         unset($this->quizzes);
     }
 
@@ -406,7 +406,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
         };
 
         if (empty(trim($source))) {
-            $this->error('Please provide a source (text, book, or halaqah session).');
+            $this->error(__('Please provide a source (text, book, or halaqah session).'));
             return;
         }
 
@@ -421,12 +421,12 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
             );
 
             if (empty($this->aiGeneratedQuestions)) {
-                $this->error('AI returned no questions. Try a different source or provider.');
+                $this->error(__('AI returned no questions. Try a different source or provider.'));
             } else {
-                $this->success(count($this->aiGeneratedQuestions) . ' questions generated! Review and import below.');
+                $this->success(__(':count questions generated! Review and import below.', ['count' => count($this->aiGeneratedQuestions)]));
             }
         } catch (\Exception $e) {
-            $this->error('AI generation failed: ' . $e->getMessage());
+            $this->error(__('AI generation failed: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -451,7 +451,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
 
         // Remove from staged list
         array_splice($this->aiGeneratedQuestions, $index, 1);
-        $this->success('Question imported to builder.');
+        $this->success(__('Question imported to builder.'));
     }
 
     public function importAllAiQuestions(): void
@@ -475,7 +475,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
         $count = count($this->aiGeneratedQuestions);
         $this->aiGeneratedQuestions = [];
         $this->aiModal = false;
-        $this->success("{$count} questions imported! Save when ready.");
+        $this->success(__(':count questions imported! Save when ready.', ['count' => $count]));
     }
 
     public function generateExplanationForQuestion(int $index): void
@@ -484,7 +484,7 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
         if (! $q) return;
 
         if (empty($q['question_text'])) {
-            $this->error('Save the question text first before generating an explanation.');
+            $this->error(__('Save the question text first before generating an explanation.'));
             return;
         }
 
@@ -504,9 +504,9 @@ new #[Title('Quiz Management')] #[Layout('layouts.app')] class extends Component
         try {
             $explanation = app(QuizAiService::class)->generateExplanation($question, $this->aiProvider, $this->aiModel);
             $this->questions[$index]['ai_explanation'] = $explanation;
-            $this->success('Explanation generated!');
+            $this->success(__('Explanation generated!'));
         } catch (\Exception $e) {
-            $this->error('Could not generate explanation: ' . $e->getMessage());
+            $this->error(__('Could not generate explanation: :message', ['message' => $e->getMessage()]));
         }
     }
 

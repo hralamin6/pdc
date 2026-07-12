@@ -13,15 +13,15 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
-            <x-button icon="o-cog-6-tooth" :link="route('app.daily-reports.settings')" wire:navigate class="btn-ghost btn-circle" tooltip="{{ __('Tracking Settings') }}" />
+            <x-button icon="o-cog-6-tooth" :link="route('web.my-report.settings')" wire:navigate class="btn-ghost btn-circle" tooltip="{{ __('Tracking Settings') }}" />
             @can('daily-reports.manage')
-                <x-button icon="o-shield-check" :link="route('app.daily-reports.admin')" wire:navigate class="btn-outline btn-primary rounded-xl font-bold" :label="__('Admin Portal')" />
+                <x-button icon="o-shield-check" :link="route('web.my-report.admin')" wire:navigate class="btn-outline btn-primary rounded-xl font-bold" :label="__('Admin Portal')" />
             @endcan
             <x-button
                 :label="$todayReport && $todayReport->status === 'submitted' ? __('Edit Today\'s Log') : __('Fill Today\'s Report')"
                 icon="o-pencil-square" 
                 class="btn-primary rounded-xl px-6 font-bold shadow-lg shadow-primary/20" 
-                :link="route('app.daily-reports.form')" 
+                :link="route('web.my-report.form')" 
                 wire:navigate 
             />
         </div>
@@ -96,7 +96,7 @@
 
             <div class="mt-6 pt-4 border-t border-base-content/5 flex items-center justify-between text-xs text-base-content/60">
                 <span>{{ __('Date:') }} <strong>{{ now()->format('M j, Y') }}</strong></span>
-                <a href="{{ route('app.daily-reports.form') }}" wire:navigate class="text-primary font-bold hover:underline flex items-center gap-1">
+                <a href="{{ route('web.my-report.form') }}" wire:navigate class="text-primary font-bold hover:underline flex items-center gap-1">
                     {{ $todayReport && $todayReport->status === 'submitted' ? __('Review & Edit') : __('Log Now') }}
                     <x-icon name="o-arrow-right" class="w-3.5 h-3.5" />
                 </a>

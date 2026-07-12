@@ -4,11 +4,11 @@
     {{-- Sidebar Header --}}
     <div class="p-3 md:p-4 border-b border-base-300">
         <div class="flex items-center justify-between mb-3">
-            <h2 class="text-base md:text-lg font-semibold text-base-content">AI Chat</h2>
+            <h2 class="text-base md:text-lg font-semibold text-base-content">{{ __('AI Chat') }}</h2>
             <button
                 wire:click="createNewConversation"
                 class="btn btn-circle btn-sm btn-ghost"
-                title="New Conversation"
+                title="{{ __('New Conversation') }}"
             >
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
@@ -20,7 +20,7 @@
         <input
             type="text"
             wire:model.live.debounce.300ms="search"
-            placeholder="Search conversations..."
+            placeholder="{{ __('Search conversations...') }}"
             class="input input-sm input-bordered w-full bg-base-200 text-base-content"
         />
     </div>
@@ -39,14 +39,14 @@
                             {{ $conversation->getDisplayTitle() }}
                         </h3>
                         <p class="text-xs text-base-content/60 mt-1">
-                            {{ $conversation->last_message_at?->diffForHumans() ?? 'No messages yet' }}
+                            {{ $conversation->last_message_at?->diffForHumans() ?? __('No messages yet') }}
                         </p>
                         <div class="flex items-center gap-2 mt-1">
                             <span class="badge badge-sm badge-ghost">
                                 {{ $conversation->ai_provider }}
                             </span>
                             <span class="text-xs text-base-content/50">
-                                {{ $conversation->total_tokens }} tokens
+                                {{ $conversation->total_tokens }} {{ __('tokens') }}
                             </span>
                         </div>
                     </div>
@@ -57,12 +57,12 @@
                 <svg class="w-12 h-12 mx-auto mb-3 text-base-content/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                 </svg>
-                <p class="text-sm">No conversations yet</p>
+                <p class="text-sm">{{ __('No conversations yet') }}</p>
                 <button
                     wire:click="createNewConversation"
                     class="btn btn-sm btn-primary mt-3"
                 >
-                    Start a new chat
+                    {{ __('Start a new chat') }}
                 </button>
             </div>
         @endforelse
@@ -74,7 +74,7 @@
             <button
                 wire:click="$set('showSettingsModal', true)"
                 class="btn btn-sm btn-ghost flex-1"
-                title="Settings"
+                title="{{ __('Settings') }}"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
@@ -84,7 +84,7 @@
             <button
                 wire:click="$set('showImageGeneratorModal', true)"
                 class="btn btn-sm btn-secondary flex-1"
-                title="Generate Image"
+                title="{{ __('Generate Image') }}"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
@@ -93,7 +93,7 @@
             <button
                 wire:click="exportConversation"
                 class="btn btn-sm btn-success flex-1"
-                title="Export"
+                title="{{ __('Export') }}"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
@@ -101,9 +101,9 @@
             </button>
             <button
                 wire:click="deleteConversation"
-                onclick="return confirm('Are you sure you want to delete this conversation?')"
+                onclick="return confirm('{{ __('Are you sure you want to delete this conversation?') }}')"
                 class="btn btn-sm btn-error flex-1"
-                title="Delete"
+                title="{{ __('Delete') }}"
             >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>

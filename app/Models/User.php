@@ -298,4 +298,9 @@ class User extends Authenticatable implements HasMedia, MustVerifyEmail
     {
         return $this->hasMany(LibraryHub::class, 'manager_id');
     }
+
+    public function halaqahAttendances()
+    {
+        return $this->hasMany(HalaqahAttendance::class, 'user_id');
+    }
 }

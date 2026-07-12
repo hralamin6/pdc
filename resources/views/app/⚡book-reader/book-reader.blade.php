@@ -6,7 +6,7 @@
             <h1 class="font-bold text-sm md:text-base line-clamp-1">{{ $book->title }}</h1>
         </div>
         <div class="flex items-center gap-2">
-            <x-button icon="o-arrow-down-tray" class="btn-primary btn-sm" link="{{ $this->resolvedPdfUrl }}" external download tooltip="Download PDF" />
+            <x-button icon="o-arrow-down-tray" class="btn-primary btn-sm" link="{{ $this->resolvedPdfUrl }}" external download tooltip="{{ __('Download PDF') }}" />
         </div>
     </div>
 
@@ -16,8 +16,8 @@
         <object data="{{ $this->resolvedPdfUrl }}#toolbar=1&navpanes=0" type="application/pdf" class="w-full h-full hidden md:block">
             <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
                 <x-icon name="o-exclamation-triangle" class="w-12 h-12 text-warning mb-2" />
-                <p>Your browser doesn't support built-in PDFs or this is an external link.</p>
-                <a href="{{ $this->resolvedPdfUrl }}" class="btn btn-primary mt-4" target="_blank" download>Open / Download PDF instead</a>
+                <p>{{ __("Your browser doesn't support built-in PDFs or this is an external link.") }}</p>
+                <a href="{{ $this->resolvedPdfUrl }}" class="btn btn-primary mt-4" target="_blank" download>{{ __('Open / Download PDF instead') }}</a>
             </div>
         </object>
 

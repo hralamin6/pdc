@@ -205,8 +205,8 @@
                     <label class="label"><span class="label-text font-semibold">{{ __('Payment Method *') }}</span></label>
                     <select wire:model.live="payment_method" class="select select-bordered w-full rounded-xl">
                         <option value="cash">{{ __('Cash') }}</option>
-                        <option value="bkash">bKash</option>
-                        <option value="nagad">Nagad</option>
+                        <option value="bkash">{{ __('bKash') }}</option>
+                        <option value="nagad">{{ __('Nagad') }}</option>
                         <option value="bank_transfer">{{ __('Bank Transfer') }}</option>
                         <option value="other">{{ __('Other') }}</option>
                     </select>
@@ -222,7 +222,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <x-input wire:model="transaction_id" :label="__('Transaction ID / Ref')" placeholder="TxID" class="input-bordered rounded-xl" />
+                    <x-input wire:model="transaction_id" :label="__('Transaction ID / Ref')" placeholder="{{ __('TxID') }}" class="input-bordered rounded-xl" />
                 @endif
             </div>
 

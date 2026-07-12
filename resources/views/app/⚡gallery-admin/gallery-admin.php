@@ -46,7 +46,7 @@ new #[Title('Showcase Albums')] #[Layout('layouts.app')] class extends Component
 
         $this->showCreateModal = false;
         $this->reset(['title', 'description', 'category', 'is_published']);
-        $this->success('Album created successfully!');
+        $this->success(__('Album created successfully!'));
         
         return redirect()->route('app.gallery.edit', $album->slug);
     }
@@ -55,7 +55,7 @@ new #[Title('Showcase Albums')] #[Layout('layouts.app')] class extends Component
     {
         $album = GalleryAlbum::findOrFail($id);
         $album->delete();
-        $this->success('Album deleted.');
+        $this->success(__('Album deleted.'));
     }
 
     public function getAlbumsProperty()

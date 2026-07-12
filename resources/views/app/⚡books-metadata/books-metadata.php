@@ -113,7 +113,7 @@ new #[Title('Library Metadata')] #[Layout('layouts.app')] class extends Componen
             ]);
         }
 
-        $this->success('Saved successfully.');
+        $this->success(__('Saved successfully.'));
         $this->modal = false;
         $this->resetForm();
     }
@@ -129,12 +129,12 @@ new #[Title('Library Metadata')] #[Layout('layouts.app')] class extends Componen
         }
 
         if ($model->books_count > 0) {
-            $this->error('Cannot delete: this record is linked to books.');
+            $this->error(__('Cannot delete: this record is linked to books.'));
             return;
         }
 
         $model->delete();
-        $this->warning('Deleted successfully.');
+        $this->warning(__('Deleted successfully.'));
     }
 
     private function resetForm(): void

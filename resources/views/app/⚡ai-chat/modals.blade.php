@@ -126,7 +126,7 @@
             <div class="relative inline-block overflow-hidden text-left align-bottom transition-all transform bg-white dark:bg-gray-800 rounded-lg shadow-xl sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
                 <div class="px-4 pt-5 pb-4 bg-white dark:bg-gray-800 sm:p-6 sm:pb-4">
                     <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">Generate Image</h3>
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-white">{{ __('Generate Image') }}</h3>
                         <button wire:click="$set('showImageGeneratorModal', false)" class="text-gray-400 hover:text-gray-500">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -138,32 +138,32 @@
                         {{-- Model Selection --}}
                         <div>
                             <x-choices-offline
-                                label="Image Model"
+                                :label="__('Image Model')"
                                 wire:model="imageModel"
                                 :options="$this->getImageModels()"
                                 option-value="id"
                                 option-label="name"
-                                placeholder="Search image models..."
+                                :placeholder="__('Search image models...')"
                                 single
                                 searchable
-                                hint="💡 Flux Schnell and Z-Image Turbo offer best value (5K pollen)"
+                                :hint="__('💡 Flux Schnell and Z-Image Turbo offer best value (5K pollen)')"
                             />
                         </div>
 
                         {{-- Image Prompt --}}
                         <div>
                             <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Image Prompt
+                                {{ __('Image Prompt') }}
                             </label>
                             <textarea
                                 wire:model="imagePrompt"
                                 rows="4"
                                 class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
-                                placeholder="Describe the image you want to generate..."
+                                placeholder="{{ __('Describe the image you want to generate...') }}"
                                 required
                             ></textarea>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                Be descriptive for better results. Powered by Pollinations AI.
+                                {{ __('Be descriptive for better results. Powered by Pollinations AI.') }}
                             </p>
                         </div>
 
@@ -173,15 +173,15 @@
                                 wire:click="$set('showImageGeneratorModal', false)"
                                 class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-lg transition"
                             >
-                                Cancel
+                                {{ __('Cancel') }}
                             </button>
                             <button
                                 type="submit"
                                 class="px-4 py-2 text-sm font-medium text-white bg-purple-500 hover:bg-purple-600 rounded-lg transition disabled:opacity-50"
                                 wire:loading.attr="disabled"
                             >
-                                <span wire:loading.remove wire:target="generateImage">Generate Image</span>
-                                <span wire:loading wire:target="generateImage">Generating...</span>
+                                <span wire:loading.remove wire:target="generateImage">{{ __('Generate Image') }}</span>
+                                <span wire:loading wire:target="generateImage">{{ __('Generating...') }}</span>
                             </button>
                         </div>
                     </form>

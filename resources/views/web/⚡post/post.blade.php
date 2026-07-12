@@ -356,28 +356,28 @@
                         
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <a href="https://www.facebook.com/sharer/sharer.php?u={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> Facebook
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> {{ __('Facebook') }}
                             </a>
                             <a href="https://x.com/intent/tweet?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> X (Twitter)
+                                <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span> {{ __('X (Twitter)') }}
                             </a>
                             <a href="https://wa.me/?text={{ $this->shareText }}%20{{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> WhatsApp
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> {{ __('WhatsApp') }}
                             </a>
                             <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ $this->shareUrl }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-sky-50 dark:hover:bg-sky-900/20 text-sky-600 dark:text-sky-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> LinkedIn
+                                <span class="w-1.5 h-1.5 rounded-full bg-sky-500"></span> {{ __('LinkedIn') }}
                             </a>
                             <a href="https://www.reddit.com/submit?url={{ $this->shareUrl }}&title={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 text-orange-600 dark:text-orange-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Reddit
+                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> {{ __('Reddit') }}
                             </a>
                             <a href="https://t.me/share/url?url={{ $this->shareUrl }}&text={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-cyan-50 dark:hover:bg-cyan-900/20 text-cyan-600 dark:text-cyan-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> Telegram
+                                <span class="w-1.5 h-1.5 rounded-full bg-cyan-500"></span> {{ __('Telegram') }}
                             </a>
-                            <a href="mailto:?subject={{ $this->shareText }}&body={{ $this->shareText }}%0A%0A{{ $this->shareUrl }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold font-bold">
+                            <a href="mailto:?subject={{ $this->shareText }}&body={{ $this->shareText }}%0A%0A{{ $this->shareUrl }}" class="px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold">
                                 <span class="w-1.5 h-1.5 rounded-full bg-gray-450"></span> {{ __('Email') }}
                             </a>
                             <a href="https://www.pinterest.com/pin/create/button/?url={{ $this->shareUrl }}&description={{ $this->shareText }}" target="_blank" rel="noopener" class="px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400 inline-flex items-center gap-2 transition bg-slate-50 dark:bg-slate-950 border border-slate-200/50 dark:border-slate-800 font-bold">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pinterest
+                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> {{ __('Pinterest') }}
                             </a>
                             <button 
                               type="button"

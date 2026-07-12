@@ -654,8 +654,8 @@
                 {{-- Empty State: No Conversation Selected --}}
                 <div class="flex flex-col items-center justify-center h-full text-center p-8">
                     <x-icon name="o-chat-bubble-left-ellipsis" class="w-24 h-24 text-base-content/20 mb-4" />
-                    <h3 class="text-xl font-semibold text-base-content/70 mb-2">Select a conversation</h3>
-                    <p class="text-base-content/50">Choose a conversation from the list to start messaging</p>
+                    <h3 class="text-xl font-semibold text-base-content/70 mb-2">{{ __('Select a conversation') }}</h3>
+                    <p class="text-base-content/50">{{ __('Choose a conversation from the list to start messaging') }}</p>
                 </div>
             @endif
         </div>

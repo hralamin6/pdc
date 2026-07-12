@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use App\Models\Page;
 
 new class extends Component {
     public bool $mobileMenu = false;
@@ -22,6 +23,11 @@ new class extends Component {
             Session::put('locale', $locale);
             $this->redirect(url()->previous(), navigate: true);
         }
+    }
+
+    public function getPagesProperty()
+    {
+        return Page::published()->orderBy('order')->get();
     }
 
     public function getUnreadNotificationsCountProperty(): int
@@ -112,8 +118,12 @@ new class extends Component {
 
                 {{-- Brand --}}
                 <a href="{{ route('web.home') }}" wire:navigate class="flex items-center gap-2.5 shrink-0 group">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-105 transition-transform">
-                        <x-icon name="o-moon" class="w-5 h-5 text-white" />
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/30 group-hover:scale-105 transition-transform overflow-hidden">
+                        @if(file_exists(public_path('logo.png')))
+                            <img src="{{ asset('logo.png') }}" class="w-full h-full object-cover bg-white" alt="{{ __('Logo') }}" />
+                        @else
+                            <x-icon name="o-moon" class="w-5 h-5 text-white" />
+                        @endif
                     </div>
                     <span class="text-lg font-black tracking-tight text-slate-900 dark:text-white">
                         {{ setting('app.name', 'PSTU Dawah') }}
@@ -236,15 +246,60 @@ new class extends Component {
                                         <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Community Gallery') }}</p>
                                     </div>
                                 </a>
+                                <a href="{{ route('web.finances') }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                    <div class="w-8 h-8 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+                                        <x-icon name="o-banknotes" class="w-4 h-4 text-emerald-600" />
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-emerald-600 transition-colors">{{ __('Finances') }}</p>
+                                        <p class="text-xs text-slate-500 dark:text-slate-400">{{ __('Treasury & Transparency') }}</p>
+                                    </div>
+                                </a>
                             </div>
                         </div>
                     </div>
 
-                    {{-- About --}}
-                    <a href="#about"
-                       class="px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
-                        {{ __('About') }}
-                    </a>
+                    {{-- Dynamic Pages (Discover) --}}
+                    @if($this->pages->isNotEmpty())
+                        <div class="relative" @click.stop>
+                            <button
+                                @click.stop="toggleMenu('discover')"
+                                class="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
+                                {{ __('Discover') }}
+                                <svg class="w-3.5 h-3.5 transition-transform duration-200" :class="openMenu === 'discover' ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                            </button>
+                            <div
+                                x-show="openMenu === 'discover'"
+                                @click.stop
+                                x-transition:enter="transition ease-out duration-200"
+                                x-transition:enter-start="opacity-0 scale-95 -translate-y-2"
+                                x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                                x-transition:leave="transition ease-in duration-150"
+                                x-transition:leave-start="opacity-100 scale-100"
+                                x-transition:leave-end="opacity-0 scale-95"
+                                class="absolute top-full right-0 mt-2 w-64 bg-white dark:bg-slate-800 rounded-2xl shadow-2xl shadow-black/10 dark:shadow-black/40 border border-slate-100 dark:border-white/5 py-2 z-50">
+                                <div class="px-3 py-2">
+                                    <p class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">{{ __('More Info') }}</p>
+                                    @foreach($this->pages as $page)
+                                    <a href="{{ route('web.page', $page->slug) }}" wire:navigate @click="openMenu = null" class="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group">
+                                        <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+                                            <x-icon name="o-document-text" class="w-4 h-4 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 group-hover:text-primary transition-colors">{{ $page->title }}</p>
+                                        </div>
+                                    </a>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        {{-- About --}}
+                        <a href="#about"
+                           class="px-4 py-2 rounded-xl text-sm font-semibold transition-all text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5">
+                            {{ __('About') }}
+                        </a>
+                    @endif
                 </div>
 
                 {{-- Right Side Actions --}}
@@ -405,6 +460,7 @@ new class extends Component {
                             <x-menu-item title="{{ __('My Profile') }}" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-item title="{{ __('My Quizzes') }}" icon="o-academic-cap" link="{{ route('web.my-quizzes') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                            <x-menu-item title="{{ __('My Daily Report') }}" icon="o-chart-bar-square" link="{{ route('web.my-report') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-item title="{{ __('My Books') }}" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" link="{{ route('web.my-donations') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                             <x-menu-item title="{{ __('Dashboard') }}" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
@@ -479,6 +535,17 @@ new class extends Component {
             <a href="{{ route('web.showcase') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
                 <x-icon name="o-photo" class="w-5 h-5 text-cyan-600" /> {{ __('Showcase') }}
             </a>
+            <a href="{{ route('web.finances') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                <x-icon name="o-banknotes" class="w-5 h-5 text-emerald-600" /> {{ __('Finances') }}
+            </a>
+            @if($this->pages->isNotEmpty())
+                <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">{{ __('Discover') }}</div>
+                @foreach($this->pages as $page)
+                    <a href="{{ route('web.page', $page->slug) }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                        <x-icon name="o-document-text" class="w-5 h-5 text-primary" /> {{ $page->title }}
+                    </a>
+                @endforeach
+            @endif
 
             <div class="border-t border-slate-100 dark:border-white/5 pt-4 mt-4 flex items-center justify-between">
                 {{-- <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500" x-cloak /> --}}
@@ -487,6 +554,9 @@ new class extends Component {
                         <div class="flex flex-col gap-2 w-full">
                             <a href="{{ route('web.profile') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
                                 <x-icon name="o-user" class="w-5 h-5 text-primary" /> {{ __('My Profile') }}
+                            </a>
+                            <a href="{{ route('web.my-report') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
+                                <x-icon name="o-chart-bar-square" class="w-5 h-5 text-primary" /> {{ __('My Daily Report') }}
                             </a>
                             <a href="{{ route('web.chat') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
                                 <span class="flex items-center gap-3">

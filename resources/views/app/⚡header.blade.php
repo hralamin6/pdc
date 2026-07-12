@@ -235,7 +235,7 @@ new class extends Component
                                             @if($isChat && isset($data['sender_avatar']))
                                                 <div class="avatar">
                                                     <div class="w-10 h-10 rounded-full ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
-                                                        <img src="{{ $data['sender_avatar'] }}" alt="avatar" />
+                                                        <img src="{{ $data['sender_avatar'] }}" alt="{{ __('avatar') }}" />
                                                     </div>
                                                 </div>
                                             @else

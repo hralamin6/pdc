@@ -18,7 +18,7 @@
         <div class="mb-6 bg-gradient-to-br from-primary/10 to-primary/5 border border-primary/20 rounded-2xl p-6 shadow-sm flex items-center justify-between">
             <div>
                 <h3 class="text-sm uppercase tracking-widest font-bold text-primary/70 mb-1">{{ __('Filtered Total Collected') }}</h3>
-                <div class="text-4xl font-extrabold text-primary">BDT {{ number_format($this->totalCollected, 2) }}</div>
+                <div class="text-4xl font-extrabold text-primary">{{ __('BDT') }} {{ number_format($this->totalCollected, 2) }}</div>
             </div>
             <div class="hidden md:block">
                 <x-icon name="o-banknotes" class="w-16 h-16 text-primary/20" />
@@ -73,7 +73,7 @@
                                     @if($tx->is_anonymous || !$tx->user)
                                         <div class="avatar placeholder">
                                             <div class="bg-neutral text-neutral-content rounded-full w-10">
-                                                <span class="text-xs">AN</span>
+                                                <span class="text-xs">{{ __('AN') }}</span>
                                             </div>
                                         </div>
                                         <div>
@@ -98,7 +98,7 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="font-bold text-primary">BDT {{ number_format($tx->amount, 2) }}</div>
+                                <div class="font-bold text-primary">{{ __('BDT') }} {{ number_format($tx->amount, 2) }}</div>
                                 <div class="text-xs uppercase tracking-widest text-base-content/70 mt-1">{{ __($tx->payment_method) }}</div>
                             </td>
                             <td>

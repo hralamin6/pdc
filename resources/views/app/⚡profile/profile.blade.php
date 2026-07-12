@@ -90,7 +90,7 @@
                 {{-- Banner Section --}}
                 @if($bannerUrl)
                     <div class="relative w-full h-48 md:h-64 rounded-t-lg overflow-hidden bg-gradient-to-r from-primary/20 to-secondary/20">
-                        <img src="{{ $bannerUrl }}" alt="Banner" class="w-full h-full object-cover" />
+                        <img src="{{ $bannerUrl }}" alt="{{ __('Banner') }}" class="w-full h-full object-cover" />
                     </div>
                 @else
                     <div class="relative w-full h-48 md:h-64 rounded-t-lg overflow-hidden bg-gradient-to-r from-primary/20 to-secondary/20"></div>
@@ -554,7 +554,7 @@
                             icon="o-map"
                             wire:model.live="division_id"
                             :options="$divisions"
-                            placeholder="Select Division"
+                            :placeholder="__('Select Division')"
                         />
 
                         @if(count($districts) > 0)
@@ -563,7 +563,7 @@
                                 icon="o-map"
                                 wire:model.live="district_id"
                                 :options="$districts"
-                                placeholder="Select District"
+                                :placeholder="__('Select District')"
                             />
                         @endif
 
@@ -583,7 +583,7 @@
                                 icon="o-map"
                                 wire:model.live="union_id"
                                 :options="$unions"
-                                placeholder="Select Union"
+                                :placeholder="__('Select Union')"
                             />
                         @endif
 
@@ -770,7 +770,7 @@
                         <div class="mb-6">
                             <p class="text-sm font-medium mb-2">{{ __('Current Banner') }}</p>
                             <div class="relative w-full h-48 rounded-lg overflow-hidden border dark:border-gray-700">
-                                <img src="{{ $bannerUrl }}" alt="Banner" class="w-full h-full object-cover" />
+                                <img src="{{ $bannerUrl }}" alt="{{ __('Banner') }}" class="w-full h-full object-cover" />
                             </div>
                         </div>
                     @endif

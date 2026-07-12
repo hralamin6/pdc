@@ -179,7 +179,7 @@ new #[Title('Course Details')] #[Layout('layouts.web')] class extends Component
                                             <p class="text-xs text-slate-500 mt-1">{{ $quiz->questions->count() }} {{ __('Questions') }} • {{ $quiz->total_marks }} {{ __('Marks') }}</p>
                                         </div>
                                         @if($quiz->mode === 'live')
-                                            <span class="badge badge-error badge-sm shrink-0 border-none animate-pulse">LIVE</span>
+                                            <span class="badge badge-error badge-sm shrink-0 border-none animate-pulse">{{ __('LIVE') }}</span>
                                         @endif
                                     </div>
                                     

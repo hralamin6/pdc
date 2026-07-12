@@ -126,14 +126,14 @@
                 
                 @if($existingCoverUrl && !$cover_image)
                     <div class="relative rounded-2xl overflow-hidden h-32 border border-slate-200 dark:border-slate-700 mb-2">
-                        <img src="{{ $existingCoverUrl }}" class="w-full h-full object-cover" alt="Existing Cover">
+                        <img src="{{ $existingCoverUrl }}" class="w-full h-full object-cover" alt="{{ __('Existing Cover') }}">
                         <span class="absolute bottom-2 left-2 bg-slate-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-lg">{{ __('Current Image') }}</span>
                     </div>
                 @endif
 
                 @if($cover_image)
                     <div class="relative rounded-2xl overflow-hidden h-32 border border-slate-200 dark:border-slate-700 mb-2">
-                        <img src="{{ $cover_image->temporaryUrl() }}" class="w-full h-full object-cover" alt="Cover Preview">
+                        <img src="{{ $cover_image->temporaryUrl() }}" class="w-full h-full object-cover" alt="{{ __('Cover Preview') }}">
                         <span class="absolute bottom-2 left-2 bg-indigo-900/80 backdrop-blur-sm text-white text-[10px] font-bold px-2 py-0.5 rounded-lg">{{ __('Preview Upload') }}</span>
                     </div>
                 @endif

@@ -74,7 +74,7 @@
         {{ __('or drag and drop') }}
       </p>
       <p class="text-xs text-gray-500 dark:text-gray-500">
-        {{ __('PNG, JPG, WEBP up to') }} {{ number_format($maxSize / 1024, 1) }}MB
+        {{ __('PNG, JPG, WEBP up to') }} {{ number_format($maxSize / 1024, 1) }}{{ __('MB') }}
         @if($multiple)
           ({{ __('max') }} {{ $maxFiles }} {{ __('files') }})
         @endif

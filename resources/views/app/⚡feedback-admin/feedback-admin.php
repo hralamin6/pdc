@@ -44,18 +44,18 @@ new #[Layout('layouts.app')] class extends Component {
     public function toggleRead(Feedback $feedback)
     {
         $feedback->update(['is_read' => !$feedback->is_read]);
-        $this->success('Status updated.');
+        $this->success(__('Status updated.'));
     }
 
     public function deleteMessage(Feedback $feedback)
     {
         $feedback->delete();
-        $this->warning('Message deleted.');
+        $this->warning(__('Message deleted.'));
     }
     
     public function markAllAsRead()
     {
         Feedback::where('is_read', false)->update(['is_read' => true]);
-        $this->success('All marked as read.');
+        $this->success(__('All marked as read.'));
     }
 };

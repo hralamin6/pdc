@@ -306,18 +306,18 @@
                     <div class="form-control">
                         <label class="label py-1"><span class="label-text text-sm font-bold">{{ __('Calculation Method') }}</span></label>
                         <select x-model="calcMethod" class="select select-bordered select-sm rounded-xl">
-                            <option value="Karachi">Univ. of Islamic Sciences, Karachi</option>
-                            <option value="MuslimWorldLeague">Muslim World League</option>
-                            <option value="Egyptian">Egyptian General Authority</option>
-                            <option value="UmmAlQura">Umm al-Qura, Makkah</option>
-                            <option value="Dubai">Dubai</option>
-                            <option value="MoonsightingCommittee">Moonsighting Committee</option>
-                            <option value="NorthAmerica">ISNA (North America)</option>
-                            <option value="Kuwait">Kuwait</option>
-                            <option value="Qatar">Qatar</option>
-                            <option value="Singapore">Singapore</option>
-                            <option value="Tehran">Tehran</option>
-                            <option value="Turkey">Turkey</option>
+                            <option value="Karachi">{{ __('Univ. of Islamic Sciences, Karachi') }}</option>
+                            <option value="MuslimWorldLeague">{{ __('Muslim World League') }}</option>
+                            <option value="Egyptian">{{ __('Egyptian General Authority') }}</option>
+                            <option value="UmmAlQura">{{ __('Umm al-Qura, Makkah') }}</option>
+                            <option value="Dubai">{{ __('Dubai') }}</option>
+                            <option value="MoonsightingCommittee">{{ __('Moonsighting Committee') }}</option>
+                            <option value="NorthAmerica">{{ __('ISNA (North America)') }}</option>
+                            <option value="Kuwait">{{ __('Kuwait') }}</option>
+                            <option value="Qatar">{{ __('Qatar') }}</option>
+                            <option value="Singapore">{{ __('Singapore') }}</option>
+                            <option value="Tehran">{{ __('Tehran') }}</option>
+                            <option value="Turkey">{{ __('Turkey') }}</option>
                         </select>
                     </div>
 
@@ -336,7 +336,7 @@
                 <button @click="applySettings()" class="btn btn-primary btn-sm rounded-xl px-6">{{ __('Apply & Reload') }}</button>
             </div>
         </div>
-        <div class="modal-backdrop" @click="showModal = false"><button>close</button></div>
+        <div class="modal-backdrop" @click="showModal = false"><button>{{ __('close') }}</button></div>
     </div>
 
     {{-- Live Quiz Widget --}}

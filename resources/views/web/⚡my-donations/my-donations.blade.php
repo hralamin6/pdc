@@ -204,7 +204,7 @@
     </div>
 
     {{-- Create Pledge Modal --}}
-    <x-modal wire:model="pledgeModal" title="Become a Sustainer" class="backdrop-blur-sm">
+    <x-modal wire:model="pledgeModal" :title="__('Become a Sustainer')" class="backdrop-blur-sm">
         <div class="space-y-6 pt-4">
             <div class="p-4 rounded-2xl bg-teal-50 dark:bg-teal-900/20 text-teal-800 dark:text-teal-300 text-xs leading-relaxed border border-teal-100 dark:border-teal-800/50">
                 <x-icon name="o-information-circle" class="w-5 h-5 inline mr-1 text-teal-600 dark:text-teal-400" />
@@ -260,17 +260,17 @@
     </x-modal>
 
     {{-- Fulfill Payment Modal --}}
-    <x-modal wire:model="fulfillModal" title="Fulfill Donation" class="backdrop-blur-sm">
+    <x-modal wire:model="fulfillModal" :title="__('Fulfill Donation')" class="backdrop-blur-sm">
         <div class="space-y-4 pt-2">
             <p class="text-sm text-slate-500 mb-2">{{ __('Please select your payment method first.') }}</p>
             
             <x-select wire:model.live="paymentMethod" label="{{ __('Payment Method Used') }}" :options="[
-                ['id' => 'cash', 'name' => 'Cash (Handed to Treasurer)'],
-                ['id' => 'bkash', 'name' => 'bKash'],
-                ['id' => 'nagad', 'name' => 'Nagad'],
-                ['id' => 'bank', 'name' => 'Bank Transfer'],
-                ['id' => 'other', 'name' => 'Other']
-            ]" placeholder="Select a method..." required />
+                ['id' => 'cash', 'name' => __('Cash (Handed to Treasurer)')],
+                ['id' => 'bkash', 'name' => __('bKash')],
+                ['id' => 'nagad', 'name' => __('Nagad')],
+                ['id' => 'bank', 'name' => __('Bank Transfer')],
+                ['id' => 'other', 'name' => __('Other')]
+            ]" placeholder="{{ __('Select a method...') }}" required />
 
             {{-- Organization Accounts Box (Filtered by Payment Method) --}}
             @if($paymentMethod && $this->filteredBankAccounts->isNotEmpty())
@@ -299,7 +299,7 @@
                     </div>
                 </div>
                 
-                <x-select wire:model="bankAccountId" label="{{ __('Destination Account') }}" :options="$this->filteredBankAccounts" option-value="id" option-label="name" placeholder="Select where you sent the money..." required />
+                <x-select wire:model="bankAccountId" label="{{ __('Destination Account') }}" :options="$this->filteredBankAccounts" option-value="id" option-label="name" placeholder="{{ __('Select where you sent the money...') }}" required />
             @elseif($paymentMethod)
                 <div class="p-3 rounded-xl bg-warning/20 text-warning-content text-sm mt-4 mb-4">
                     <x-icon name="o-exclamation-triangle" class="w-5 h-5 inline mr-1" />
@@ -308,10 +308,10 @@
             @endif
 
             @if(in_array($paymentMethod, ['bkash', 'nagad', 'bank']))
-                <x-input wire:model="transactionId" label="{{ __('Transaction ID') }}" placeholder="e.g. 9ABCXYZ23" hint="{{ __('Required for verification') }}" required />
+                <x-input wire:model="transactionId" label="{{ __('Transaction ID') }}" placeholder="{{ __('e.g. 9ABCXYZ23') }}" hint="{{ __('Required for verification') }}" required />
             @endif
             
-            <x-textarea wire:model="paymentNote" label="{{ __('Note (Optional)') }}" placeholder="Any message to the treasurer?" rows="2" />
+            <x-textarea wire:model="paymentNote" label="{{ __('Note (Optional)') }}" placeholder="{{ __('Any message to the treasurer?') }}" rows="2" />
         </div>
         
         <x-slot:actions>

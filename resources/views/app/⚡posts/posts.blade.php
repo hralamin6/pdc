@@ -372,7 +372,7 @@
                 <p class="text-sm font-medium mb-2">{{ __('Current Featured Image') }}</p>
                 <div class="relative w-full h-48 rounded-lg overflow-hidden bg-base-300">
                   @if($featured_image)
-                    <img src="{{ $featured_image->temporaryUrl() }}" class="w-full h-full object-cover" alt="Preview" />
+                    <img src="{{ $featured_image->temporaryUrl() }}" class="w-full h-full object-cover" alt="{{ __('Preview') }}" />
                   @elseif($selectedId)
                     @php
                       $post = \App\Models\Post::find($selectedId);

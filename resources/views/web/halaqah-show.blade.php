@@ -455,7 +455,7 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
         <div class="space-y-4">
             <x-choices label="{{ __('Donor (Optional)') }}" wire:model="donorId" :options="\App\Models\User::orderBy('name')->get()" option-label="name" option-value="id" placeholder="{{ __('Search member...') }}" hint="{{ __('Leave empty for anonymous') }}" single searchable />
             <x-input label="{{ __('Amount (৳)') }}" wire:model="donationAmount" type="number" prefix="৳" required />
-            <x-select label="{{ __('Payment Method') }}" wire:model.live="donationPaymentMethod" :options="[['id'=>'cash','name'=>__('Cash')],['id'=>'bkash','name'=>'bKash'],['id'=>'nagad','name'=>'Nagad'],['id'=>'bank','name'=>__('Bank Transfer')]]" />
+            <x-select label="{{ __('Payment Method') }}" wire:model.live="donationPaymentMethod" :options="[['id'=>'cash','name'=>__('Cash')],['id'=>'bkash','name'=>__('bKash')],['id'=>'nagad','name'=>__('Nagad')],['id'=>'bank','name'=>__('Bank Transfer')]]" />
             @if(in_array($donationPaymentMethod, ['bkash','nagad','bank']))
                 <x-input label="{{ __('Transaction ID') }}" wire:model="donationTransactionId" required />
             @endif

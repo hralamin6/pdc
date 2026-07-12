@@ -88,16 +88,16 @@
                                     $totalSizeGB = $totalSizeMB / 1024;
                                 @endphp
                                 @if($totalSizeGB >= 1)
-                                    {{ number_format($totalSizeGB, 2) }} GB
+                                    {{ number_format($totalSizeGB, 2) }} {{ __('GB') }}
                                 @else
-                                    {{ number_format($totalSizeMB, 1) }} MB
+                                    {{ number_format($totalSizeMB, 1) }} {{ __('MB') }}
                                 @endif
                             @else
-                                0 MB
+                                0 {{ __('MB') }}
                             @endif
                         </p>
                         <p class="text-xs text-gray-500 dark:text-gray-400">
-                            {{ number_format($this->stats['total_size']) }} bytes
+                            {{ number_format($this->stats['total_size']) }} {{ __('bytes') }}
                         </p>
                     </div>
                 </div>
@@ -253,7 +253,7 @@
                                         </div>
                                         {{-- Detailed byte count --}}
                                         <div class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ number_format($backup->file_size) }} bytes
+                                            {{ number_format($backup->file_size) }} {{ __('bytes') }}
                                         </div>
                                     @else
                                         <div class="text-gray-400 dark:text-gray-500 italic">

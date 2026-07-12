@@ -14,7 +14,7 @@
             {{ __('Guild Roster') }}
         </div>
         <h1 class="text-4xl md:text-6xl font-black mb-6 text-white tracking-tight">
-          PSTU Dawah <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400">{{ __('Community') }}</span>
+          {{ __('PSTU Dawah') }} <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-fuchsia-400">{{ __('Community') }}</span>
         </h1>
         <p class="text-lg text-slate-400 mb-10 max-w-2xl mx-auto font-medium">
           {{ __('Meet the dedicated seekers, mentors, and scholars leveling up their Deen and brotherhood together.') }}
@@ -25,7 +25,7 @@
         <div class="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-300">
           <div class="flex -space-x-4 mr-2">
             @foreach($this->topContributors->take(5) as $contributor)
-              <a href="{{ route('web.user', $contributor->id) }}" wire:navigate class="w-12 h-12 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center overflow-hidden hover:-translate-y-1 hover:z-20 transition-transform shadow-lg" title="{{ $contributor->name }} - XP: {{ $contributor->gamification_points }}">
+              <a href="{{ route('web.user', $contributor->id) }}" wire:navigate class="w-12 h-12 rounded-full border-2 border-slate-900 bg-slate-800 flex items-center justify-center overflow-hidden hover:-translate-y-1 hover:z-20 transition-transform shadow-lg" title="{{ $contributor->name }} - {{ __('XP') }}: {{ $contributor->gamification_points }}">
                 <img src="{{ $contributor->avatar_url }}" alt="{{ $contributor->name }}" class="w-full h-full object-cover">
               </a>
             @endforeach

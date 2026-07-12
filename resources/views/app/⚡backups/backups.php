@@ -80,12 +80,12 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
 
             ProcessBackupJob::dispatch($backup, $options);
 
-            $this->success('Backup started successfully! You will be notified when it completes.');
+            $this->success(__('Backup started successfully! You will be notified when it completes.'));
             $this->showCreateModal = false;
             $this->reset(['backupType']);
 
         } catch (\Exception $e) {
-            $this->error('Failed to start backup: ' . $e->getMessage());
+            $this->error(__('Failed to start backup: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -98,14 +98,14 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
             $backup = Backup::findOrFail($backupId);
 
             if (!$backup->exists()) {
-                $this->error('Backup file not found on disk.');
+                $this->error(__('Backup file not found on disk.'));
                 return null;
             }
 
             return $backup->download();
 
         } catch (\Exception $e) {
-            $this->error('Failed to download backup: ' . $e->getMessage());
+            $this->error(__('Failed to download backup: :message', ['message' => $e->getMessage()]));
             return null;
         }
     }
@@ -119,10 +119,10 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
             $backup = Backup::findOrFail($backupId);
             $backup->delete();
 
-            $this->success('Backup deleted successfully.');
+            $this->success(__('Backup deleted successfully.'));
 
         } catch (\Exception $e) {
-            $this->error('Failed to delete backup: ' . $e->getMessage());
+            $this->error(__('Failed to delete backup: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -141,7 +141,7 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
         $this->authorize('backups.delete');
 
         if (empty($this->selectedBackups)) {
-            $this->warning('No backups selected.');
+            $this->warning(__('No backups selected.'));
             return;
         }
 
@@ -155,12 +155,12 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
                 }
             }
 
-            $this->success("Successfully deleted {$count} backup(s).");
+            $this->success(__('Successfully deleted :count backup(s).', ['count' => $count]));
             $this->selectedBackups = [];
             $this->selectAll = false;
 
         } catch (\Exception $e) {
-            $this->error('Failed to delete selected backups: ' . $e->getMessage());
+            $this->error(__('Failed to delete selected backups: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -190,11 +190,11 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
                 $count++;
             }
 
-            $this->success("Successfully cleaned up {$count} old backup(s).");
+            $this->success(__('Successfully cleaned up :count old backup(s).', ['count' => $count]));
             $this->showCleanupModal = false;
 
         } catch (\Exception $e) {
-            $this->error('Failed to cleanup old backups: ' . $e->getMessage());
+            $this->error(__('Failed to cleanup old backups: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -208,10 +208,10 @@ new #[Title('Backups')] #[Layout('layouts.app')] class  extends Component
             // For now, we'll dispatch a scheduled backup to demonstrate
             ScheduledBackupJob::dispatch('daily');
 
-            $this->success('Scheduled backup queued successfully!');
+            $this->success(__('Scheduled backup queued successfully!'));
 
         } catch (\Exception $e) {
-            $this->error('Failed to schedule backup: ' . $e->getMessage());
+            $this->error(__('Failed to schedule backup: :message', ['message' => $e->getMessage()]));
         }
     }
 

@@ -78,7 +78,7 @@ new #[Title('Live Quiz — Host Control')] #[Layout('layouts.app')] class extend
 
         broadcast(new QuizLiveStarted($this->quiz))->toOthers();
 
-        $this->success('⚡ Live quiz started! All waiting members have been notified.');
+        $this->success(__('⚡ Live quiz started! All waiting members have been notified.'));
         $this->refreshStats();
     }
 
@@ -116,7 +116,7 @@ new #[Title('Live Quiz — Host Control')] #[Layout('layouts.app')] class extend
         $this->quiz->update(['status' => 'closed']);
         $this->broadcastLeaderboard();
 
-        $this->warning('Quiz ended and all attempts auto-submitted.');
+        $this->warning(__('Quiz ended and all attempts auto-submitted.'));
         $this->refreshStats();
     }
 

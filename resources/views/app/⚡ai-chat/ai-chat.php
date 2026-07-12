@@ -157,7 +157,7 @@ class extends Component
 
         $this->selectedConversationId = $conversation->id;
         $this->showNewChatModal = false;
-        $this->success('New conversation created!');
+        $this->success(__('New conversation created!'));
     }
 
     public function selectConversation(int $conversationId): void
@@ -185,7 +185,7 @@ class extends Component
         if ($conversation && $conversation->user_id === auth()->id()) {
             $conversation->delete();
             $this->selectedConversationId = null;
-            $this->success('Conversation deleted successfully!');
+            $this->success(__('Conversation deleted successfully!'));
         }
     }
 
@@ -198,7 +198,7 @@ class extends Component
         $conversation = AiConversation::find($this->selectedConversationId);
         if ($conversation && $conversation->user_id === auth()->id()) {
             $conversation->update(['title' => $title]);
-            $this->success('Title updated!');
+            $this->success(__('Title updated!'));
         }
     }
 
@@ -215,7 +215,7 @@ class extends Component
 
         $conversation = $this->selectedConversation;
         if (!$conversation || $conversation->user_id !== auth()->id()) {
-            $this->error('Invalid conversation');
+            $this->error(__('Invalid conversation'));
             return;
         }
 
@@ -321,7 +321,7 @@ class extends Component
                 ],
             ]);
 
-            $this->error('AI Error: ' . $e->getMessage());
+            $this->error(__('AI Error: :message', ['message' => $e->getMessage()]));
             $this->dispatch('scroll-to-bottom');
         }
     }
@@ -331,12 +331,12 @@ class extends Component
         $message = AiMessage::find($messageId);
 
         if (!$message || $message->conversation->user_id !== auth()->id()) {
-            $this->error('Invalid message');
+            $this->error(__('Invalid message'));
             return;
         }
 
         if (!$message->isAssistant()) {
-            $this->error('Can only regenerate assistant messages');
+            $this->error(__('Can only regenerate assistant messages'));
             return;
         }
 
@@ -369,7 +369,7 @@ class extends Component
                 ],
             ]);
 
-            $this->success('Response regenerated!');
+            $this->success(__('Response regenerated!'));
             $this->dispatch('message-regenerated');
 
         } catch (\Exception $e) {
@@ -388,7 +388,7 @@ class extends Component
                 ],
             ]);
 
-            $this->error('Failed to regenerate: ' . $e->getMessage());
+            $this->error(__('Failed to regenerate: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -418,7 +418,7 @@ class extends Component
             ]);
 
             $this->cancelEdit();
-            $this->success('Message updated!');
+            $this->success(__('Message updated!'));
         }
     }
 
@@ -434,7 +434,7 @@ class extends Component
 
         if ($message && $message->conversation->user_id === auth()->id()) {
             $message->delete();
-            $this->success('Message deleted!');
+            $this->success(__('Message deleted!'));
         }
     }
 
@@ -482,7 +482,7 @@ class extends Component
                 $conversation->update(['last_message_at' => now()]);
             }
 
-            $this->success('Image generated successfully!');
+            $this->success(__('Image generated successfully!'));
             $this->showImageGeneratorModal = false;
             $this->imagePrompt = '';
             $this->imageModel = 'flux';
@@ -511,7 +511,7 @@ class extends Component
                 ]);
             }
 
-            $this->error('Failed to generate image: ' . $e->getMessage());
+            $this->error(__('Failed to generate image: :message', ['message' => $e->getMessage()]));
         } finally {
             $this->generatingImage = false;
         }
@@ -540,7 +540,7 @@ class extends Component
         }
 
         $this->showSettingsModal = false;
-        $this->success('Settings updated!');
+        $this->success(__('Settings updated!'));
     }
 
     public function updatedAiProvider(): void
@@ -669,13 +669,13 @@ class extends Component
     public function exportConversation(string $format = 'txt')
     {
         if (!$this->selectedConversationId) {
-            $this->warning('No conversation selected');
+            $this->warning(__('No conversation selected'));
             return;
         }
 
         $conversation = $this->selectedConversation;
         if (!$conversation || $conversation->user_id !== auth()->id()) {
-            $this->error('Invalid conversation');
+            $this->error(__('Invalid conversation'));
             return;
         }
 

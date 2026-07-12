@@ -247,7 +247,7 @@ class extends Component
 
 
 
-        $this->success('General settings saved.', position: 'toast-bottom');
+        $this->success(__('General settings saved.'), position: 'toast-bottom');
     }
 
     public function saveMail(): void
@@ -286,7 +286,7 @@ class extends Component
             'MAIL_FROM_NAME' => $this->mailFromName,
         ]);
 
-        $this->success('Mail settings saved.', position: 'toast-bottom');
+        $this->success(__('Mail settings saved.'), position: 'toast-bottom');
     }
 
     public function saveOauth(): void
@@ -313,7 +313,7 @@ class extends Component
             'GOOGLE_CLIENT_SECRET' => $this->googleClientSecret,
         ]);
 
-        $this->success('OAuth settings saved.', position: 'toast-bottom');
+        $this->success(__('OAuth settings saved.'), position: 'toast-bottom');
     }
 
     public function savePusher(): void
@@ -355,7 +355,7 @@ class extends Component
             'VAPID_PRIVATE_KEY' => $this->vapidPrivateKey,
         ]);
 
-        $this->success('Pusher/WebPush settings saved.', position: 'toast-bottom');
+        $this->success(__('Pusher/WebPush settings saved.'), position: 'toast-bottom');
     }
 
     public function saveAi(): void
@@ -391,7 +391,7 @@ class extends Component
             'OPENAI_BASE_URL' => $this->openaiBaseUrl,
         ]);
 
-        $this->success('AI settings saved.', position: 'toast-bottom');
+        $this->success(__('AI settings saved.'), position: 'toast-bottom');
     }
 
     public function addCustomProvider(): void
@@ -408,7 +408,7 @@ class extends Component
         $key = strtolower($this->newProviderKey);
 
         if (array_key_exists($key, $this->aiProviders)) {
-            $this->error("Provider key '{$key}' already exists.", position: 'toast-bottom');
+            $this->error(__("Provider key ':key' already exists.", ['key' => $key]), position: 'toast-bottom');
             return;
         }
 
@@ -426,14 +426,14 @@ class extends Component
         $this->newProviderUrl = '';
         $this->customProviderModal = false;
 
-        $this->success('Custom provider added to the list.', position: 'toast-bottom');
+        $this->success(__('Custom provider added to the list.'), position: 'toast-bottom');
     }
 
     public function removeProvider(string $key): void
     {
         $this->authorize('settings.update');
         unset($this->aiProviders[$key]);
-        $this->success("Provider '{$key}' removed.", position: 'toast-bottom');
+        $this->success(__("Provider ':key' removed.", ['key' => $key]), position: 'toast-bottom');
     }
 
     public function saveAiSdk(): void
@@ -443,7 +443,7 @@ class extends Component
         SettingModel::set('ai_sdk.providers', json_encode($this->aiProviders));
         SettingModel::set('ai_sdk.defaults', json_encode($this->aiDefaults));
 
-        $this->success('AI SDK Providers and defaults saved successfully.', position: 'toast-bottom');
+        $this->success(__('AI SDK Providers and defaults saved successfully.'), position: 'toast-bottom');
     }
 
     #[Computed]
@@ -489,7 +489,7 @@ $extension = pathinfo(parse_url($this->logoImageUrl, PHP_URL_PATH), PATHINFO_EXT
                     ->usingFileName($logo->key . now()->timestamp . '.' . $extension)
                     ->toMediaCollection('logo');
             }else{
-                        $this->error('Invalid image url.', position: 'toast-bottom');
+                        $this->error(__('Invalid image url.'), position: 'toast-bottom');
             }
 
         }
@@ -512,7 +512,7 @@ $extension = pathinfo(parse_url($this->logoImageUrl, PHP_URL_PATH), PATHINFO_EXT
                     ->usingFileName($icon->key . now()->timestamp . '.' . $extension)
                     ->toMediaCollection('icon');
             }else{
-                        $this->error('Invalid image url.', position: 'toast-bottom');
+                        $this->error(__('Invalid image url.'), position: 'toast-bottom');
                         return;
             }
         }
@@ -539,7 +539,7 @@ $extension = pathinfo(parse_url($this->logoImageUrl, PHP_URL_PATH), PATHINFO_EXT
         }
                 $this->reset(['logoImage', 'iconImage',  'logoImageUrl', 'iconImageUrl']);
 
-        $this->success('Branding images saved.', position: 'toast-bottom');
+        $this->success(__('Branding images saved.'), position: 'toast-bottom');
     }
 
     public function saveApp(): void
@@ -575,7 +575,7 @@ $extension = pathinfo(parse_url($this->logoImageUrl, PHP_URL_PATH), PATHINFO_EXT
             'APP_TIMEZONE' => $this->appTimezone,
         ]);
 
-        $this->success('App settings saved.', position: 'toast-bottom');
+        $this->success(__('App settings saved.'), position: 'toast-bottom');
     }
 
     /**

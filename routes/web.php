@@ -28,6 +28,7 @@ Route::livewire('/library/user/{id}', 'web::library-user')->name('web.library.us
 Route::livewire('/library/hub/{id}', 'web::library-hub')->name('web.library.hub');
 Route::livewire('/library/{slug}', 'web::book')->name('web.book');
 Route::livewire('/showcase', 'web::showcase')->name('web.showcase');
+Route::livewire('/finances', 'web::finances')->name('web.finances');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
 Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
 
@@ -53,6 +54,12 @@ Route::redirect('/posts', '/blog');
 Route::redirect('/posts/{slug}', '/blog/{slug}');
 
 Route::middleware('auth')->group(function () {
+    Route::livewire('/my-report', 'web::my-report')->name('web.my-report');
+    Route::livewire('/my-report/fill', 'web::my-report-fill')->name('web.my-report.fill');
+    Route::livewire('/my-report/history', 'web::my-report-history')->name('web.my-report.history');
+    Route::livewire('/my-report/stats', 'web::my-report-stats')->name('web.my-report.stats');
+    Route::livewire('/my-report/settings', 'web::my-report-settings')->name('web.my-report.settings');
+    
     Route::livewire('/profile', 'web::profile')->name('web.profile');
     Route::livewire('/my-books', 'web::my-books')->name('web.my-books');
     Route::livewire('/my-donations', 'web::my-donations')->name('web.my-donations');
@@ -71,10 +78,10 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/posts/', 'app::posts')->name('app.posts');
 
     // Halaqahs Routes
-    Route::livewire('/app/halaqahs', 'app::halaqahs')->name('app.halaqahs');
-    Route::livewire('/app/halaqahs/manage', 'app::halaqahs-manage')->name('app.halaqahs.manage');
-    Route::livewire('/app/halaqahs/{halaqah}/attendance', 'app::halaqahs-attendance')->name('app.halaqahs.attendance');
-    Route::livewire('/app/halaqahs/{halaqah}', 'app::halaqahs-show')->name('app.halaqahs.show');
+    Route::livewire('/app/halaqah-series', 'app::halaqah-series')->name('app.halaqah-series');
+    Route::livewire('/app/halaqah-series/{series}', 'app::halaqah-series-show')->name('app.halaqah-series.show');
+    Route::livewire('/app/halaqahs/schedule', 'app::halaqahs-schedule')->name('app.halaqahs.schedule');
+    Route::livewire('/app/halaqahs/{halaqah}', 'app::halaqah-show')->name('app.halaqahs.show');
 
     Route::livewire('/app/donations/campaigns', 'app::donations-campaigns')->name('app.donations.campaigns');
     Route::livewire('/app/donations/campaigns/{campaign}', 'app::donations-campaign-details')->name('app.donations.campaign-details');
@@ -84,7 +91,6 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/donations/transactions', 'app::donations-transactions')->name('app.donations.transactions');
 
     // Treasury / Expense Routes
-    Route::livewire('/app/expenses', 'app::expenses')->name('app.expenses');
     Route::livewire('/app/expenses/admin', 'app::expenses-admin')->name('app.expenses.admin');
     Route::livewire('/app/expenses/categories', 'app::expense-categories')->name('app.expense-categories');
     Route::livewire('/app/expenses/bank-accounts', 'app::bank-accounts')->name('app.bank-accounts');
@@ -100,10 +106,10 @@ Route::middleware('auth')->group(function () {
     Route::livewire('/app/library-admin/metadata', 'app::books-metadata')->name('app.books.metadata');
 
     // Daily Reports Routes
-    Route::livewire('/app/daily-reports', 'app::daily-reports')->name('app.daily-reports');
-    Route::livewire('/app/daily-reports/form', 'app::daily-reports-form')->name('app.daily-reports.form');
-    Route::livewire('/app/daily-reports/settings', 'app::daily-reports-settings')->name('app.daily-reports.settings');
-    Route::livewire('/app/daily-reports/admin', 'app::daily-reports-admin')->name('app.daily-reports.admin');
+    Route::livewire('/app/daily-reports/admin', 'app::daily-reports-admin')->name('web.my-report.admin');
+    Route::livewire('/app/daily-reports/templates', 'app::daily-reports-templates')->name('web.my-report.templates');
+    Route::livewire('/app/daily-reports/analytics', 'app::daily-reports-analytics')->name('web.my-report.analytics');
+    Route::livewire('/app/daily-reports/leaderboard', 'app::daily-reports-leaderboard')->name('web.my-report.leaderboard');
 
     // Quiz Routes
     Route::livewire('/app/quizzes', 'app::quiz-manage')->name('app.quiz.manage');

@@ -198,12 +198,12 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             $this->loadStatistics();
 
             if ($savedCount > 0) {
-                $this->success("Successfully saved {$savedCount} translation(s)!");
+                $this->success(__('Successfully saved :count translation(s)!', ['count' => $savedCount]));
             } else {
-                $this->info('No changes to save.');
+                $this->info(__('No changes to save.'));
             }
         } catch (\Exception $e) {
-            $this->error('Failed to save translations: '.$e->getMessage());
+            $this->error(__('Failed to save translations: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -234,10 +234,10 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             }
             $this->loadStatistics();
             $this->addKeyModal = false;
-            $this->success('New translation key added successfully!');
+            $this->success(__('New translation key added successfully!'));
             $this->reset(['newKey', 'newKeyValues']);
         } catch (\Exception $e) {
-            $this->error('Failed to add key: '.$e->getMessage());
+            $this->error(__('Failed to add key: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -250,9 +250,9 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             }
             $this->loadStatistics();
             unset($this->editableTranslations[$key]);
-            $this->success('Translation key deleted successfully!');
+            $this->success(__('Translation key deleted successfully!'));
         } catch (\Exception $e) {
-            $this->error('Failed to delete key: '.$e->getMessage());
+            $this->error(__('Failed to delete key: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -278,10 +278,10 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             $this->loadLanguages();
             $this->loadStatistics();
             $this->addLanguageModal = false;
-            $this->success('New language added successfully!');
+            $this->success(__('New language added successfully!'));
             $this->reset(['newLanguageCode']);
         } catch (\Exception $e) {
-            $this->error('Failed to add language: '.$e->getMessage());
+            $this->error(__('Failed to add language: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -292,12 +292,12 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             if ($this->translationService->deleteLanguage($code)) {
                 $this->loadLanguages();
                 $this->loadStatistics();
-                $this->success('Language deleted successfully!');
+                $this->success(__('Language deleted successfully!'));
             } else {
-                $this->warning('Cannot delete this language.');
+                $this->warning(__('Cannot delete this language.'));
             }
         } catch (\Exception $e) {
-            $this->error('Failed to delete language: '.$e->getMessage());
+            $this->error(__('Failed to delete language: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -310,9 +310,9 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
                 'filename' => "{$lang}.json",
                 'type' => 'application/json',
             ]);
-            $this->success('Language exported successfully!');
+            $this->success(__('Language exported successfully!'));
         } catch (\Exception $e) {
-            $this->error('Failed to export language: '.$e->getMessage());
+            $this->error(__('Failed to export language: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -340,10 +340,10 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             $this->translationService->importLanguage($this->importLanguage, $this->importJson);
             $this->loadStatistics();
             $this->importModal = false;
-            $this->success('Language imported successfully!');
+            $this->success(__('Language imported successfully!'));
             $this->reset(['importJson', 'importLanguage']);
         } catch (\Exception $e) {
-            $this->error('Failed to import language: '.$e->getMessage());
+            $this->error(__('Failed to import language: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -362,9 +362,9 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
     {
         try {
             $this->scannedKeys = $this->translationService->scanForKeys();
-            $this->info('Found '.count($this->scannedKeys).' translation keys in code.');
+            $this->info(__('Found :count translation keys in code.', ['count' => count($this->scannedKeys)]));
         } catch (\Exception $e) {
-            $this->error('Failed to scan for keys: '.$e->getMessage());
+            $this->error(__('Failed to scan for keys: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -375,10 +375,10 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             $this->translationService->syncKeys($this->scannedKeys);
             $this->scanModal = false;
             $this->loadStatistics();
-            $this->success('Keys synced successfully!');
+            $this->success(__('Keys synced successfully!'));
             $this->reset('scannedKeys');
         } catch (\Exception $e) {
-            $this->error('Failed to sync keys: '.$e->getMessage());
+            $this->error(__('Failed to sync keys: :message', ['message' => $e->getMessage()]));
         }
     }
 
@@ -413,7 +413,7 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
 
             if ($missingCount === 0) {
                 $this->aiTranslateModal = false;
-                $this->warning('No missing translations for this language.');
+                $this->warning(__('No missing translations for this language.'));
 
                 return;
             }
@@ -422,10 +422,10 @@ new #[Title('Translate')] #[Layout('layouts.app')] class extends Component
             AutoTranslateJob::dispatch($this->aiTargetLanguage);
 
             $this->aiTranslateModal = false;
-            $this->success("Auto-translation job queued for {$missingCount} keys! Processing in background.");
+            $this->success(__('Auto-translation job queued for :count keys! Processing in background.', ['count' => $missingCount]));
             $this->reset('aiTargetLanguage');
         } catch (\Exception $e) {
-            $this->error('Failed to queue auto-translate: '.$e->getMessage());
+            $this->error(__('Failed to queue auto-translate: :message', ['message' => $e->getMessage()]));
         }
     }
 };

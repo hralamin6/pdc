@@ -2,7 +2,7 @@
     {{-- Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-base-100 p-6 rounded-3xl border border-base-content/5 shadow-sm">
         <div class="flex items-center gap-4">
-            <x-button icon="o-arrow-left" class="btn-circle btn-ghost" :link="route('app.daily-reports')" wire:navigate />
+            <x-button icon="o-arrow-left" class="btn-circle btn-ghost" :link="route('app.dashboard')" wire:navigate />
             <div>
                 <h1 class="text-2xl sm:text-3xl font-extrabold text-base-content tracking-tight">{{ __('Admin Supervision Portal') }}</h1>
                 <p class="text-xs sm:text-sm text-base-content/60 mt-0.5">{{ __('Monitor community consistency, inspect progress, and send reminders.') }}</p>

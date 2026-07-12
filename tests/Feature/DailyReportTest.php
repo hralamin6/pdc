@@ -8,7 +8,11 @@ use App\Models\UserStreak;
 use Illuminate\Support\Facades\Notification;
 use Livewire\Livewire;
 
+uses(Illuminate\Foundation\Testing\RefreshDatabase::class);
+
 beforeEach(function () {
+    $this->seed(\Database\Seeders\PermissionSeeder::class);
+
     DailyReportTemplate::create([
         'title' => 'Fajr Prayer',
         'type' => 'boolean',
@@ -30,7 +34,7 @@ it('auto-initializes default tracking items for a new user on dashboard view', f
 
     $this->actingAs($user);
 
-    Livewire::test('app::daily-reports')
+    Livewire::test('web::my-report')
         ->assertStatus(200);
 
     expect(UserReportItem::where('user_id', $user->id)->count())->toBeGreaterThan(0);
@@ -42,7 +46,7 @@ it('allows submitting a daily report and updates streak correctly', function () 
 
     $this->actingAs($user);
 
-    Livewire::test('app::daily-reports-form')
+    Livewire::test('web::my-report-fill')
         ->assertStatus(200)
         ->set('entries.'.UserReportItem::where('user_id', $user->id)->first()->id.'.boolean_value', true)
         ->set('notes', 'Great day of reflection!')
@@ -60,7 +64,7 @@ it('does not double-increment streak when re-submitting report on the same day',
 
     $this->actingAs($user);
 
-    $component = Livewire::test('app::daily-reports-form');
+    $component = Livewire::test('web::my-report-fill');
     $component->call('saveReport');
 
     $streak1 = UserStreak::where('user_id', $user->id)->first()->current_streak;

@@ -78,7 +78,7 @@ class extends Component
         if ($notification) {
             $notification->markAsRead();
             $this->updateUnreadCount();
-            $this->success('Notification marked as read');
+            $this->success(__('Notification marked as read'));
         }
     }
 
@@ -86,7 +86,7 @@ class extends Component
     {
         Auth::user()->unreadNotifications->markAsRead();
         $this->updateUnreadCount();
-        $this->success('All notifications marked as read');
+        $this->success(__('All notifications marked as read'));
     }
 
     public function deleteNotification($notificationId): void
@@ -99,7 +99,7 @@ class extends Component
         if ($notification) {
             $notification->delete();
             $this->updateUnreadCount();
-            $this->success('Notification deleted');
+            $this->success(__('Notification deleted'));
         }
     }
 
@@ -107,7 +107,7 @@ class extends Component
     {
         Auth::user()->notifications()->delete();
         $this->updateUnreadCount();
-        $this->success('All notifications deleted');
+        $this->success(__('All notifications deleted'));
     }
 
     public function getNotifications()
@@ -163,7 +163,7 @@ class extends Component
             );
         }
 
-        $this->success('Notification preferences saved successfully!');
+        $this->success(__('Notification preferences saved successfully!'));
     }
 
     public function enableAll(): void

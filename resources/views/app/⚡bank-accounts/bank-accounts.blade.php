@@ -1,7 +1,7 @@
 <div>
-    <x-header title="Bank Accounts" subtitle="Manage cash, bKash, Nagad, and bank accounts" separator>
+    <x-header :title="__('Bank Accounts')" :subtitle="__('Manage cash, bKash, Nagad, and bank accounts')" separator>
         <x-slot:actions>
-            <x-button icon="o-plus" label="New Account" class="bg-gradient-to-r from-primary to-secondary text-white border-none shadow-lg shadow-primary/30 hover:scale-105 transition-transform" wire:click="openModal()" />
+            <x-button icon="o-plus" :label="__('New Account')" class="bg-gradient-to-r from-primary to-secondary text-white border-none shadow-lg shadow-primary/30 hover:scale-105 transition-transform" wire:click="openModal()" />
         </x-slot:actions>
     </x-header>
 
@@ -20,55 +20,55 @@
                         </div>
                     </div>
                     @if(!$acc->is_active)
-                        <span class="badge badge-ghost badge-sm">Inactive</span>
+                        <span class="badge badge-ghost badge-sm">{{ __('Inactive') }}</span>
                     @endif
                 </div>
 
                 {{-- Live Balance --}}
                 <div class="bg-base-200/50 rounded-xl p-4 mb-4">
-                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-1">Current Balance</p>
+                    <p class="text-xs font-bold uppercase tracking-widest text-base-content/40 mb-1">{{ __('Current Balance') }}</p>
                     @php $balance = $acc->balance; @endphp
                     <p class="text-2xl font-black {{ $balance >= 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600' }}">
                         ৳{{ number_format(abs($balance), 2) }}
-                        @if($balance < 0) <span class="text-sm">(deficit)</span> @endif
+                        @if($balance < 0) <span class="text-sm">{{ __('(deficit)') }}</span> @endif
                     </p>
                 </div>
 
                 <div class="text-xs text-base-content/50 space-y-1 mb-4">
                     @if($acc->account_number)
-                        <p>Account: <span class="font-mono">{{ $acc->account_number }}</span></p>
+                        <p>{{ __('Account:') }} <span class="font-mono">{{ $acc->account_number }}</span></p>
                     @endif
                     @if($acc->bank_name)
-                        <p>Bank: {{ $acc->bank_name }}{{ $acc->branch ? ' — ' . $acc->branch : '' }}</p>
+                        <p>{{ __('Bank:') }} {{ $acc->bank_name }}{{ $acc->branch ? ' — ' . $acc->branch : '' }}</p>
                     @endif
                     @if($acc->holder_name)
-                        <p>Holder: {{ $acc->holder_name }}</p>
+                        <p>{{ __('Holder:') }} {{ $acc->holder_name }}</p>
                     @endif
-                    <p>{{ $acc->expenses_count }} expenses recorded</p>
+                    <p>{{ $acc->expenses_count }} {{ __('expenses recorded') }}</p>
                 </div>
 
                 <div class="flex gap-2 pt-3 border-t border-base-content/5">
-                    <x-button icon="o-pencil" label="Edit" class="btn-ghost btn-sm flex-1" wire:click="openModal({{ $acc->id }})" />
-                    <x-button icon="o-trash" class="btn-ghost btn-sm text-error" wire:click="delete({{ $acc->id }})" wire:confirm="Delete this account?" tooltip="Delete" />
+                    <x-button icon="o-pencil" :label="__('Edit')" class="btn-ghost btn-sm flex-1" wire:click="openModal({{ $acc->id }})" />
+                    <x-button icon="o-trash" class="btn-ghost btn-sm text-error" wire:click="delete({{ $acc->id }})" wire:confirm="{{ __('Delete this account?') }}" :tooltip="__('Delete')" />
                 </div>
             </div>
         @empty
             <div class="col-span-full text-center py-16 bg-base-200/50 rounded-2xl border border-dashed border-base-content/10">
                 <x-icon name="o-credit-card" class="w-12 h-12 text-base-content/20 mx-auto mb-4" />
-                <h3 class="text-lg font-bold text-base-content/70 mb-1">No accounts yet</h3>
-                <p class="text-base-content/50 text-sm mb-4">Add your first account to start tracking balances.</p>
-                <x-button icon="o-plus" label="Add Account" class="btn-primary" wire:click="openModal()" />
+                <h3 class="text-lg font-bold text-base-content/70 mb-1">{{ __('No accounts yet') }}</h3>
+                <p class="text-base-content/50 text-sm mb-4">{{ __('Add your first account to start tracking balances.') }}</p>
+                <x-button icon="o-plus" :label="__('Add Account')" class="btn-primary" wire:click="openModal()" />
             </div>
         @endforelse
     </div>
 
     {{-- Modal --}}
-    <x-modal wire:model="modal" title="{{ $editingId ? 'Edit Account' : 'New Account' }}" class="backdrop-blur-sm">
+    <x-modal wire:model="modal" :title="$editingId ? __('Edit Account') : __('New Account')" class="backdrop-blur-sm">
         <div class="space-y-4">
-            <x-input wire:model="name" label="Account Name *" placeholder="e.g. Main bKash Account" class="input-bordered rounded-xl" />
+            <x-input wire:model="name" :label="__('Account Name *')" :placeholder="__('e.g. Main bKash Account')" class="input-bordered rounded-xl" />
 
             <div>
-                <label class="label"><span class="label-text font-semibold">Account Type *</span></label>
+                <label class="label"><span class="label-text font-semibold">{{ __('Account Type *') }}</span></label>
                 <div class="grid grid-cols-3 gap-2">
                     @foreach(['cash' => ['icon' => 'o-banknotes', 'label' => 'Cash'], 'bkash' => ['icon' => 'o-device-phone-mobile', 'label' => 'bKash'], 'nagad' => ['icon' => 'o-device-phone-mobile', 'label' => 'Nagad'], 'bank' => ['icon' => 'o-building-library', 'label' => 'Bank'], 'other' => ['icon' => 'o-credit-card', 'label' => 'Other']] as $val => $opt)
                         <button type="button" wire:click="$set('type', '{{ $val }}')"
@@ -81,28 +81,28 @@
             </div>
 
             <div class="grid grid-cols-2 gap-4">
-                <x-input wire:model="account_number" label="Account Number" placeholder="01XXXXXXXXX" class="input-bordered rounded-xl" />
-                <x-input wire:model="holder_name" label="Holder Name" class="input-bordered rounded-xl" />
+                <x-input wire:model="account_number" :label="__('Account Number')" placeholder="01XXXXXXXXX" class="input-bordered rounded-xl" />
+                <x-input wire:model="holder_name" :label="__('Holder Name')" class="input-bordered rounded-xl" />
             </div>
 
             @if($type === 'bank')
                 <div class="grid grid-cols-2 gap-4">
-                    <x-input wire:model="bank_name" label="Bank Name" placeholder="Dutch-Bangla Bank" class="input-bordered rounded-xl" />
-                    <x-input wire:model="branch" label="Branch" class="input-bordered rounded-xl" />
+                    <x-input wire:model="bank_name" :label="__('Bank Name')" :placeholder="__('Dutch-Bangla Bank')" class="input-bordered rounded-xl" />
+                    <x-input wire:model="branch" :label="__('Branch')" class="input-bordered rounded-xl" />
                 </div>
             @endif
 
-            <x-textarea wire:model="notes" label="Notes (optional)" rows="2" class="textarea-bordered rounded-xl" />
+            <x-textarea wire:model="notes" :label="__('Notes (optional)')" rows="2" class="textarea-bordered rounded-xl" />
 
             <label class="flex items-center gap-3 cursor-pointer">
                 <input type="checkbox" wire:model="is_active" class="checkbox checkbox-primary" />
-                <span class="label-text font-semibold">Active</span>
+                <span class="label-text font-semibold">{{ __('Active') }}</span>
             </label>
         </div>
 
         <x-slot:actions>
-            <x-button label="Cancel" wire:click="$set('modal', false)" class="btn-ghost" />
-            <x-button label="{{ $editingId ? 'Update' : 'Create' }}" icon="o-check" wire:click="save" class="bg-gradient-to-r from-primary to-secondary text-white border-none font-bold" />
+            <x-button :label="__('Cancel')" wire:click="$set('modal', false)" class="btn-ghost" />
+            <x-button :label="$editingId ? __('Update') : __('Create')" icon="o-check" wire:click="save" class="bg-gradient-to-r from-primary to-secondary text-white border-none font-bold" />
         </x-slot:actions>
     </x-modal>
 </div>

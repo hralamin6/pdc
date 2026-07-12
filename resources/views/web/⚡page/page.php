@@ -5,7 +5,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 new
-#[Layout('layouts.auth')]
+#[Layout('layouts.web')]
 class extends Component
 {
     public ?PageModel $page = null;

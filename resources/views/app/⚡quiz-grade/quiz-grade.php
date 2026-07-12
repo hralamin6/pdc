@@ -72,7 +72,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
         $grade = $this->adminGrades[$answerId] ?? null;
 
         if ($grade === null || $grade < 0 || $grade > 1) {
-            $this->error('Grade must be between 0.0 and 1.0');
+            $this->error(__('Grade must be between 0.0 and 1.0'));
 
             return;
         }
@@ -87,7 +87,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
         $attempt->calculateAndSaveScore();
         $attempt->recalculateRanks();
 
-        $this->success('Grade saved and score updated.');
+        $this->success(__('Grade saved and score updated.'));
     }
 
     public function autoConfirmHighConfidence()
@@ -117,7 +117,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
             }
         }
 
-        $this->success("Auto-confirmed {$count} high-confidence answers.");
+        $this->success(__('Auto-confirmed :count high-confidence answers.', ['count' => $count]));
     }
 
     public function evaluatePendingWithAi()
@@ -129,7 +129,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
             ->get();
 
         if ($answers->isEmpty()) {
-            $this->warning('No pending un-evaluated answers found.');
+            $this->warning(__('No pending un-evaluated answers found.'));
             return;
         }
 
@@ -148,7 +148,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
             }
         }
 
-        $this->success("AI evaluated {$count} pending answers.");
+        $this->success(__('AI evaluated :count pending answers.', ['count' => $count]));
     }
 
     public function reevaluateAllWithAi()
@@ -159,7 +159,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
             ->get();
 
         if ($answers->isEmpty()) {
-            $this->warning('No pending answers found to re-evaluate.');
+            $this->warning(__('No pending answers found to re-evaluate.'));
             return;
         }
 
@@ -178,6 +178,6 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
             }
         }
 
-        $this->success("AI re-evaluated {$count} answers.");
+        $this->success(__('AI re-evaluated :count answers.', ['count' => $count]));
     }
 };

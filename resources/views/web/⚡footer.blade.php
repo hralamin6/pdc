@@ -2,6 +2,7 @@
 
 use Livewire\Component;
 use App\Models\Feedback;
+use App\Models\Page;
 use Mary\Traits\Toast;
 
 new class extends Component {
@@ -26,6 +27,13 @@ new class extends Component {
         $this->reset(['feedbackMessage', 'feedbackModal', 'feedbackType']);
         $this->success(__('Feedback sent anonymously. JazakAllah Khair!'));
     }
+
+    public function with()
+    {
+        return [
+            'pages' => Page::published()->orderBy('order')->get(),
+        ];
+    }
 };
 ?>
 
@@ -36,24 +44,34 @@ new class extends Component {
             {{-- Brand --}}
             <div class="lg:col-span-1">
                 <a href="{{ route('web.home') }}" wire:navigate class="flex items-center gap-3 mb-6 group">
-                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
-                        <x-icon name="o-moon" class="w-5 h-5 text-white" />
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20 overflow-hidden">
+                        @if(file_exists(public_path('logo.png')))
+                            <img src="{{ asset('logo.png') }}" class="w-full h-full object-cover bg-white" alt="{{ __('Logo') }}" />
+                        @else
+                            <x-icon name="o-moon" class="w-5 h-5 text-white" />
+                        @endif
                     </div>
                     <span class="text-xl font-black tracking-tight">{{ setting('app.name', 'PSTU Dawah') }}</span>
                 </a>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
-                    {{ __('Uniting students and alumni through faith, knowledge, and brotherhood at PSTU.') }}
+                    {{ setting('app.details', __('Uniting students and alumni through faith, knowledge, and brotherhood at PSTU.')) }}
                 </p>
-                <div class="flex gap-3">
-                    <a href="#" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
+                <div class="flex gap-3 flex-wrap">
+                    @if(setting('app.url'))
+                    <a href="{{ setting('app.url') }}" target="_blank" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
                         <x-icon name="o-globe-alt" class="w-4 h-4" />
                     </a>
-                    <a href="#" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
+                    @endif
+                    @if(setting('app.email'))
+                    <a href="mailto:{{ setting('app.email') }}" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
                         <x-icon name="o-envelope" class="w-4 h-4" />
                     </a>
-                    <a href="#" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
+                    @endif
+                    @if(setting('app.phone'))
+                    <a href="tel:{{ setting('app.phone') }}" class="w-9 h-9 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-primary/10 dark:hover:bg-primary/20 hover:border-primary/30 transition-all">
                         <x-icon name="o-phone" class="w-4 h-4" />
                     </a>
+                    @endif
                 </div>
             </div>
 
@@ -72,10 +90,13 @@ new class extends Component {
             <div>
                 <h4 class="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">{{ __('Resources') }}</h4>
                 <ul class="space-y-3 text-sm text-slate-600 dark:text-slate-400">
-                    <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-clock" class="w-3.5 h-3.5" /> {{ __('Prayer Times') }}</a></li>
-                    <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-clipboard-document-check" class="w-3.5 h-3.5" /> {{ __('Daily Routine (App)') }}</a></li>
-                    <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-document-text" class="w-3.5 h-3.5" /> {{ __('Study Materials') }}</a></li>
-                    <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-question-mark-circle" class="w-3.5 h-3.5" /> {{ __('FAQ') }}</a></li>
+                    @foreach($pages as $page)
+                        <li><a href="{{ route('web.page', $page->slug) }}" wire:navigate class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-document-text" class="w-3.5 h-3.5" /> {{ $page->title }}</a></li>
+                    @endforeach
+                    @if($pages->isEmpty())
+                        <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-clock" class="w-3.5 h-3.5" /> {{ __('Prayer Times') }}</a></li>
+                        <li><a href="#" class="hover:text-primary dark:hover:text-white transition-colors flex items-center gap-2"><x-icon name="o-clipboard-document-check" class="w-3.5 h-3.5" /> {{ __('Daily Routine (App)') }}</a></li>
+                    @endif
                 </ul>
             </div>
 
@@ -114,7 +135,7 @@ new class extends Component {
         {{-- Bottom Bar --}}
         <div class="pt-8 border-t border-slate-200 dark:border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
             <p class="text-sm text-slate-500 text-center md:text-left">
-                &copy; {{ date('Y') }} {{ setting('app.name', 'PSTU Dawah Community') }}. {{ __('All rights reserved.') }}
+                &copy; {{ date('Y') }} {{ setting('app.name', __('PSTU Dawah Community')) }}. {{ __('All rights reserved.') }}
             </p>
             <div class="flex items-center gap-3 text-sm text-slate-500">
                 <x-theme-toggle class="btn btn-ghost btn-xs btn-circle text-slate-500 hover:text-slate-900 dark:hover:text-white" x-cloak />

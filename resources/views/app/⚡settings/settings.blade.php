@@ -7,7 +7,7 @@
       <x-card class="p-5">
         <div class="flex items-center gap-4"> 
           @php($logo = $logo_url ?: getSettingImage('iconImage', 'icon'))
-          <x-avatar :image="$logo" alt="App" class="w-16 h-16 ring-2 ring-primary/20" />
+          <x-avatar :image="$logo" :alt="__('App')" class="w-16 h-16 ring-2 ring-primary/20" />
           <div>
             <div class="font-semibold text-base-content/90">{{ $appName ?: $name ?: config('app.name') }}</div>
             <div class="text-sm text-base-content/60">{{ $appEnv ?: config('app.env') }}</div>
@@ -180,13 +180,13 @@
           <div class="grid md:grid-cols-2 gap-6">
             <div class="space-y-3">
               <x-file :label="__('Upload Logo')" wire:model="logoImage" accept="image/*" crop-after-change>
-                <x-avatar :image="$logoImage?->temporaryUrl() ?? getSettingImage('logoImage', 'logo')" alt="Logo" class="w-24 h-24 ring-4 ring-primary/20" />
+                <x-avatar :image="$logoImage?->temporaryUrl() ?? getSettingImage('logoImage', 'logo')" :alt="__('Logo')" class="w-24 h-24 ring-4 ring-primary/20" />
               </x-file>
               <x-input :label="__('Logo URL')" wire:model.defer="logoImageUrl" type="url" :placeholder="__('https://.../logo.png')" />
             </div>
             <div class="space-y-3">
               <x-file :label="__('Upload Icon')" wire:model="iconImage" accept="image/*" crop-after-change>
-                <x-avatar :image="$iconImage?->temporaryUrl() ?? getSettingImage('iconImage', 'icon')" alt="Icon" class="w-24 h-24 ring-4 ring-primary/20" />
+                <x-avatar :image="$iconImage?->temporaryUrl() ?? getSettingImage('iconImage', 'icon')" :alt="__('Icon')" class="w-24 h-24 ring-4 ring-primary/20" />
               </x-file>
               <x-input :label="__('Icon URL')" wire:model.defer="iconImageUrl" type="url" :placeholder="__('https://.../icon.png')" />
             </div>
@@ -316,7 +316,7 @@
           <!-- Custom Provider Creation Modal -->
           <x-modal wire:model="customProviderModal" title="{{ __('Add Custom AI Provider') }}">
             <x-form wire:submit="addCustomProvider" class="space-y-4">
-              <x-input label="{{ __('Unique Key / Name') }}" wire:model.defer="newProviderKey" placeholder="e.g. cerebras, my-router" hint="{{ __('Must be alpha-numeric, all lower case') }}" required />
+              <x-input label="{{ __('Unique Key / Name') }}" wire:model.defer="newProviderKey" placeholder="{{ __('e.g. cerebras, my-router') }}" hint="{{ __('Must be alpha-numeric, all lower case') }}" required />
               <x-select label="{{ __('Driver') }}" wire:model.defer="newProviderDriver" :options="[
                 ['id' => 'openai', 'name' => 'OpenAI'],
                 ['id' => 'groq', 'name' => 'Groq'],
@@ -328,7 +328,7 @@
                 ['id' => 'anthropic', 'name' => 'Anthropic']
               ]" required />
               <x-input label="{{ __('API Key') }}" wire:model.defer="newProviderApiKey" type="password" required />
-              <x-input label="{{ __('Base URL / Endpoint (Optional)') }}" wire:model.defer="newProviderUrl" placeholder="e.g. https://api.cerebras.ai/v1" />
+              <x-input label="{{ __('Base URL / Endpoint (Optional)') }}" wire:model.defer="newProviderUrl" placeholder="{{ __('e.g. https://api.cerebras.ai/v1') }}" />
 
               <x-slot:actions>
                 <x-button label="{{ __('Cancel') }}" wire:click="$set('customProviderModal', false)" class="btn-ghost" />

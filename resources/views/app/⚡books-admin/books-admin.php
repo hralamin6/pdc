@@ -114,7 +114,7 @@ new #[Title('Manage Books')] #[Layout('layouts.app')] class extends Component
             $book->addMedia($this->pdf_file)->toMediaCollection('pdf_file');
         }
 
-        $this->success('Book saved successfully.');
+        $this->success(__('Book saved successfully.'));
         $this->modal = false;
         $this->resetForm();
     }
@@ -122,13 +122,13 @@ new #[Title('Manage Books')] #[Layout('layouts.app')] class extends Component
     public function approve(int $id): void
     {
         Book::findOrFail($id)->update(['status' => 'approved']);
-        $this->success('Approved.');
+        $this->success(__('Approved.'));
     }
 
     public function delete(int $id): void
     {
         Book::findOrFail($id)->delete();
-        $this->warning('Book deleted.');
+        $this->warning(__('Book deleted.'));
     }
 
     private function resetForm(): void

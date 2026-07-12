@@ -235,7 +235,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <h3 class="text-3xl md:text-4xl font-black tracking-tight">{{ __('Community Fund') }}</h3>
                         <p class="text-white/70 text-sm mt-2 max-w-sm font-medium">{{ __('Open records of all donations and expenses to ensure trust.') }}</p>
                     </div>
-                    <a href="{{ route('app.donations.campaigns') }}" class="btn btn-circle btn-ghost bg-white/10 hover:bg-white/20 border border-white/10 shrink-0">
+                    <a href="{{ route('web.finances') }}" wire:navigate class="btn btn-circle btn-ghost bg-white/10 hover:bg-white/20 border border-white/10 shrink-0">
                         <x-icon name="o-arrow-right" class="w-5 h-5 text-white"/>
                     </a>
                 </div>
@@ -264,8 +264,8 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     </div>
                     <h3 class="text-3xl font-black mb-3 leading-tight drop-shadow-md">{{ Str::limit($activeQuiz->title, 40) }}</h3>
                     <div class="flex gap-4 items-center">
-                        <span class="bg-black/20 px-3 py-1 rounded-lg text-xs font-bold">{{ $activeQuiz->questions_count ?? 10 }} Qs</span>
-                        <span class="bg-black/20 px-3 py-1 rounded-lg text-xs font-bold text-yellow-200">{{ $activeQuiz->total_marks ?? 10 }} XP</span>
+                        <span class="bg-black/20 px-3 py-1 rounded-lg text-xs font-bold">{{ $activeQuiz->questions_count ?? 10 }} {{ __('Qs') }}</span>
+                        <span class="bg-black/20 px-3 py-1 rounded-lg text-xs font-bold text-yellow-200">{{ $activeQuiz->total_marks ?? 10 }} {{ __('XP') }}</span>
                     </div>
                 </div>
 
@@ -336,7 +336,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                                 <p class="text-teal-100">{{ __('Active Players') }}</p>
                             </div>
                         </div>
-                        <a href="{{ route('app.daily-reports') }}" class="btn btn-circle bg-white text-teal-600 hover:bg-teal-50 border-none shadow-lg hover:scale-110 transition-transform">
+                        <a href="{{ route('web.my-report') }}" class="btn btn-circle bg-white text-teal-600 hover:bg-teal-50 border-none shadow-lg hover:scale-110 transition-transform">
                             <x-icon name="o-play" class="w-6 h-6 ml-1"/>
                         </a>
                     </div>

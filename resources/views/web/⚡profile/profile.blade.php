@@ -281,32 +281,32 @@
                             <div class="flex flex-wrap gap-3">
                                 @if($facebook)
                                     <a href="{{ $facebook }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-blue-600" /> Facebook
+                                        <x-icon name="o-link" class="w-4 h-4 text-blue-600" /> {{ __('Facebook') }}
                                     </a>
                                 @endif
                                 @if($twitter)
                                     <a href="{{ $twitter }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-sky-400" /> Twitter
+                                        <x-icon name="o-link" class="w-4 h-4 text-sky-400" /> {{ __('Twitter') }}
                                     </a>
                                 @endif
                                 @if($instagram)
                                     <a href="{{ $instagram }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-pink-500" /> Instagram
+                                        <x-icon name="o-link" class="w-4 h-4 text-pink-500" /> {{ __('Instagram') }}
                                     </a>
                                 @endif
                                 @if($linkedin)
                                     <a href="{{ $linkedin }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-blue-500" /> LinkedIn
+                                        <x-icon name="o-link" class="w-4 h-4 text-blue-500" /> {{ __('LinkedIn') }}
                                     </a>
                                 @endif
                                 @if($youtube)
                                     <a href="{{ $youtube }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-red-600" /> YouTube
+                                        <x-icon name="o-link" class="w-4 h-4 text-red-600" /> {{ __('YouTube') }}
                                     </a>
                                 @endif
                                 @if($github)
                                     <a href="{{ $github }}" target="_blank" class="btn btn-sm btn-outline rounded-xl font-bold flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                                        <x-icon name="o-link" class="w-4 h-4 text-slate-800 dark:text-white" /> GitHub
+                                        <x-icon name="o-link" class="w-4 h-4 text-slate-800 dark:text-white" /> {{ __('GitHub') }}
                                     </a>
                                 @endif
                             </div>
@@ -359,7 +359,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Phone Number') }}</label>
-                                <input type="tel" wire:model="phone" placeholder="017xxxxxxxx" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="tel" wire:model="phone" :placeholder="__('017xxxxxxxx')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Date of Birth') }}</label>
@@ -419,39 +419,39 @@
                     <form wire:submit="saveSocialMedia" class="space-y-5 max-w-xl">
                         <div>
                             <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Website') }}</label>
-                            <input type="url" wire:model="website" placeholder="https://website.com" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                            <input type="url" wire:model="website" :placeholder="__('https://website.com')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Facebook URL') }}</label>
-                                <input type="url" wire:model="facebook" placeholder="https://facebook.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="facebook" :placeholder="__('https://facebook.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Twitter URL') }}</label>
-                                <input type="url" wire:model="twitter" placeholder="https://twitter.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="twitter" :placeholder="__('https://twitter.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Instagram URL') }}</label>
-                                <input type="url" wire:model="instagram" placeholder="https://instagram.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="instagram" :placeholder="__('https://instagram.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('LinkedIn URL') }}</label>
-                                <input type="url" wire:model="linkedin" placeholder="https://linkedin.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="linkedin" :placeholder="__('https://linkedin.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('YouTube Channel URL') }}</label>
-                                <input type="url" wire:model="youtube" placeholder="https://youtube.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="youtube" :placeholder="__('https://youtube.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('GitHub Profile URL') }}</label>
-                                <input type="url" wire:model="github" placeholder="https://github.com/..." class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="github" :placeholder="__('https://github.com/...')" class="w-full px-3 py-2.5 text-sm bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                         </div>
 
@@ -554,7 +554,7 @@
                         <div class="space-y-4 max-w-xl">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Avatar Image URL') }}</label>
-                                <input type="url" wire:model="image_url" placeholder="https://example.com/avatar.jpg" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="image_url" :placeholder="__('https://example.com/avatar.jpg')" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{{ __('OR') }}</div>
@@ -590,7 +590,7 @@
                         <div class="space-y-4 max-w-xl">
                             <div>
                                 <label class="block text-xs font-bold text-slate-450 dark:text-slate-400 mb-1.5 uppercase">{{ __('Banner Image URL') }}</label>
-                                <input type="url" wire:model="banner_url" placeholder="https://example.com/banner.jpg" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
+                                <input type="url" wire:model="banner_url" :placeholder="__('https://example.com/banner.jpg')" class="w-full px-3 py-2.5 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl focus:ring-2 focus:ring-primary/45 focus:border-primary/45 focus:outline-none transition text-slate-700 dark:text-slate-350" />
                             </div>
                             
                             <div class="text-xs font-bold text-slate-400 uppercase tracking-widest text-center">{{ __('OR') }}</div>
@@ -800,7 +800,7 @@
                                                                 $newStr = is_array($newValue) ? json_encode($newValue) : (string)($newValue ?? 'null');
                                                             @endphp
                                                             <div class="flex items-start gap-3 text-[11px] font-mono">
-                                                                <span class="text-slate-500 font-bold shrink-0 w-24 truncate mt-0.5" title="{{ $key }}">{{ str_replace('_', ' ', Str::title($key)) }}:</span>
+                                                                <span class="text-slate-500 font-bold shrink-0 w-24 truncate mt-0.5" title="{{ $key }}">{{ __(str_replace('_', ' ', Str::title($key))) }}:</span>
                                                                 <div class="flex-1 flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                                                                     <span class="bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-400 px-2 py-0.5 rounded border border-rose-100 dark:border-rose-900/50 break-all line-through decoration-rose-300 dark:decoration-rose-700">{{ $oldStr }}</span>
                                                                     <x-icon name="o-arrow-right" class="w-3 h-3 text-slate-400 hidden sm:block shrink-0" />
@@ -818,7 +818,7 @@
                                                     @foreach($act->properties['attributes'] as $key => $value)
                                                         @if(!in_array($key, ['updated_at', 'created_at', 'id']))
                                                             <div class="flex items-start gap-2">
-                                                                <span class="text-slate-500 font-bold shrink-0">{{ str_replace('_', ' ', Str::title($key)) }}:</span>
+                                                                <span class="text-slate-500 font-bold shrink-0">{{ __(str_replace('_', ' ', Str::title($key))) }}:</span>
                                                                 <span class="text-slate-700 dark:text-slate-300 break-all">{{ is_array($value) ? json_encode($value) : (string)($value ?? 'null') }}</span>
                                                             </div>
                                                         @endif
@@ -832,7 +832,7 @@
                                                     @foreach($act->properties['old'] as $key => $value)
                                                         @if(!in_array($key, ['updated_at', 'created_at', 'id']))
                                                             <div class="flex items-start gap-2">
-                                                                <span class="text-slate-500 font-bold shrink-0">{{ str_replace('_', ' ', Str::title($key)) }}:</span>
+                                                                <span class="text-slate-500 font-bold shrink-0">{{ __(str_replace('_', ' ', Str::title($key))) }}:</span>
                                                                 <span class="text-slate-700 dark:text-slate-300 break-all">{{ is_array($value) ? json_encode($value) : (string)($value ?? 'null') }}</span>
                                                             </div>
                                                         @endif
@@ -845,7 +845,7 @@
                                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] font-mono">
                                                     @foreach($act->properties as $key => $value)
                                                         <div class="flex items-start gap-2">
-                                                            <span class="text-slate-500 font-bold shrink-0">{{ str_replace('_', ' ', Str::title($key)) }}:</span>
+                                                            <span class="text-slate-500 font-bold shrink-0">{{ __(str_replace('_', ' ', Str::title($key))) }}:</span>
                                                             <span class="text-slate-700 dark:text-slate-300 break-all">{{ is_array($value) ? json_encode($value) : (string)($value ?? 'null') }}</span>
                                                         </div>
                                                     @endforeach

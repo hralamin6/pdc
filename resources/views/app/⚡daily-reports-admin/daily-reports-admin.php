@@ -28,7 +28,7 @@ new #[Title('Daily Reports Admin Portal')] #[Layout('layouts.app')] class extend
         $user = User::find($userId);
         if ($user) {
             $user->notify(new DailyReportReminderNotification());
-            $this->success("Reminder sent to {$user->name}!");
+            $this->success(__('Reminder sent to :name!', ['name' => $user->name]));
         }
     }
 
@@ -43,7 +43,7 @@ new #[Title('Daily Reports Admin Portal')] #[Layout('layouts.app')] class extend
             $user->notify(new DailyReportReminderNotification());
         }
 
-        $this->success("Reminder notifications sent to {$pendingUsers->count()} pending members!");
+        $this->success(__('Reminder notifications sent to :count pending members!', ['count' => $pendingUsers->count()]));
     }
 
     public function inspectUser(int $userId)

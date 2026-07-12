@@ -22,7 +22,7 @@ class DailyReportReminderNotification extends Notification implements ShouldQueu
         return [
             'title' => 'Daily Report Reminder 📝',
             'message' => $this->customMessage ?? 'Don\'t forget to log your daily reflection and ibadah activities today!',
-            'action_url' => route('app.daily-reports.form'),
+            'action_url' => route('web.my-report.fill'),
             'type' => 'daily_report_reminder',
             'icon' => 'o-pencil-square',
         ];

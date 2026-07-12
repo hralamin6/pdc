@@ -155,7 +155,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
             ]);
         }
 
-        $this->success(count($this->selectedBookIds) . ' book(s) added to ' . $hub->name . ' inventory.');
+        $this->success(__(':count book(s) added to :name inventory.', ['count' => count($this->selectedBookIds), 'name' => $hub->name]));
         $this->addBooksModal = false;
         unset($this->hubs);
     }
@@ -202,7 +202,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
             ]
         );
 
-        $this->success('Hub saved successfully.');
+        $this->success(__('Hub saved successfully.'));
         $this->hubModal = false;
         unset($this->hubs);
     }
@@ -212,7 +212,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         $this->authorize('library.hubs.create');
         $hub = LibraryHub::findOrFail($id);
         $hub->update(['is_active' => !$hub->is_active]);
-        $this->success('Hub status updated.');
+        $this->success(__('Hub status updated.'));
         unset($this->hubs);
     }
 
@@ -232,7 +232,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         $req->update(['status' => 'accepted']);
         $this->notifyBorrower($req, 'accepted');
         
-        $this->success('Request accepted. Please arrange for pickup at the Hub.');
+        $this->success(__('Request accepted. Please arrange for pickup at the Hub.'));
         unset($this->borrowRequests);
     }
 
@@ -242,7 +242,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         if ($req->status !== 'pending') return;
 
         $req->update(['status' => 'rejected']);
-        $this->info('Request rejected.');
+        $this->info(__('Request rejected.'));
         unset($this->borrowRequests);
     }
 
@@ -254,7 +254,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         $req->update(['status' => 'given']);
         $this->notifyBorrower($req, 'given');
 
-        $this->success('Marked as given to borrower.');
+        $this->success(__('Marked as given to borrower.'));
         unset($this->borrowRequests);
     }
 
@@ -269,7 +269,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         ]);
         $req->bookCopy->update(['status' => 'available']);
 
-        $this->success('Book returned to the Hub inventory!');
+        $this->success(__('Book returned to the Hub inventory!'));
         unset($this->borrowRequests);
     }
 
@@ -279,7 +279,7 @@ new #[Title('Community Library Hubs')] #[Layout('layouts.app')] class extends Co
         if ($req->status !== 'active') return;
 
         $this->notifyBorrower($req, 'reminder');
-        $this->success('Return reminder sent to the borrower.');
+        $this->success(__('Return reminder sent to the borrower.'));
     }
 
     private function getAuthorizedRequest(int $id)
