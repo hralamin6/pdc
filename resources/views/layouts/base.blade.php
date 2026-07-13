@@ -31,6 +31,8 @@
       <meta property="og:image:secure_url" content="@yield('image', getSettingImage('iconImage', 'icon'))" />
       <meta name="twitter:image" content="@yield('image', getSettingImage('iconImage', 'icon'))" />
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.1/dist/cropper.min.css">
+        <script src="https://unpkg.com/cropperjs@1.6.1/dist/cropper.min.js"></script>
       @stack('styles')
       @stack('scripts')
 

@@ -14,11 +14,28 @@ new #[Layout('layouts::web')] #[Title('Create a new account')] class extends Com
     public $password = '';
     public $password_confirmation = '';
 
-    protected $rules = [
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        'password' => ['required', 'string', 'min:8', 'confirmed'],
-    ];
+    public function rules(): array
+    {
+        return [
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                'unique:users',
+                'regex:/^[^@]+@(gmail\.com|[a-zA-Z0-9-]+\.pstu\.ac\.bd)$/i'
+            ],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'email.regex' => __('Only @gmail.com and PSTU edu mails are allowed.'),
+        ];
+    }
 
     public function register()
     {
@@ -59,7 +76,7 @@ new #[Layout('layouts::web')] #[Title('Create a new account')] class extends Com
             <x-form wire:submit="register">
                 <x-input :label="__('Full Name')" wire:model="name" type="text" icon="o-user" :placeholder="__('John Doe')" />
 
-                <x-input :label="__('Email Address')" wire:model="email" type="email" icon="o-envelope" :placeholder="__('you@example.com')" />
+                <x-input :label="__('Email Address')" wire:model="email" type="email" icon="o-envelope" :placeholder="__('you@gmail.com')" :hint="__('Only @gmail.com or @departmentName.pstu.ac.bd emails')" />
 
                 <x-password :label="__('Password')" wire:model="password" icon="o-lock-closed" :placeholder="__('Enter your password')" :hint="__('Minimum 8 characters')" right clearable />
 

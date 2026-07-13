@@ -28,6 +28,7 @@ Route::livewire('/library/user/{id}', 'web::library-user')->name('web.library.us
 Route::livewire('/library/hub/{id}', 'web::library-hub')->name('web.library.hub');
 Route::livewire('/library/{slug}', 'web::book')->name('web.book');
 Route::livewire('/showcase', 'web::showcase')->name('web.showcase');
+Route::livewire('/showcase/{slug}', 'web::showcase-show')->name('web.showcase.show');
 Route::livewire('/finances', 'web::finances')->name('web.finances');
 Route::livewire('/halaqahs', 'web::halaqahs')->name('web.halaqahs');
 Route::livewire('/halaqahs/{halaqah}', 'web::halaqah-show')->name('web.halaqah.show');
@@ -36,7 +37,7 @@ Route::livewire('/quizzes', 'web::quizzes')->name('web.quizzes');
 Route::livewire('/courses/{series}', 'web::course-show')->name('web.course.show');
 
 // Web Quiz Routes — accessible without app panel (requires auth)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::livewire('/my-quizzes', 'web::my-quizzes')->name('web.my-quizzes');
     
     Route::livewire('/quizzes/{quiz}/take', 'web::quiz-take')->name('web.quiz.take');
@@ -62,6 +63,7 @@ Route::middleware('auth')->group(function () {
     
     Route::livewire('/profile', 'web::profile')->name('web.profile');
     Route::livewire('/my-books', 'web::my-books')->name('web.my-books');
+    Route::livewire('/my-blog', 'web::my-blog')->name('web.my-blog');
     Route::livewire('/my-donations', 'web::my-donations')->name('web.my-donations');
     Route::livewire('/notifications', 'web::notifications')->name('web.notifications');
     Route::livewire('/chat/{conversation?}', 'web::chat')->name('web.chat');

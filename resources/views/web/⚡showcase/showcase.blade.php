@@ -18,7 +18,7 @@
         {{-- Bento Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             @forelse($this->albums as $album)
-                <div class="group relative rounded-[2rem] overflow-hidden bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-cyan-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 {{ $loop->iteration % 5 == 0 ? 'md:col-span-2 md:row-span-2' : '' }}">
+                <a href="{{ route('web.showcase.show', $album->slug) }}" wire:navigate class="group relative rounded-[2rem] block overflow-hidden bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-cyan-500 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 {{ $loop->iteration % 5 == 0 ? 'md:col-span-2 md:row-span-2' : '' }}">
                     <div class="h-64 {{ $loop->iteration % 5 == 0 ? 'md:h-[32rem]' : '' }} relative">
                         @if($album->cover_url)
                             <img src="{{ $album->cover_url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ $album->title }}">
@@ -35,7 +35,7 @@
                             <p class="text-slate-300 text-sm line-clamp-2">{{ $album->description }}</p>
                         </div>
                     </div>
-                </div>
+                </a>
             @empty
                 <div class="col-span-full text-center py-20">
                     <x-icon name="o-photo" class="w-16 h-16 mx-auto text-slate-400 mb-4" />

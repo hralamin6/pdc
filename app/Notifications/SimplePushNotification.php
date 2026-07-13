@@ -21,7 +21,7 @@ class SimplePushNotification extends Notification
 
     public function via($notifiable)
     {
-        $channels = ['database'];
+        $channels = ['database', 'broadcast'];
 
         if ($notifiable->pushSubscriptions()->exists()) {
             $channels[] = WebPushChannel::class;

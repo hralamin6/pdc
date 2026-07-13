@@ -44,7 +44,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                              ->whereNotNull('available_from')
                              ->where('available_from', '<=', now()->addHour())
                              ->where('available_until', '>=', now());
-                      });
+                       });
                 })
                 ->orderBy('available_from', 'asc')
                 ->first(),
@@ -81,36 +81,36 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-widest bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-white/90 shadow-md dark:shadow-[0_0_15px_rgba(255,255,255,0.1)]">
                     <span class="w-2.5 h-2.5 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-pulse shadow-[0_0_10px_rgba(6,182,212,0.5)] dark:shadow-[0_0_10px_rgba(34,211,238,0.8)]"></span>
                     {{ __('Ready for Enrollment') }}
-                </div>
+                    </div>
 
                 <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-slate-900 dark:text-white">
-                    {{ __('Level Up Your') }}
+                        {{ __('Level Up Your') }}
                     <span class="block mt-2 text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-fuchsia-600 to-amber-500 dark:from-cyan-400 dark:via-fuchsia-400 dark:to-amber-400 drop-shadow-sm">{{ __('Deen & Brotherhood') }}</span>
-                </h1>
+                    </h1>
 
                 <p class="text-xl text-slate-600 dark:text-white/70 max-w-2xl mx-auto leading-relaxed font-medium">
                     {{ __('PSTU Dawah Community — Gamifying your Islamic journey. Join circles, track your habits, earn XP, and grow together.') }}
-                </p>
+                    </p>
 
                 <div class="flex flex-col sm:flex-row justify-center gap-4 pt-6">
                     <a href="{{ route('web.halaqahs') }}" wire:navigate class="btn bg-gradient-to-r from-cyan-500 to-blue-600 text-white hover:from-cyan-600 hover:to-blue-700 border-none rounded-2xl px-10 h-14 font-black shadow-lg dark:shadow-[0_0_30px_rgba(6,182,212,0.4)] hover:-translate-y-1 transition-transform text-lg">
-                        {{ __('Explore Quests') }}
-                    </a>
-                    @guest
-                        <a href="{{ route('register') }}" class="btn bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-white/20 rounded-2xl px-10 h-14 font-black shadow-sm dark:shadow-none hover:-translate-y-1 transition-transform text-lg">
-                            {{ __('Create Avatar') }}
+                            {{ __('Explore Quests') }}
                         </a>
-                    @endguest
-                </div>
+                        @guest
+                        <a href="{{ route('register') }}" class="btn bg-white dark:bg-white/10 border border-slate-200 dark:border-white/20 text-slate-800 dark:text-white hover:bg-slate-50 dark:hover:bg-white/20 rounded-2xl px-10 h-14 font-black shadow-sm dark:shadow-none hover:-translate-y-1 transition-transform text-lg">
+                                {{ __('Create Avatar') }}
+                            </a>
+                        @endguest
+                    </div>
 
                 <!-- Stats Badges -->
                 <div class="flex flex-wrap justify-center gap-6 sm:gap-12 pt-12">
-                    @php $statCards = [
+                        @php $statCards = [
                         ['val' => $stats['members'], 'label' => __('Active Players'), 'clr' => 'cyan'],
                         ['val' => $stats['sessions'], 'label' => __('Sessions Complete'), 'clr' => 'fuchsia'],
                         ['val' => $stats['courses'], 'label' => __('Active Series'), 'clr' => 'amber'],
-                    ]; @endphp
-                    @foreach($statCards as $sc)
+                        ]; @endphp
+                        @foreach($statCards as $sc)
                         <div class="flex flex-col items-center">
                             <p class="text-3xl md:text-5xl font-black text-{{ $sc['clr'] }}-600 dark:text-{{ $sc['clr'] }}-400 dark:drop-shadow-[0_0_15px_rgba(var(--tw-colors-{{ $sc['clr'] }}-400),0.5)]">{{ $sc['val'] }}</p>
                             <p class="text-slate-500 dark:text-white/60 text-xs font-bold uppercase tracking-widest mt-2">{{ $sc['label'] }}</p>
@@ -328,7 +328,9 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         <div class="flex items-center gap-4">
                             <div class="flex -space-x-3">
                                 @foreach($mentors->take(3) as $mentor)
-                                    <img class="w-12 h-12 rounded-full border-2 border-teal-500 shadow-lg object-cover" src="{{ $mentor->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($mentor->name).'&background=fff&color=14b8a6' }}" alt="{{ __('Mentor') }}">
+                                    <a href="{{ route('web.user', $mentor->id) }}" wire:navigate>
+                                        <img class="w-12 h-12 rounded-full border-2 border-teal-500 shadow-lg object-cover hover:scale-110 transition-transform" src="{{ $mentor->avatar_url ?? 'https://ui-avatars.com/api/?name='.urlencode($mentor->name).'&background=fff&color=14b8a6' }}" alt="{{ $mentor->name }}">
+                                    </a>
                                 @endforeach
                             </div>
                             <div class="text-xs font-bold leading-tight">
@@ -388,12 +390,21 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             <p class="text-sm text-slate-600 dark:text-slate-400 mb-8 line-clamp-2 flex-grow font-medium leading-relaxed">{{ $h->topic }}</p>
 
                             <div class="flex items-center justify-between pt-5 border-t-2 border-dashed border-slate-200 dark:border-slate-700">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-500 border border-indigo-200 dark:border-indigo-800">
-                                        <x-icon name="o-user" class="w-5 h-5"/>
+                                @if($h->speaker)
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full overflow-hidden border border-indigo-200 dark:border-indigo-800 shrink-0">
+                                            <img class="w-full h-full object-cover" src="{{ $h->speaker->avatar_url }}" alt="{{ $h->speaker->name }}">
+                                        </div>
+                                        <p class="text-xs font-black text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">{{ $h->speaker->name }}</p>
                                     </div>
-                                    <p class="text-xs font-black text-slate-700 dark:text-slate-300">{{ $h->speaker->name ?? __('TBA') }}</p>
-                                </div>
+                                @else
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/50 flex items-center justify-center text-indigo-500 border border-indigo-200 dark:border-indigo-800">
+                                            <x-icon name="o-user" class="w-5 h-5"/>
+                                        </div>
+                                        <p class="text-xs font-black text-slate-700 dark:text-slate-300">{{ __('TBA') }}</p>
+                                    </div>
+                                @endif
                                 <div class="text-right">
                                     <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{{ $h->scheduled_at->format('l') }}</p>
                                     <p class="text-sm font-black text-slate-800 dark:text-white">{{ $h->scheduled_at->format('g:i A') }}</p>
@@ -448,7 +459,11 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                     </div>
 
                     <div class="p-8 flex-grow flex flex-col">
-                        <h3 class="font-black text-2xl text-slate-900 dark:text-white mb-4 leading-tight group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">{{ $campaign->title }}</h3>
+                        <a href="{{ route('web.campaign', $campaign->slug) }}" wire:navigate class="hover:text-rose-500 transition-colors">
+                            <h3 class="font-black text-2xl text-slate-900 dark:text-white mb-4 leading-tight group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
+                                {{ $campaign->title }}
+                            </h3>
+                        </a>
                         <p class="text-sm text-slate-600 dark:text-slate-400 line-clamp-2 mb-8 flex-grow font-medium leading-relaxed">{{ Str::limit($campaign->description, 90) }}</p>
 
                         <div class="space-y-3 mb-8 bg-slate-50 dark:bg-slate-900 p-5 rounded-2xl border-2 border-slate-100 dark:border-slate-700/50">
@@ -463,7 +478,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             </div>
                         </div>
 
-                        <a href="{{ route('app.donations.campaigns') }}" wire:navigate class="btn bg-rose-500 hover:bg-rose-600 text-white btn-block rounded-xl font-black text-lg shadow-[0_10px_20px_rgba(244,63,94,0.3)] h-14">
+                        <a href="{{ route('web.campaign', $campaign->slug) }}" wire:navigate class="btn bg-rose-500 hover:bg-rose-600 text-white btn-block rounded-xl font-black text-lg shadow-[0_10px_20px_rgba(244,63,94,0.3)] h-14">
                             {{ __('Contribute Now') }}
                         </a>
                     </div>
@@ -510,15 +525,15 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                                 <h3 class="font-black text-3xl md:text-4xl text-slate-900 dark:text-white mb-5 group-hover:text-amber-500 transition-colors leading-tight">{{ $mainPost->title }}</h3>
                                 <p class="text-base text-slate-600 dark:text-slate-400 line-clamp-3 mb-8 font-medium leading-relaxed">{{ $mainPost->excerpt }}</p>
 
-                                <div class="flex items-center gap-4 mt-auto">
-                                    <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-600">
+                                    <div class="flex items-center gap-4 mt-auto">
+                                        <div class="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-700 flex items-center justify-center font-black text-slate-700 dark:text-slate-300 border-2 border-slate-200 dark:border-slate-600">
                                         {{ substr($mainPost->user->name ?? 'A', 0, 1) }}
-                                    </div>
-                                    <div>
+                                        </div>
+                                        <div>
                                         <p class="font-black text-sm text-slate-900 dark:text-white">{{ $mainPost->user->name ?? __('Archivist') }}</p>
-                                        <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-0.5">{{ $mainPost->published_at?->diffForHumans() }}</p>
+                                            <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-0.5">{{ $mainPost->published_at?->diffForHumans() }}</p>
+                                        </div>
                                     </div>
-                                </div>
                             </div>
                         </div>
                     </a>
@@ -562,13 +577,13 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
 
             <div class="flex flex-wrap justify-center gap-10 md:gap-16">
                 @foreach($mentors as $mentor)
-                    <div class="text-center group cursor-pointer">
+                    <a href="{{ route('web.user', $mentor->id) }}" wire:navigate class="text-center group block">
                         <div class="w-28 h-28 mx-auto mb-5 rounded-[2rem] rotate-3 overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl group-hover:rotate-0 group-hover:scale-110 group-hover:border-cyan-400 group-hover:shadow-[0_15px_30px_rgba(6,182,212,0.3)] transition-all duration-300">
                             <img src="{{ $mentor->avatar_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($mentor->name) . '&background=06b6d4&color=fff' }}" alt="{{ $mentor->name }}" class="w-full h-full object-cover">
                         </div>
-                        <h4 class="font-black text-slate-900 dark:text-white text-base">{{ $mentor->name }}</h4>
+                        <h4 class="font-black text-slate-900 dark:text-white text-base hover:text-cyan-500 transition-colors">{{ $mentor->name }}</h4>
                         <p class="text-[10px] font-black uppercase tracking-widest text-cyan-500 mt-1">{{ ucfirst($mentor->getRoleNames()->first() ?? __('Mentor')) }}</p>
-                    </div>
+                    </a>
                 @endforeach
             </div>
         </div>

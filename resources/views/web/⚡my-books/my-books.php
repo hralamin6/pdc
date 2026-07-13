@@ -47,11 +47,17 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
     public ?int $customPagesCount = null;
     public $customCoverFile = null;
 
-    // Reading interaction progress state
-    public ?int $selectedInteractionId = null;
-    public int $progressPagesRead = 0;
-    public ?int $progressRating = null;
-    public string $progressReview = '';
+    public function getCoverPreviewUrl(): ?string
+    {
+        if (!$this->customCoverFile) {
+            return null;
+        }
+        try {
+            return $this->customCoverFile->temporaryUrl();
+        } catch (\Throwable $e) {
+            return null;
+        }
+    }
 
     public function mount(): void
     {
@@ -203,7 +209,10 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
             ]);
 
             if ($this->customCoverFile) {
-                $book->addMedia($this->customCoverFile)->toMediaCollection('cover');
+                $extension = $this->customCoverFile->getClientOriginalExtension() ?: 'jpg';
+                $book->addMedia($this->customCoverFile)
+                    ->usingFileName('cover_' . now()->timestamp . '_' . uniqid() . '.' . $extension)
+                    ->toMediaCollection('cover');
             }
 
             $bookId = $book->id;

@@ -488,6 +488,7 @@ new class extends Component {
                                 <x-menu-item title="{{ __('My Quizzes') }}" icon="o-academic-cap" link="{{ route('web.my-quizzes') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                                 <x-menu-item title="{{ __('My Daily Report') }}" icon="o-chart-bar-square" link="{{ route('web.my-report') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                                 <x-menu-item title="{{ __('My Books') }}" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('My Blog') }}" icon="o-pencil-square" link="{{ route('web.my-blog') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                                 <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" link="{{ route('web.my-donations') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                                 <x-menu-item title="{{ __('Dashboard') }}" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
                                 <x-menu-separator class="my-1 opacity-70" />

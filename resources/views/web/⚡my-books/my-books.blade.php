@@ -475,13 +475,16 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-455 dark:text-slate-400 mb-1.5">{{ __('Book Cover Image') }}</label>
                         <x-file wire:model="customCoverFile" accept="image/*" class="w-full" crop-after-change>
-                            <div class="flex flex-col items-center justify-center p-4 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-850 transition cursor-pointer">
-                                @if($customCoverFile)
-                                    <img src="{{ $customCoverFile->temporaryUrl() }}" class="w-16 h-24 object-cover rounded-lg shadow-sm" />
-                                @else
+                            <div x-data="{ hasImage: false }" class="flex flex-col items-center justify-center p-4 border border-dashed border-slate-200 dark:border-slate-800 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-850 transition cursor-pointer w-full">
+                                <img src="{{ $this->getCoverPreviewUrl() ?? 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' }}" 
+                                     class="w-16 h-24 object-cover rounded-lg shadow-sm"
+                                     @load="hasImage = !$event.target.src.includes('data:image/gif')"
+                                     x-show="hasImage" />
+                                
+                                <div x-show="!hasImage" class="flex flex-col items-center justify-center">
                                     <x-icon name="o-arrow-up-tray" class="w-6 h-6 text-slate-400 mb-1.5" />
                                     <span class="text-xs text-slate-450 font-semibold">{{ __('Click to upload cover image') }}</span>
-                                @endif
+                                </div>
                             </div>
                         </x-file>
                     </div>

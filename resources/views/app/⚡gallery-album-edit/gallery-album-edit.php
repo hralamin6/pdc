@@ -7,10 +7,10 @@ use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
-use App\Livewire\Traits\InteractsWithAiImages;
+use Livewire\Attributes\On;
 
 new #[Title('Edit Album')] #[Layout('layouts.app')] class extends Component {
-    use WithFileUploads, Toast, InteractsWithAiImages;
+    use WithFileUploads, Toast;
 
     public GalleryAlbum $album;
     public $photos = [];
@@ -40,5 +40,20 @@ new #[Title('Edit Album')] #[Layout('layouts.app')] class extends Component {
         $media = $this->album->media()->findOrFail($mediaId);
         $media->delete();
         $this->success(__('Photo removed.'));
+    }
+
+    #[On('ai-image:generated')]
+    public function handleAiImageGenerated(string $path, string $property, string $targetId)
+    {
+        if ($this->getId() !== $targetId) {
+            return;
+        }
+
+        if (file_exists($path)) {
+            $this->album->addMedia($path)->toMediaCollection('gallery_images');
+            $this->success(__('AI Image added to your gallery!'));
+        } else {
+            $this->error(__('Could not find the generated image file.'));
+        }
     }
 };

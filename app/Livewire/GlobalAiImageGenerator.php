@@ -26,6 +26,7 @@ class GlobalAiImageGenerator extends Component
     public bool $isGenerating = false;
 
     public array $fetchedModels = [];
+    public ?string $contextTitle = null;
 
     public function mount()
     {
@@ -37,10 +38,18 @@ class GlobalAiImageGenerator extends Component
     }
 
     #[On('ai-generator:open')]
-    public function open(string $targetId, string $property)
+    public function open(string $targetId, string $property, ?string $contextTitle = null, ?string $contextPrompt = null)
     {
         $this->targetId = $targetId;
         $this->targetProperty = $property;
+        $this->contextTitle = $contextTitle;
+        
+        if ($contextPrompt && empty($this->prompt)) {
+            $this->prompt = $contextPrompt;
+        }
+        
+        $this->fetchModelsForProvider();
+        
         $this->show = true;
     }
 
@@ -65,7 +74,7 @@ class GlobalAiImageGenerator extends Component
         if ($config && isset($config['url'])) {
             try {
                 $url = rtrim($config['url'], '/') . '/models';
-                $response = \Illuminate\Support\Facades\Http::withToken($config['key'] ?? '')->timeout(3)->get($url);
+                $response = \Illuminate\Support\Facades\Http::withToken($config['key'] ?? '')->timeout(60)->get($url);
                 if ($response->successful() && isset($response['data'])) {
                     foreach ($response['data'] as $model) {
                         if (isset($model['id'])) {
@@ -94,47 +103,14 @@ class GlobalAiImageGenerator extends Component
     {
         $models = $this->fetchedModels;
         
-        // If API didn't return models, fallback to hardcoded lists
-        if (empty($models)) {
-            switch ($this->provider) {
-                case 'openai':
-                    $models = [
-                        ['id' => 'dall-e-3', 'name' => 'DALL-E 3'],
-                        ['id' => 'dall-e-2', 'name' => 'DALL-E 2']
-                    ];
-                    break;
-                case 'replicate':
-                    $models = [
-                        ['id' => 'flux-pro', 'name' => 'Flux Pro'],
-                        ['id' => 'flux-schnell', 'name' => 'Flux Schnell'],
-                        ['id' => 'stable-diffusion-xl', 'name' => 'SDXL']
-                    ];
-                    break;
-                case 'pollinations':
-                    $models = [
-                        ['id' => 'flux', 'name' => 'Flux'],
-                        ['id' => 'turbo', 'name' => 'SD Turbo']
-                    ];
-                    break;
-                case 'midjourney':
-                    $models = [
-                        ['id' => 'v6', 'name' => 'Midjourney V6'],
-                        ['id' => 'v5.2', 'name' => 'Midjourney V5.2']
-                    ];
-                    break;
-                default:
-                    $models = [
-                        ['id' => 'default', 'name' => 'Default Model']
-                    ];
-                    break;
-            }
-        }
-
         // Always append Custom option
         $models[] = ['id' => 'custom', 'name' => 'Custom Model...'];
 
         return $models;
     }
+
+    public ?string $generatedImageUrl = null;
+    public ?string $generatedImagePath = null;
 
     public function generate()
     {
@@ -149,28 +125,53 @@ class GlobalAiImageGenerator extends Component
         $finalModel = $this->model === 'custom' ? $this->customModel : $this->model;
 
         try {
-            $pending = Image::of($this->prompt)->size($this->size);
+            $pending = Image::of($this->prompt)->size($this->size)->timeout(60);
 
             $response = $pending->generate($this->provider, $finalModel);
             $image = $response->firstImage();
 
-            $disk = config('livewire.temporary_file_upload.disk', 'local');
-            $filename = 'livewire-tmp/' . Str::random(32) . '.png';
+            $filename = 'ai-tmp/' . Str::random(32) . '.png';
             
-            // The image property on GeneratedImage is a base64 encoded string
-            Storage::disk($disk)->put($filename, base64_decode($image->image));
+            Storage::disk('public')->put($filename, base64_decode($image->image));
 
-            $this->dispatch('ai-image:generated', tmpPath: $filename, property: $this->targetProperty, targetId: $this->targetId);
+            $this->generatedImageUrl = Storage::disk('public')->url($filename);
+            $this->generatedImagePath = Storage::disk('public')->path($filename);
 
-            $this->show = false;
-            $this->prompt = '';
-            
-            $this->success(__('AI Image generated and added successfully!'));
+            $this->success(__('AI Image generated successfully!'));
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         } finally {
             $this->isGenerating = false;
         }
+    }
+
+    public function useImage()
+    {
+        if ($this->generatedImagePath) {
+            $this->dispatch('ai-image:generated', 
+                path: $this->generatedImagePath, 
+                property: $this->targetProperty, 
+                targetId: $this->targetId
+            );
+        }
+
+        $this->resetImage();
+        $this->show = false;
+        $this->prompt = '';
+    }
+
+    public function discardImage()
+    {
+        if ($this->generatedImagePath && file_exists($this->generatedImagePath)) {
+            @unlink($this->generatedImagePath);
+        }
+        $this->resetImage();
+    }
+
+    public function resetImage()
+    {
+        $this->generatedImageUrl = null;
+        $this->generatedImagePath = null;
     }
 
     public function render()

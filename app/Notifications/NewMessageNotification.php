@@ -39,7 +39,7 @@ class NewMessageNotification extends Notification implements ShouldQueue
         // Send push notification if:
         // 1. User is online (has active session)
         // 2. User has enabled push for chat
-        if ($this->sendPush && $notifiable->isPushEnabledFor('chat')) {
+        if (!$this->sendPush && $notifiable->isPushEnabledFor('chat')) {
             $channels[] = WebPushChannel::class;
         }
 

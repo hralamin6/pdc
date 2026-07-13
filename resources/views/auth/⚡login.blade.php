@@ -12,11 +12,18 @@ new #[Layout('layouts::web')] #[Title('Sign in to your account')] class extends 
 
     protected $rules = [
         'email' => ['required', 'email'],
-        'password' => ['required', 'min:6'],
+        'password' => ['required', 'min:6']
     ];
     public function quickLogin(string $role): void
     {
-        if ($role === 'admin') {
+        if (config('app.env') === 'production' || config('app.env') === 'prod') {
+            return;
+        }
+
+        if ($role === 'superadmin') {
+            $this->email = 'superadmin@mail.com';
+            $this->password = '000000';
+        } elseif ($role === 'admin') {
             $this->email = 'admin@mail.com';
             $this->password = '000000';
         } elseif ($role === 'user') {
@@ -85,18 +92,24 @@ new #[Layout('layouts::web')] #[Title('Sign in to your account')] class extends 
                     </x-slot:actions>
                 @endif
             </x-form>
-            <div class="flex justify-center gap-4 mt-6">
-                <x-button  wire:click="quickLogin('admin')" icon="o-user-circle" class="btn-accent btn-md capitalize shadow-sm hover:shadow-md transition duration-150">
+            @if(config('app.env') == 'local')
+            <div class="flex justify-center gap-2 mt-6">
+                <x-button  wire:click="quickLogin('superadmin')" icon="o-shield-check" class="btn-primary btn-sm capitalize shadow-sm hover:shadow-md transition duration-150">
+                    @lang('Super Admin')
+                </x-button>
+
+                <x-button  wire:click="quickLogin('admin')" icon="o-user-circle" class="btn-accent btn-sm capitalize shadow-sm hover:shadow-md transition duration-150">
                     @lang('Admin')
                 </x-button>
 
                 <x-button         wire:click="quickLogin('user')"
                         icon="o-user"
-                        class="btn-secondary btn-md capitalize shadow-sm hover:shadow-md transition duration-150"
+                        class="btn-secondary btn-sm capitalize shadow-sm hover:shadow-md transition duration-150"
                 >
                     @lang('User')
                 </x-button>
             </div>
+            @endif
 
             <!-- Social Login -->
             <div class="flex flex-col gap-3 mt-6">
