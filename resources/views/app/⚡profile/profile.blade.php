@@ -269,42 +269,42 @@
                                 @if($facebook)
                                     <a href="{{ $facebook }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        Facebook
+                                        {{ __('Facebook') }}
                                     </a>
                                 @endif
 
                                 @if($twitter)
                                     <a href="{{ $twitter }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        Twitter
+                                        {{ __('Twitter') }}
                                     </a>
                                 @endif
 
                                 @if($instagram)
                                     <a href="{{ $instagram }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        Instagram
+                                        {{ __('Instagram') }}
                                     </a>
                                 @endif
 
                                 @if($linkedin)
                                     <a href="{{ $linkedin }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        LinkedIn
+                                        {{ __('LinkedIn') }}
                                     </a>
                                 @endif
 
                                 @if($youtube)
                                     <a href="{{ $youtube }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        YouTube
+                                        {{ __('YouTube') }}
                                     </a>
                                 @endif
 
                                 @if($github)
                                     <a href="{{ $github }}" target="_blank" class="btn btn-sm btn-outline gap-2">
                                         <x-icon name="o-share" class="w-4 h-4" />
-                                        GitHub
+                                        {{ __('GitHub') }}
                                     </a>
                                 @endif
                             </div>

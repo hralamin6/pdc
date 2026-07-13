@@ -439,46 +439,73 @@ new class extends Component {
                                 </div>
                             </div>
                         </div>
+                        @endauth
+                    </div>
 
-                        <x-dropdown class="btn-ghost shadow-none p-0" no-x-anchor right>
-                            <x-slot:trigger>
-                                <button class="flex items-center gap-2.5 hover:opacity-80 transition-opacity focus:outline-none">
-                                    <div class="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 ring-2 ring-primary/20 overflow-hidden">
-                                        <img src="{{ userImage(auth()->user()) }}" class="w-full h-full object-cover" />
-                                    </div>
-                                    <span class="hidden md:inline text-sm font-semibold text-slate-700 dark:text-slate-300">
-                                        {{ auth()->user()->name }}
-                                    </span>
-                                </button>
-                            </x-slot:trigger>
+                    {{-- Auth Menu (Mobile & Desktop) --}}
+                    <div class="flex items-center ml-1 lg:ml-0 gap-2">
+                        @auth
+                            <div class="w-px h-5 bg-slate-200 dark:bg-white/10 mx-1 hidden lg:block"></div>
+                            <x-dropdown class="btn-ghost shadow-none p-0" no-x-anchor right>
+                                <x-slot:trigger>
+                                    <button class="flex items-center gap-2.5 hover:opacity-80 transition-opacity focus:outline-none">
+                                        <div class="relative">
+                                            <div class="w-8 h-8 lg:w-9 lg:h-9 rounded-xl bg-slate-100 dark:bg-slate-800 ring-2 ring-primary/20 overflow-hidden">
+                                                <img src="{{ userImage(auth()->user()) }}" class="w-full h-full object-cover" />
+                                            </div>
+                                            @if(($totalUnread = $this->unreadMessagesCount + $this->unreadNotificationsCount) > 0)
+                                                <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary text-[9px] font-black text-white rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900 shadow-sm z-10">
+                                                    {{ $totalUnread }}
+                                                </span>
+                                            @endif
+                                        </div>
+                                        <span class="hidden md:inline text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                            {{ auth()->user()->name }}
+                                        </span>
+                                    </button>
+                                </x-slot:trigger>
 
-                            <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                                <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">{{ __('Signed in as') }}</p>
-                                <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">{{ auth()->user()->email }}</p>
+                                <div class="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
+                                    <p class="text-xs text-slate-400 dark:text-slate-500 font-bold uppercase tracking-wider">{{ __('Signed in as') }}</p>
+                                    <p class="text-sm font-bold text-slate-800 dark:text-slate-200 truncate max-w-[200px]">{{ auth()->user()->email }}</p>
+                                </div>
+
+                                <x-menu-item title="{{ __('My Profile') }}" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold">
+                                    @if($this->unreadMessagesCount > 0)
+                                        <x-slot:badge>
+                                            <x-badge value="{{ $this->unreadMessagesCount }}" class="badge-primary badge-sm" />
+                                        </x-slot:badge>
+                                    @endif
+                                </x-menu-item>
+                                <x-menu-item title="{{ __('Notifications') }}" icon="o-bell" link="{{ route('web.notifications') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold">
+                                    @if($this->unreadNotificationsCount > 0)
+                                        <x-slot:badge>
+                                            <x-badge value="{{ $this->unreadNotificationsCount }}" class="badge-primary badge-sm" />
+                                        </x-slot:badge>
+                                    @endif
+                                </x-menu-item>
+                                <x-menu-item title="{{ __('My Quizzes') }}" icon="o-academic-cap" link="{{ route('web.my-quizzes') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('My Daily Report') }}" icon="o-chart-bar-square" link="{{ route('web.my-report') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('My Books') }}" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" link="{{ route('web.my-donations') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-item title="{{ __('Dashboard') }}" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
+                                <x-menu-separator class="my-1 opacity-70" />
+                                <x-menu-item title="{{ __('Sign Out') }}" icon="o-power" onclick="document.getElementById('web-logout-form').submit();" class="rounded-xl m-1 text-error font-semibold" />
+                            </x-dropdown>
+                            <form id="web-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
+                        @else
+                            <div class="hidden lg:flex items-center gap-2">
+                                <a href="{{ route('login') }}" wire:navigate
+                                   class="btn btn-ghost btn-sm rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
+                                    {{ __('Sign in') }}
+                                </a>
+                                <a href="{{ route('register') }}" wire:navigate
+                                   class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
+                                    {{ __('Join Free') }}
+                                </a>
                             </div>
-
-                            <x-menu-item title="{{ __('My Profile') }}" icon="o-user" link="{{ route('web.profile') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('Messages') }}" icon="o-chat-bubble-left-right" link="{{ route('web.chat') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('My Quizzes') }}" icon="o-academic-cap" link="{{ route('web.my-quizzes') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('My Daily Report') }}" icon="o-chart-bar-square" link="{{ route('web.my-report') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('My Books') }}" icon="o-book-open" link="{{ route('web.my-books') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('My Donations') }}" icon="o-heart" link="{{ route('web.my-donations') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-item title="{{ __('Dashboard') }}" icon="o-squares-2x2" link="{{ route('app.dashboard') }}" wire:navigate class="rounded-xl m-1 text-slate-700 dark:text-slate-300 font-semibold" />
-                            <x-menu-separator class="my-1 opacity-70" />
-                            <x-menu-item title="{{ __('Sign Out') }}" icon="o-power" onclick="document.getElementById('web-logout-form').submit();" class="rounded-xl m-1 text-error font-semibold" />
-                        </x-dropdown>
-                        <form id="web-logout-form" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
-                    @else
-                        <a href="{{ route('login') }}" wire:navigate
-                           class="btn btn-ghost btn-sm rounded-xl font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition-all">
-                            {{ __('Sign in') }}
-                        </a>
-                        <a href="{{ route('register') }}" wire:navigate
-                           class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold shadow-lg shadow-primary/25 hover:scale-105 transition-transform">
-                            {{ __('Join Free') }}
-                        </a>
-                        </a>
-                    @endauth
+                        @endauth
                     </div>
 
                     {{-- Mobile Hamburger --}}
@@ -488,11 +515,6 @@ new class extends Component {
                             <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? 'opacity-0' : ''"></span>
                             <span class="block w-5 h-0.5 bg-slate-600 dark:bg-slate-300 transition-all duration-300" :class="mobileOpen ? '-rotate-45 -translate-y-2' : ''"></span>
                         </button>
-                        @auth
-                            @if($this->unreadMessagesCount > 0 || $this->unreadNotificationsCount > 0)
-                                <span class="absolute top-0 right-0 w-2.5 h-2.5 bg-primary rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none shadow-sm"></span>
-                            @endif
-                        @endauth
                     </div>
                 </div>
             </div>
@@ -509,9 +531,9 @@ new class extends Component {
         x-transition:leave-end="opacity-0 -translate-y-4"
         class="fixed inset-x-0 top-16 z-40 lg:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-white/5 shadow-2xl">
         <div class="max-w-7xl mx-auto px-4 py-6 space-y-1">
-            <a href="{{ route('web.home') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('web.home') ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5' }} font-semibold transition-colors">
+            {{-- <a href="{{ route('web.home') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl {{ request()->routeIs('web.home') ? 'bg-primary/10 text-primary' : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5' }} font-semibold transition-colors">
                 <x-icon name="o-home" class="w-5 h-5" /> {{ __('Home') }}
-            </a>
+            </a> --}}
             <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">{{ __('Learn') }}</div>
             <a href="{{ route('web.halaqahs') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
                 <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> {{ __('Halaqahs') }}
@@ -538,67 +560,22 @@ new class extends Component {
             <a href="{{ route('web.finances') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
                 <x-icon name="o-banknotes" class="w-5 h-5 text-emerald-600" /> {{ __('Finances') }}
             </a>
-            @if($this->pages->isNotEmpty())
+            {{-- @if($this->pages->isNotEmpty())
                 <div class="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-4 pt-4 pb-1">{{ __('Discover') }}</div>
                 @foreach($this->pages as $page)
                     <a href="{{ route('web.page', $page->slug) }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
                         <x-icon name="o-document-text" class="w-5 h-5 text-primary" /> {{ $page->title }}
                     </a>
                 @endforeach
-            @endif
+            @endif --}}
 
             <div class="border-t border-slate-100 dark:border-white/5 pt-4 mt-4 flex items-center justify-between">
                 {{-- <x-theme-toggle class="btn btn-ghost btn-sm btn-circle text-slate-500" x-cloak /> --}}
                 <div class="flex items-center gap-2 w-full">
-                    @auth
-                        <div class="flex flex-col gap-2 w-full">
-                            <a href="{{ route('web.profile') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-user" class="w-5 h-5 text-primary" /> {{ __('My Profile') }}
-                            </a>
-                            <a href="{{ route('web.my-report') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-chart-bar-square" class="w-5 h-5 text-primary" /> {{ __('My Daily Report') }}
-                            </a>
-                            <a href="{{ route('web.chat') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
-                                <span class="flex items-center gap-3">
-                                    <x-icon name="o-chat-bubble-left-right" class="w-5 h-5 text-primary" /> {{ __('Messages') }}
-                                </span>
-                                @if($this->unreadMessagesCount > 0)
-                                    <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
-                                        {{ $this->unreadMessagesCount }}
-                                    </span>
-                                @endif
-                            </a>
-                            <a href="{{ route('web.notifications') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors justify-between">
-                                <span class="flex items-center gap-3">
-                                    <x-icon name="o-bell" class="w-5 h-5 text-primary" /> {{ __('Notifications') }}
-                                </span>
-                                @if($this->unreadNotificationsCount > 0)
-                                    <span class="badge badge-sm badge-primary rounded-full px-2 py-0.5 text-[10px] font-black text-white">
-                                        {{ $this->unreadNotificationsCount }}
-                                    </span>
-                                @endif
-                            </a>
-                            <a href="{{ route('web.my-books') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-book-open" class="w-5 h-5 text-primary" /> {{ __('My Books') }}
-                            </a>
-                            <a href="{{ route('web.my-quizzes') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-beaker" class="w-5 h-5 text-primary" /> {{ __('My Quizzes') }}
-                            </a>
-                            <a href="{{ route('web.my-donations') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-heart" class="w-5 h-5 text-primary" /> {{ __('My Donations') }}
-                            </a>
-                            <a href="{{ route('app.dashboard') }}" wire:navigate @click="mobileOpen=false" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/5 font-semibold transition-colors">
-                                <x-icon name="o-squares-2x2" class="w-5 h-5 text-primary" /> {{ __('Dashboard') }}
-                            </a>
-                            <button onclick="document.getElementById('web-logout-form-mobile').submit();" class="flex items-center gap-3 px-4 py-3 rounded-2xl text-error hover:bg-red-50 dark:hover:bg-red-950/20 font-semibold transition-colors text-left w-full">
-                                <x-icon name="o-power" class="w-5 h-5" /> {{ __('Sign Out') }}
-                            </button>
-                            <form id="web-logout-form-mobile" action="{{ route('logout') }}" method="POST" class="hidden">@csrf</form>
-                        </div>
-                    @else
+                    @guest
                         <a href="{{ route('login') }}" wire:navigate class="btn btn-ghost btn-sm rounded-xl font-semibold">{{ __('Sign in') }}</a>
                         <a href="{{ route('register') }}" wire:navigate class="btn btn-sm bg-gradient-to-r from-primary to-secondary border-none text-white rounded-xl px-5 font-bold">{{ __('Join Free') }}</a>
-                    @endauth
+                    @endguest
                 </div>
             </div>
         </div>

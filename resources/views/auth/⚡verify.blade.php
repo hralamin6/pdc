@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::auth')] #[Title('Verify Your Email')] class extends Component {
+new #[Layout('layouts::web')] #[Title('Verify Your Email')] class extends Component {
     public $resent = false;
 
     public function mount()

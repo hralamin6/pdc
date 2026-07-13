@@ -76,7 +76,7 @@
                             </div>
                         </td>
                         <td>
-                            <div class="font-bold text-primary">BDT {{ number_format($pledge->amount, 2) }}</div>
+                            <div class="font-bold text-primary">{{ __('BDT') }} {{ number_format($pledge->amount, 2) }}</div>
                             <div class="text-xs uppercase tracking-widest text-base-content/70">{{ __($pledge->frequency) }}</div>
                         </td>
                         <td>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::auth')] #[Title('Reset Password')] class extends Component
+new #[Layout('layouts::web')] #[Title('Reset Password')] class extends Component
 {
     public $email = '';
     public $emailSentMessage = false;

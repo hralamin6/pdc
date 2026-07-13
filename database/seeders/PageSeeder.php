@@ -11,88 +11,155 @@ class PageSeeder extends Seeder
     {
         $pages = [
             [
-                'title' => 'Terms of Service',
+                'title' => 'ব্যবহারের শর্তাবলী ও নিয়মসমূহ (Terms of Service)',
                 'slug' => 'terms',
-                'content' => '<h2>1. Terms</h2>
-<p>By accessing this website, you are agreeing to be bound by these Terms of Service, all applicable laws and regulations, and agree that you are responsible for compliance with any applicable local laws.</p>
+                'content' => '<h2>১. শর্তাবলী গ্রহণ</h2>
+<p>পটুয়াখালী সেন্ট্রাল দাওয়াহ (PSTU Central Dawah) প্ল্যাটফর্মটি ব্যবহারের মাধ্যমে আপনি আমাদের সকল নিয়ম, নীতিমালা এবং প্রযোজ্য আইনের প্রতি বাধ্য থাকার সম্মতি প্রদান করছেন। যদি আপনি এই শর্তাবলীতে সম্মত না হন, তবে অনুগ্রহ করে সাইটটি ব্যবহার করা থেকে বিরত থাকুন।</p>
 
-<h2>2. Use License</h2>
-<p>Permission is granted to temporarily download one copy of the materials on our website for personal, non-commercial transitory viewing only.</p>
+<h2>২. অ্যাকাউন্ট ও নিরাপত্তা</h2>
+<p>প্ল্যাটফর্মের কিছু সুবিধা (যেমন: লাইব্রেরির বই ধার নেওয়া, দৈনিক আমল রিপোর্ট জমা দেওয়া, কুইজে অংশ নেওয়া) ব্যবহারের জন্য নিবন্ধিত হওয়া আবশ্যক। আপনার অ্যাকাউন্টের তথ্যের গোপনীয়তা রক্ষা এবং এর মাধ্যমে পরিচালিত সকল কাজের দায়িত্ব সম্পূর্ণভাবে আপনার।</p>
 
-<h2>3. Disclaimer</h2>
-<p>The materials on our website are provided on an "as is" basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including, without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.</p>
+<h2>৩. পি২পি লাইব্রেরি ব্যবহারের নীতিমালা</h2>
+<ul>
+  <li><strong>বই সংগ্রহের সময়সীমা:</strong> কোনো বই সর্বাধিক ৩০ দিনের জন্য ধার নেওয়া যাবে। নির্ধারিত সময়ের মধ্যে বই ফেরত দিতে হবে।</li>
+  <li><strong>বইয়ের যত্ন:</strong> ধার নেওয়া বই কোনোভাবেই নষ্ট বা ক্ষতি করা যাবে না। বইয়ে দাগানো বা পৃষ্ঠা ছেঁড়া সম্পূর্ণ নিষিদ্ধ।</li>
+  <li><strong>অনুমতি:</strong> অন্য সদস্যদের ব্যক্তিগত বই ধার নেওয়ার ক্ষেত্রে মালিকের সম্মতি চূড়ান্ত বলে গণ্য হবে।</li>
+</ul>
 
-<h2>4. Limitations</h2>
-<p>In no event shall we or our suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on our website.</p>
+<h2>৪. দৈনিক আমল ও রিপোর্ট (Shibir System)</h2>
+<p>প্রতিদিন স্বতঃস্ফূর্তভাবে আপনার অভ্যাস ও আমলের সত্য রিপোর্ট প্রদান করুন। এই ট্র্যাকিং সিস্টেমটি সম্পূর্ণ ব্যক্তিগত ও আত্মশুদ্ধির উদ্দেশ্যে তৈরি করা হয়েছে। কোনো প্রকার কৃত্রিম বা অসত্য তথ্য প্রদান থেকে বিরত থাকুন।</p>
 
-<h2>5. Revisions</h2>
-<p>The materials appearing on our website could include technical, typographical, or photographic errors. We do not warrant that any of the materials on our website are accurate, complete or current.</p>',
-                'meta_title' => 'Terms of Service',
-                'meta_description' => 'Read our terms of service to understand the rules and regulations governing the use of our website.',
-                'meta_keywords' => 'terms, service, legal, agreement',
+<h2>৫. অনুদান ও অঙ্গীকার (Donation Pledges)</h2>
+<p>সদস্যরা চাইলে স্বেচ্ছায় নির্দিষ্ট প্রজেক্ট বা মাসিক সহায়তার জন্য অঙ্গীকার (Pledge) করতে পারেন। অঙ্গীকারকৃত অর্থ পরিশোধে অসমর্থ হলে তা বাতিল বা পরিবর্তন করতে পারবেন।</p>',
+                'meta_title' => 'ব্যবহারের শর্তাবলী - পটুয়াখালী সেন্ট্রাল দাওয়াহ',
+                'meta_description' => 'পটুয়াখালী সেন্ট্রাল দাওয়াহ ও লাইব্রেরি প্ল্যাটফর্মের ব্যবহারের নিয়মাবলী ও শর্তসমূহ বিস্তারিত পড়ুন।',
+                'meta_keywords' => 'শর্তাবলী, লাইব্রেরি নিয়ম, অনুদান শর্ত, দাওয়াহ শর্তাবলী',
                 'status' => 'published',
                 'published_at' => now(),
                 'order' => 1,
             ],
             [
-                'title' => 'Privacy Policy',
+                'title' => 'গোপনীয়তা নীতি (Privacy Policy)',
                 'slug' => 'privacy',
-                'content' => '<h2>1. Information We Collect</h2>
-<p>We collect information from you when you register on our site, place an order, subscribe to our newsletter, respond to a survey or fill out a form.</p>
-
-<h2>2. How We Use Your Information</h2>
-<p>Any of the information we collect from you may be used in one of the following ways:</p>
+                'content' => '<h2>১. তথ্য সংগ্রহ ও ব্যবহার</h2>
+<p>আমরা আপনার অ্যাকাউন্টের নিরাপত্তা নিশ্চিত করতে এবং আমাদের সেবা প্রদান করার জন্য কিছু তথ্য সংগ্রহ করি। এর মধ্যে রয়েছে:</p>
 <ul>
-<li>To personalize your experience</li>
-<li>To improve our website</li>
-<li>To improve customer service</li>
-<li>To process transactions</li>
-<li>To send periodic emails</li>
+  <li><strong>ব্যক্তিগত তথ্য:</strong> নাম, ইমেইল, ফোন নম্বর, পড়াশোনার বিভাগ এবং প্রোফাইল ছবি।</li>
+  <li><strong>ভৌগোলিক তথ্য:</strong> ইউনিয়ন, উপজেলা, জেলা ও বিভাগ (সদস্যদের অবস্থানভিত্তিক সুবিধা দিতে)।</li>
+  <li><strong>কার্যক্রমের তথ্য:</strong> দৈনিক আমল ও অভ্যাস ট্র্যাকিংয়ের ডেটা, লাইব্রেরির বইয়ের পছন্দ তালিকা এবং কুইজে অংশ নেওয়ার ইতিহাস।</li>
 </ul>
 
-<h2>3. Information Protection</h2>
-<p>We implement a variety of security measures to maintain the safety of your personal information when you place an order or enter, submit, or access your personal information.</p>
+<h2>২. তথ্যের গোপনীয়তা ও সুরক্ষা</h2>
+<p>আপনার দৈনিক আমল বা অভ্যাসের ডেটা সম্পূর্ণ গোপন রাখা হয় এবং তা অন্য কোনো সাধারণ ব্যবহারকারী দেখতে পায় না। শুধুমাত্র মেন্টর বা সুপার এডমিন আপনার দ্বীনি অগ্রগতির প্রয়োজনে তা পর্যালোচনা করতে পারেন। আমরা কোনো অবস্থাতেই আপনার ব্যক্তিগত তথ্য বাণিজ্যিক উদ্দেশ্যে তৃতীয় পক্ষের কাছে বিক্রি বা শেয়ার করি না।</p>
 
-<h2>4. Cookie Usage</h2>
-<p>Yes. Cookies are small files that a site or its service provider transfers to your computer\'s hard drive through your Web browser (if you allow) that enables the sites or service providers systems to recognize your browser and capture and remember certain information.</p>
+<h2>৩. কুকিজ (Cookies)</h2>
+<p>ব্যবহারকারীর ব্রাউজিং অভিজ্ঞতা সহজ ও আরামদায়ক করতে আমরা প্রয়োজনীয় কুকিজ ফাইল ব্যবহার করি। আপনি চাইলে আপনার ব্রাউজার সেটিংস থেকে এটি বন্ধ করে রাখতে পারেন, তবে এতে ওয়েবসাইটের কিছু সুবিধা সঠিকভাবে কাজ নাও করতে পারে।</p>
 
-<h2>5. Third Party Disclosure</h2>
-<p>We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information unless we provide users with advance notice.</p>
-
-<h2>6. Your Consent</h2>
-<p>By using our site, you consent to our privacy policy.</p>',
-                'meta_title' => 'Privacy Policy',
-                'meta_description' => 'Learn how we collect, use, and protect your personal information on our website.',
-                'meta_keywords' => 'privacy, policy, data, protection, personal information',
+<h2>৪. অনুদান তথ্যের স্বচ্ছতা</h2>
+<p>আপনার অনুদানের লেনদেন রেকর্ড ও ট্রানজেকশন আইডি আমাদের অ্যাকাউন্টস টিমের কাছে নিরাপদে সংরক্ষিত থাকে। আর্থিক রিপোর্ট তৈরির ক্ষেত্রে নাম প্রকাশ না করে বা আংশিক নাম প্রকাশ করে স্বচ্ছতা নিশ্চিত করা হতে পারে।</p>',
+                'meta_title' => 'গোপনীয়তা নীতি - পটুয়াখালী সেন্ট্রাল দাওয়াহ',
+                'meta_description' => 'আমাদের ইউজার ডেটা প্রটেকশন পলিসি এবং কীভাবে আমরা আপনার তথ্য সুরক্ষিত রাখি তা জেনে নিন।',
+                'meta_keywords' => 'গোপনীয়তা নীতি, ডেটা প্রটেকশন, ব্যক্তিগত তথ্য, সিকিউরিটি পলিসি',
                 'status' => 'published',
                 'published_at' => now(),
                 'order' => 2,
             ],
             [
-                'title' => 'About Us',
+                'title' => 'আমাদের সম্পর্কে (About Us)',
                 'slug' => 'about',
-                'content' => '<h2>Welcome to Our Company</h2>
-<p>We are dedicated to providing the best service to our customers. Our team works tirelessly to ensure your satisfaction.</p>
+                'content' => '<h2>আমরা কে?</h2>
+<p><strong>পটুয়াখালী সেন্ট্রাল দাওয়াহ (PSTU Central Dawah)</strong> হলো পটুয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়ের (PSTU) সাধারণ শিক্ষার্থী, শিক্ষক এবং শুভানুধ্যায়ীদের একটি সম্মিলিত অরাজনৈতিক দ্বীনি উদ্যোগ। আমরা বিশ্ববিদ্যালয়ের ক্যাম্পাস ও আশেপাশের তরুণদের মাঝে বিশুদ্ধ আকীদা, সহীহ সুন্নাহর চর্চা এবং নৈতিক চরিত্র গঠনে কাজ করছি।</p>
 
-<h2>Our Mission</h2>
-<p>Our mission is to deliver exceptional value and innovation to our customers while maintaining the highest standards of integrity and professionalism.</p>
-
-<h2>Our Values</h2>
+<h2>আমাদের ভিশন ও মিশন</h2>
+<p>আমাদের মূল উদ্দেশ্য হলো তরুণ সমাজকে দ্বীনের আলোয় আলোকিত করা এবং একটি আদর্শ ও সেবামূলক সমাজ গড়ে তোলা। আমাদের মূল কার্যক্রমসমূহ:</p>
 <ul>
-<li><strong>Excellence:</strong> We strive for excellence in everything we do</li>
-<li><strong>Innovation:</strong> We embrace new ideas and technologies</li>
-<li><strong>Integrity:</strong> We conduct business with honesty and transparency</li>
-<li><strong>Customer Focus:</strong> Our customers are at the heart of our business</li>
+  <li><strong>সাপ্তাহিক ও মাসিক হালাকাহ:</strong> বিশ্ববিদ্যালয়ের শিক্ষার্থীদের নিয়ে বিষয়ভিত্তিক দ্বীনি আলোচনা ও কুরআন তাফসীর সেশন।</li>
+  <li><strong>পি২পি সেন্ট্রাল লাইব্রেরি:</strong> শিক্ষার্থীদের মাঝে বই পড়ার অভ্যাস গড়ে তুলতে একটি সমৃদ্ধ লাইব্রেরি এবং বুক-শেয়ারিং নেটওয়ার্ক।</li>
+  <li><strong>দৈনিক আমল ট্র্যাকার:</strong> একটি ইন্টারেক্টিভ প্ল্যাটফর্মের মাধ্যমে শিক্ষার্থীদের দৈনন্দিন ইবাদত ও ইতিবাচক অভ্যাস বজায় রাখতে সাহায্য করা।</li>
+  <li><strong>সমাজকল্যাণ মূলক কাজ:</strong> করজে হাসানা, রমজান ইফতার বিতরণ এবং দরিদ্র শিক্ষার্থীদের শিক্ষাবৃত্তি প্রদান।</li>
 </ul>
 
-<h2>Contact Us</h2>
-<p>Have questions? Feel free to reach out to us anytime. We\'re here to help!</p>',
-                'meta_title' => 'About Us - Learn More About Our Company',
-                'meta_description' => 'Discover our mission, values, and what makes us unique. Learn more about our company and team.',
-                'meta_keywords' => 'about, company, mission, values, team',
+<h2>যোগাযোগ করুন</h2>
+<p>আমাদের এই পথচলায় যেকোনো পরামর্শ, জিজ্ঞাসা বা মতামত জানাতে আমাদের নাসিহা/ফিডব্যাক পেজ ব্যবহার করতে পারেন অথবা সরাসরি আমাদের ইমেইল করতে পারেন।</p>',
+                'meta_title' => 'আমাদের সম্পর্কে - পটুয়াখালী সেন্ট্রাল দাওয়াহ',
+                'meta_description' => 'পটুয়াখালী বিজ্ঞান ও প্রযুক্তি বিশ্ববিদ্যালয়ের সেন্ট্রাল দাওয়াহ ফোরামের লক্ষ্য, উদ্দেশ্য ও কার্যক্রম সম্পর্কে জানুন।',
+                'meta_keywords' => 'আমাদের লক্ষ্য, পিএসটিইউ দাওয়াহ, লাইব্রেরি কার্যক্রম, হালাকাহ কার্যক্রম',
                 'status' => 'published',
                 'published_at' => now(),
                 'order' => 3,
+            ],
+            [
+                'title' => 'রিফান্ড ও বাতিলকরণ নীতি (Refund and Cancellation Policy)',
+                'slug' => 'refund',
+                'content' => '<h2>১. অনুদান সংক্রান্ত সাধারণ নীতি</h2>
+<p>পটুয়াখালী সেন্ট্রাল দাওয়াহ প্ল্যাটফর্মে প্রদানকৃত সকল অনুদান (যেমন: সাদাকাহ, যাকাত, লাইব্রেরি ফান্ড ইত্যাদি) সম্পূর্ণ স্বেচ্ছাসেবী ও অলাভজনক দ্বীনি কাজের উদ্দেশ্যে গৃহীত হয়। সাধারণত অনুদান বা সাদাকাহর অর্থ একবার প্রদান সম্পন্ন হওয়ার পর তা অ ফেরতযোগ্য (Non-Refundable)।</p>
+
+<h2>২. বিশেষ ক্ষেত্রে রিফান্ড</h2>
+<p>যদি ভুলবশত অতিরিক্ত অর্থ পাঠানো হয় বা কারিগরি ত্রুটির কারণে একই ট্রানজেকশন দুইবার প্রসেস হয়ে যায়, তবে প্রমান সাপেক্ষে লেনদেনের তারিখ থেকে ৭ কার্যদিবসের মধ্যে আমাদের সাথে যোগাযোগ করলে আমরা রিফান্ড প্রক্রিয়া শুরু করব। রিফান্ড অনুমোদনের পর তা প্রেরকের মূল পেমেন্ট মাধ্যমে (বিকাশ/নগদ/ব্যাংক) ফেরত পাঠানো হবে।</p>
+
+<h2>৩. মাসিক অঙ্গীকার বাতিলকরণ (Pledge Cancellation)</h2>
+<p>আপনি যদি কোনো প্রজেক্টে বা মাসিক ডোনেশনে সাস্টেইনার হিসেবে কোনো অঙ্গীকার (Pledge) করে থাকেন, তবে যেকোনো সময় আপনার প্রোফাইল থেকে তা সাময়িক স্থগিত বা স্থায়ীভাবে বাতিল করতে পারবেন। এর জন্য কোনো অতিরিক্ত ফি বা জরিমানা প্রযোজ্য হবে না।</p>
+
+<h2>৪. সহায়তার জন্য যোগাযোগ</h2>
+<p>রিফান্ড বা বাতিল সংক্রান্ত যেকোনো জটিলতায় অনুগ্রহ করে আমাদের ট্রেজারার বা অ্যাডমিন প্যানেলের সাথে যোগাযোগ করুন অথবা <a href="mailto:dawah.pstu@gmail.com">dawah.pstu@gmail.com</a> ঠিকানায় ইমেইল পাঠান।</p>',
+                'meta_title' => 'রিফান্ড ও বাতিলকরণ নীতি - পটুয়াখালী সেন্ট্রাল দাওয়াহ',
+                'meta_description' => 'অনুদানের অর্থ ফেরত ও অঙ্গীকার বাতিল সংক্রান্ত আমাদের প্রাতিষ্ঠানিক নীতি ও নিয়মাবলী জানুন।',
+                'meta_keywords' => 'রিফান্ড নীতি, অনুদান বাতিল, অঙ্গীকার বাতিল, পেমেন্ট রিফান্ড',
+                'status' => 'published',
+                'published_at' => now(),
+                'order' => 4,
+            ],
+            [
+                'title' => 'প্ল্যাটফর্ম ব্যবহার নির্দেশিকা (How to Use Our App)',
+                'slug' => 'how-to-use',
+                'content' => '<h2>স্বাগতম পটুয়াখালী সেন্ট্রাল দাওয়াহ প্ল্যাটফর্মে!</h2>
+<p>আমাদের প্ল্যাটফর্মটি শিক্ষার্থীদের আত্মশুদ্ধি অর্জন, দ্বীনি জ্ঞান বৃদ্ধি ও ক্যাম্পাসে সামাজিক দ্বীনি পরিবেশ বজায় রাখতে সাহায্য করার জন্য তৈরি করা হয়েছে। একজন সাধারণ সদস্য (Normal Member) হিসেবে প্ল্যাটফর্মের প্রতিটি ফিচার কীভাবে ব্যবহার করবেন, তা নিচে বিস্তারিত বর্ণনা করা হলো:</p>
+
+<h3>১. প্রোফাইল ও ভৌগোলিক তথ্য হালনাগাদ</h3>
+<p>রেজিস্ট্রেশন সম্পন্ন করার পর আপনার প্রোফাইল সেটিংস-এ যান। সেখানে আপনার সঠিক বিভাগ, জেলা, উপজেলা এবং ইউনিয়ন নির্বাচন করুন। এটি আমাদের স্থানীয় দাওয়াহ কার্যক্রম ও লাইব্রেরি বুক-শেয়ারিং নেটওয়ার্ককে আরও গতিশীল করতে সাহায্য করবে। এছাড়া আপনার পেশা, শিক্ষাপ্রতিষ্ঠান ও সংক্ষিপ্ত বায়ো যুক্ত করতে পারেন।</p>
+
+<h3>২. দৈনিক অভ্যাস ও আমল ট্র্যাকার (Daily Reports)</h3>
+<p>আপনার প্রতিদিনের ইবাদত ও ইতিবাচক অভ্যাসগুলো ট্র্যাকিং করতে <strong>"My Daily Report"</strong> সেকশন ব্যবহার করুন:</p>
+<ul>
+  <li><strong>টেমপ্লেট কাস্টমাইজেশন:</strong> আপনি কোন কোন আমল ট্র্যাক করতে চান (যেমন: পাঁচ ওয়াক্ত সালাত, কুরআন তিলাওয়াত, সকাল-সন্ধ্যার আযকার, স্ক্রিন টাইম, পড়ালেখা ইত্যাদি) তা সেটিংস থেকে নির্বাচন করতে পারবেন।</li>
+  <li><strong>রিপোর্ট জমা দেওয়া:</strong> প্রতিদিনের শেষে টিকচিহ্ন, সংখ্যা বা ছোট টেক্সট আকারে রিপোর্ট সাবমিট করুন। কোনো দিন বাদ পড়লে পূর্ববর্তী ৩ দিনের রিপোর্ট ব্যাকডেট দিয়ে জমা দেওয়া যাবে।</li>
+  <li><strong>ধারাবাহিকতা (Streaks):</strong> আপনি প্রতিদিন রিপোর্ট জমা দিলে আপনার স্ট্রিক কাউন্ট বাড়তে থাকবে। এই ট্র্যাকিংয়ের মাধ্যমে আপনি বিভিন্ন অর্জন সূচক ব্যাজ বা মেডেল আনলক করতে পারবেন।</li>
+</ul>
+
+<h3>৩. পিয়ার-টু-পিয়ার লাইব্রেরি (P2P Library)</h3>
+<p>শিক্ষার্থীদের মাঝে বিনামূল্যে বই পড়ার সুযোগ করে দিতে আমাদের রয়েছে বুক শেয়ারিং লাইব্রেরি:</p>
+<ul>
+  <li><strong>বই খোঁজ করুন:</strong> লাইব্রেরি পেইজে গিয়ে পিডিএফ (eBook) পড়তে পারেন অথবা ফিজিক্যাল কপি ধার নেওয়ার জন্য সার্চ করতে পারেন।</li>
+  <li><strong>বইয়ের অনুরোধ (Borrow Request):</strong> আপনি কোনো ফিজিক্যাল বইয়ের কপিতে ক্লিক করে তা ধার নেওয়ার জন্য মালিকের কাছে অনুরোধ (Request) পাঠাতে পারবেন। মালিক অনুমোদন দিলে আপনি বইটি সংগ্রহ করবেন এবং সর্বোচ্চ ৩০ দিনের মধ্যে ফেরত দেবেন।</li>
+  <li><strong>নিজের বই যুক্ত করুন:</strong> আপনার আলমারিতে থাকা শিক্ষণীয় দ্বীনি বইগুলো অন্য ভাইদের সাথে শেয়ার করার জন্য আপনার প্রোফাইল থেকে "Add a Copy" অপশনে গিয়ে লাইব্রেরিতে অন্তর্ভুক্ত করতে পারেন।</li>
+</ul>
+
+<h3>৪. হালাকাহ ও একাডেমিক সেশন (Halaqahs)</h3>
+<p>ক্যাম্পাসের নিয়মিত দ্বীনি আলোচনা ও স্টাডি সার্কেলের জন্য <strong>"Halaqahs"</strong> মেন্যুতে যান। এখানে আপনি যেকোনো আসন্ন হালাকাহর টপিক, সময় ও স্থান দেখতে পাবেন। উপস্থিত থাকার জন্য "RSVP" বাটনে ক্লিক করুন। সেশন শেষে মেন্টরদের দেওয়া গুরুত্বপূর্ণ নোট বা লেকচার শিটও এখান থেকে সংগ্রহ করতে পারবেন।</p>
+
+<h3>৫. কুইজ ও গ্যামিফিকেশন (Quizzes)</h3>
+<p>আপনার সাধারণ দ্বীনি জ্ঞান যাচাই করতে নিয়মিত কুইজে অংশ নিন। এখানে দুরকম কুইজ পাবেন:</p>
+<ul>
+  <li><strong>অ্যাসিঙ্ক কুইজ (Asynchronous Quizzes):</strong> যেকোনো সময় আপনার সুবিধামতো অংশ নিতে পারবেন। কুইজ শেষে সাথে সাথেই সঠিক উত্তর ও চমৎকার ব্যাখ্যা দেখতে পাবেন।</li>
+  <li><strong>লাইভ কুইজ (Live Quizzes):</strong> মেন্টরদের পরিচালনায় নির্দিষ্ট সময়ে রিয়েল-টাইম প্রতিযোগিতামূলক লাইভ কুইজ। লিডারবোর্ডে আপনার অবস্থান অনুযায়ী দ্বীনি পয়েন্ট ও র্যাংক অর্জন করতে পারবেন।</li>
+</ul>
+
+<h3>৬. দান ও স্বচ্ছ আর্থিক তহবিল (Donations & Treasury)</h3>
+<p>ক্যাম্পাসের দ্বীনি কার্যক্রম যেমন: মসজিদ লাইব্রেরি সম্প্রসারণ, ইফতার ও সমাজসেবামূলক কাজে সরাসরি অবদান রাখতে পারেন:</p>
+<ul>
+  <li><strong>অঙ্গীকার (Pledge):</strong> আপনি চাইলে কোনো বিশেষ ক্যাম্পেইনে এককালীন বা মাসিক ভিত্তিতে অর্থ সাহায্য করার অঙ্গীকার করতে পারেন।</li>
+  <li><strong>পেমেন্ট জমা দেওয়া:</strong> আপনার বিকাশ, নগদ বা ব্যাংক একাউন্ট ব্যবহার করে অফিশিয়াল নম্বরে টাকা পাঠিয়ে ট্রানজেকশন আইডি ও স্ক্রিনশট সাবমিট করুন। আমাদের একাউন্টস টিম তা দ্রুত ভেরিফাই করে আপনার অঙ্গীকার সম্পন্ন করবে।</li>
+  <li><strong>স্বচ্ছ হিসাব (Financial Summary):</strong> সাধারণ সদস্যদের বিশ্বাসের মানদণ্ড বজায় রাখতে আমাদের প্রতিটি পাই-পয়সা আয় ও ব্যয়ের রশিদসহ স্বচ্ছ প্রতিবেদন ও মাসিক বিবরণী "Financial Summary" ট্যাবে সবসময় উন্মুক্ত থাকে।</li>
+</ul>
+
+<h3>৭. চ্যাট ও সহযোগিতা (Messenger)</h3>
+<p>দ্বীনি শিক্ষা বা মাসআলা বিষয়ক যেকোনো বিষয়ে আলোচনার জন্য আপনার মেন্টর বা সহপাঠীদের সাথে সরাসরি নিরাপদ চ্যাট বা মেসেঞ্জারে যোগাযোগ করতে পারেন।</p>',
+                'meta_title' => 'প্ল্যাটফর্ম ব্যবহার নির্দেশিকা - পটুয়াখালী সেন্ট্রাল দাওয়াহ',
+                'meta_description' => 'পটুয়াখালী সেন্ট্রাল দাওয়াহ প্ল্যাটফর্মের সকল ফিচার ব্যবহারের একটি সম্পূর্ণ ও সহজ নির্দেশিকা।',
+                'meta_keywords' => 'ব্যবহার নির্দেশিকা, সাহায্য পৃষ্ঠা, লাইব্রেরি গাইড, আমল ট্র্যাকার সাহায্য, কুইজ নির্দেশিকা',
+                'status' => 'published',
+                'published_at' => now(),
+                'order' => 5,
             ],
         ];
 

@@ -24,7 +24,7 @@
         <!-- Commitment Details -->
         <div class="bg-base-100 rounded-2xl shadow-sm border border-base-200 p-6">
             <div class="text-sm text-base-content/70 uppercase tracking-wider font-semibold mb-1">{{ __('Commitment') }}</div>
-            <div class="text-3xl font-bold text-primary mb-2">BDT {{ number_format($pledge->amount, 2) }}</div>
+            <div class="text-3xl font-bold text-primary mb-2">{{ __('BDT') }} {{ number_format($pledge->amount, 2) }}</div>
             <div class="flex items-center gap-2 mb-2">
                 <x-badge value="{{ __($pledge->frequency) }}" class="badge-neutral badge-sm uppercase" />
                 @if(!$pledge->is_active)

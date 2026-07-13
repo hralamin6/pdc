@@ -306,7 +306,7 @@
                                         </div>
                                         <span class="text-[10px] text-slate-400">{{ \Carbon\Carbon::parse($donation->donated_at)->format('d M Y') }}</span>
                                     </div>
-                                    <span class="text-sm font-black text-rose-600 dark:text-rose-400 shrink-0">+{{ number_format($donation->amount) }} {{ $donation->currency ?? 'BDT' }}</span>
+                                    <span class="text-sm font-black text-rose-600 dark:text-rose-400 shrink-0">+{{ number_format($donation->amount) }} {{ __($donation->currency ?? 'BDT') }}</span>
                                 </div>
                                 @endforeach
                             </div>

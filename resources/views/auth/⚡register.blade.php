@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::auth')] #[Title('Create a new account')] class extends Component
+new #[Layout('layouts::web')] #[Title('Create a new account')] class extends Component
 {
     public $name = '';
     public $email = '';

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::auth')] #[Title('Sign in to your account')] class extends Component
+new #[Layout('layouts::web')] #[Title('Sign in to your account')] class extends Component
 {
     public $email = '';
     public $password = '';

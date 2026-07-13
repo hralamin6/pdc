@@ -3,7 +3,7 @@
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
-new #[Layout('layouts::auth')] #[Title('Confirm Password')] class extends Component
+new #[Layout('layouts::web')] #[Title('Confirm Password')] class extends Component
 {
     public $password = '';
 
