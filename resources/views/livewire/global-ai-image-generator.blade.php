@@ -89,7 +89,7 @@
                     wire:click="generate" 
                     spinner="generate" 
                     class="btn-primary rounded-xl font-bold shadow-lg shadow-primary/30 flex-1" 
-                    @disabled($isGenerating || strlen(trim($prompt ?? '')) < 3)
+                    :disabled="$isGenerating || strlen(trim($prompt ?? '')) < 3"
                 />
             </div>
         </x-slot:actions>
