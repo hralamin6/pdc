@@ -27,7 +27,7 @@
                     {{ __('Your Imagination (Prompt)') }}
                 </label>
                 <textarea 
-                    wire:model="prompt" 
+                    wire:model.live.debounce.500ms="prompt" 
                     rows="4" 
                     class="textarea textarea-bordered w-full rounded-2xl focus:ring-2 focus:ring-primary/50 bg-slate-50 dark:bg-slate-900 shadow-inner" 
                     placeholder="{{ __('E.g. A futuristic Islamic library floating in space, high detail, unreal engine 5, beautiful lighting...') }}"></textarea>
@@ -59,26 +59,24 @@
                 {{-- Provider --}}
                 <x-select 
                     label="{{ __('AI Provider') }}" 
-                    wire:model="provider" 
-                    :options="[
-                        ['id' => 'openai', 'name' => 'OpenAI'],
-                        ['id' => 'replicate', 'name' => 'Replicate'],
-                        ['id' => 'g4f', 'name' => 'Local Daemon']
-                    ]" 
+                    wire:model.live="provider" 
+                    :options="$this->providers" 
                     class="rounded-xl"
                 />
 
                 {{-- Model --}}
-                <x-select 
-                    label="{{ __('Model') }}" 
-                    wire:model="model" 
-                    :options="[
-                        ['id' => 'dall-e-3', 'name' => 'DALL-E 3'],
-                        ['id' => 'dall-e-2', 'name' => 'DALL-E 2'],
-                        ['id' => 'flux-pro', 'name' => 'Flux Pro (Replicate)']
-                    ]" 
-                    class="rounded-xl"
-                />
+                <div class="space-y-2">
+                    <x-select 
+                        label="{{ __('Model') }}" 
+                        wire:model.live="model" 
+                        :options="$this->availableModels" 
+                        class="rounded-xl"
+                    />
+                    
+                    @if($model === 'custom')
+                        <x-input wire:model="customModel" placeholder="{{ __('Enter exact model name') }}" class="rounded-xl" />
+                    @endif
+                </div>
             </div>
         </div>
 
@@ -91,7 +89,7 @@
                     wire:click="generate" 
                     spinner="generate" 
                     class="btn-primary rounded-xl font-bold shadow-lg shadow-primary/30 flex-1" 
-                    disabled="{{ $isGenerating || empty(trim($prompt)) }}"
+                    @disabled($isGenerating || strlen(trim($prompt ?? '')) < 3)
                 />
             </div>
         </x-slot:actions>
