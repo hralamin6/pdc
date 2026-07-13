@@ -18,8 +18,8 @@ window.Echo = new Echo({
     broadcaster: 'reverb',
     key: import.meta.env.VITE_REVERB_APP_KEY ?? 768748,
     wsHost: window.location.hostname,
-    wsPort: 80,
-    wssPort: 443,
+    wsPort: 8888,
+    wssPort: 8888,
     forceTLS: window.location.protocol === 'https:',
     enabledTransports: ['ws', 'wss'],
 });

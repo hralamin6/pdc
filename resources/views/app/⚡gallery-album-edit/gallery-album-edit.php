@@ -7,9 +7,10 @@ use Mary\Traits\Toast;
 use Illuminate\Support\Facades\Gate;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use App\Livewire\Traits\InteractsWithAiImages;
 
 new #[Title('Edit Album')] #[Layout('layouts.app')] class extends Component {
-    use WithFileUploads, Toast;
+    use WithFileUploads, Toast, InteractsWithAiImages;
 
     public GalleryAlbum $album;
     public $photos = [];

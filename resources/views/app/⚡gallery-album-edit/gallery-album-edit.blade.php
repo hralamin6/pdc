@@ -12,7 +12,10 @@
                     <x-file wire:model="photos" label="{{ __('Select Images') }}" multiple accept="image/*" />
 
                     <x-slot:actions>
-                        <x-button label="{{ __('Upload') }}" type="submit" class="btn-primary btn-block" spinner="uploadPhotos" />
+                        <div class="flex flex-col gap-2 w-full">
+                            <x-button label="{{ __('Generate with AI') }}" icon="s-sparkles" class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 border-none text-white btn-block hover:scale-[1.02] transition-transform" wire:click="$dispatch('ai-generator:open', { targetId: '{{ $this->getId() }}', property: 'photos' })" />
+                            <x-button label="{{ __('Upload Selected') }}" type="submit" class="btn-primary btn-block" spinner="uploadPhotos" />
+                        </div>
                     </x-slot:actions>
                 </x-form>
             </x-card>

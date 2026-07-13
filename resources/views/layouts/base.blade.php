@@ -119,9 +119,11 @@
         >
         @yield('body')
         <x-toast />
+        
+        {{-- Global AI Image Generator Drawer --}}
+        <livewire:global-ai-image-generator />
+
         @RegisterServiceWorkerScript
-
-
     </body>
 
 </html>
