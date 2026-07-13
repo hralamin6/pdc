@@ -15,7 +15,7 @@ new #[Layout('layouts::web')] #[Title('Create a new account')] class extends Com
     public $password_confirmation = '';
 
     public function rules(): array
-    {
+    { 
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
