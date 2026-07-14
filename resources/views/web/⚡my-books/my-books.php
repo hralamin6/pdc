@@ -29,6 +29,12 @@ new #[Title('My Bookshelf')] #[Layout('layouts.web')] class extends Component
     public bool $progressModal = false;
     public bool $addReadingModal = false;
 
+    // Reading progress modal properties
+    public ?int $selectedInteractionId = null;
+    public ?int $progressPagesRead = 0;
+    public ?int $progressRating = null;
+    public string $progressReview = '';
+
     // Search and Catalog
     public string $search = '';
     public string $searchCatalog = '';
