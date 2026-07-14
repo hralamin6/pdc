@@ -103,7 +103,7 @@ class extends Component
 
     public function mount(): void
     {
-        $this->authorize('library.view');
+        // $this->authorize('library.view');
     }
 
     public function updatedSearch(): void { $this->resetPage(); }
