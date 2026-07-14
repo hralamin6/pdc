@@ -43,7 +43,9 @@ class UserMentionedNotification extends Notification implements ShouldQueue
             // $channels[] = 'mail';
         }
 
-        if ($preference->push_enabled && $notifiable->pushSubscriptions()->exists()) {
+        if ($preference->push_enabled 
+        // && $notifiable->pushSubscriptions()->exists()
+        ) {
             $channels[] = WebPushChannel::class;
         }
 

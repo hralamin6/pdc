@@ -43,8 +43,12 @@ class PushNotificationManager {
     }
 
     async registerServiceWorker() {
-        this.registration = await navigator.serviceWorker.register(this.swUrl);
-        await navigator.serviceWorker.ready;
+        // Register the SW, but always use the `ready` registration.
+        // Firefox throws DOMException from pushManager.getSubscription() if the
+        // registration object still has state "installing" or "waiting".
+        // navigator.serviceWorker.ready always resolves with the *active* registration.
+        await navigator.serviceWorker.register(this.swUrl);
+        this.registration = await navigator.serviceWorker.ready;
         console.log('✅ Service Worker ready');
     }
 
@@ -62,18 +66,32 @@ class PushNotificationManager {
             throw new Error('Permission denied');
         }
 
-        // Unsubscribe from old subscription first
-        const oldSub = await this.registration.pushManager.getSubscription();
+        // Unsubscribe from old subscription first.
+        // Use getSubscription() wrapper so Firefox DOMException is safely handled.
+        const oldSub = await this.getSubscription();
         if (oldSub) {
             await oldSub.unsubscribe();
             console.log('🗑️ Removed old subscription');
         }
 
-        // Create new subscription
-        const subscription = await this.registration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: this.urlBase64ToUint8Array(this.vapidKey)
-        });
+        // Create new subscription.
+        // Firefox can throw DOMException: "Error retrieving push subscription" from
+        // pushManager.subscribe() when its internal push.db is corrupt.
+        // We try once normally, and if it fails with DOMException we throw a
+        // typed error so autoSubscribe can handle it gracefully.
+        let subscription;
+        try {
+            subscription = await this.registration.pushManager.subscribe({
+                userVisibleOnly: true,
+                applicationServerKey: this.urlBase64ToUint8Array(this.vapidKey)
+            });
+        } catch (err) {
+            if (err instanceof DOMException) {
+                // Tag the error so callers know this is a Firefox push.db issue
+                err._firefoxPushDbCorrupt = true;
+            }
+            throw err;
+        }
 
         console.log('📱 Browser subscribed:', subscription.endpoint.substring(0, 50) + '...');
 
@@ -106,7 +124,8 @@ class PushNotificationManager {
     }
 
     async unsubscribe() {
-        const subscription = await this.registration.pushManager.getSubscription();
+        // Use safe wrapper so Firefox DOMException is handled gracefully
+        const subscription = await this.getSubscription();
         if (subscription) {
             await subscription.unsubscribe();
 
@@ -125,12 +144,47 @@ class PushNotificationManager {
         return false;
     }
 
+    /**
+     * Nuclear reset: unregister the SW entirely to purge Firefox's corrupted push
+     * subscription state, then re-register and retry subscribe() once.
+     * Firefox stores push subscriptions in its own IndexedDB; unregistering the SW
+     * is the only JS-accessible way to clear that state.
+     */
+    async nuclearResetAndSubscribe() {
+        console.log('☢️ Nuclear SW reset: unregistering service worker...');
+
+        // Unregister all service workers under this scope
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const reg of registrations) {
+            await reg.unregister();
+        }
+        console.log('✅ SW unregistered. Re-registering...');
+
+        // Re-register and wait for it to become active
+        await navigator.serviceWorker.register(this.swUrl);
+        this.registration = await navigator.serviceWorker.ready;
+        console.log('✅ SW re-registered. Retrying subscribe...');
+
+        // One clean retry — if this throws too, let it propagate
+        return await this.registration.pushManager.subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: this.urlBase64ToUint8Array(this.vapidKey)
+        });
+    }
+
     async getSubscription() {
         if (!this.registration) {
             console.warn('Service Worker not registered yet');
             return null;
         }
-        return await this.registration.pushManager.getSubscription();
+        try {
+            // Firefox can throw DOMException here if the push subscription
+            // database is in an inconsistent state. Treat that as "no subscription".
+            return await this.registration.pushManager.getSubscription();
+        } catch (error) {
+            console.warn('⚠️ getSubscription() threw (Firefox quirk):', error.message);
+            return null;
+        }
     }
 
     /**
@@ -161,10 +215,12 @@ class PushNotificationManager {
             }
 
             const response = await fetch('/api/push/status');
+            if (!response.ok) return false;
             const status = await response.json();
             return browserSub && status.subscribed;
         } catch (error) {
-            console.error('Error checking subscription status:', error);
+            // Non-fatal: treat as "not subscribed" so we can re-attempt cleanly
+            console.warn('⚠️ isSubscribed() check failed:', error.message);
             return false;
         }
     }
@@ -181,11 +237,12 @@ class PushNotificationManager {
             return false;
         }
 
-        // Check if already attempted
-        // if (this.hasAutoSubscribeAttempted()) {
-        //     console.log('⏭️ Auto-subscribe already attempted previously');
-        //     return false;
-        // }
+        // If Firefox's push.db is known to be broken on this profile, don't retry.
+        // The user must clear Firefox site data manually to recover.
+        if (localStorage.getItem('push_firefox_db_broken') === 'true') {
+            console.warn('⚠️ Firefox push.db known broken. Clear site data in Firefox to recover.');
+            return false;
+        }
 
         // Check if already subscribed
         const alreadySubscribed = await this.isSubscribed();
@@ -205,27 +262,24 @@ class PushNotificationManager {
             return false;
         }
 
-        if (permission === 'granted') {
-            // Permission already granted, subscribe silently
-            try {
-                await this.subscribe();
-                console.log('✅ Auto-subscribed successfully (permission already granted)');
-                return true;
-            } catch (error) {
-                console.error('❌ Auto-subscribe failed:', error);
-                this.markAutoSubscribeAttempted(false);
-                return false;
-            }
-        }
-
-        // Permission is 'default', attempt to subscribe (will prompt user)
         try {
-            console.log('🔔 Requesting notification permission for auto-subscribe...');
             await this.subscribe();
             console.log('✅ Auto-subscribed successfully');
             return true;
         } catch (error) {
-            console.log('⏭️ Auto-subscribe skipped:', error.message);
+            if (error instanceof DOMException && error._firefoxPushDbCorrupt) {
+                // Firefox push.db is corrupt — this cannot be fixed from JS.
+                // Mark it so we stop retrying every page load.
+                localStorage.setItem('push_firefox_db_broken', 'true');
+                console.warn(
+                    '⚠️ Firefox push notifications unavailable due to a corrupted internal push database.\n' +
+                    'To fix: Firefox menu → Settings → Privacy & Security → Cookies and Site Data → ' +
+                    'Manage Data → remove this site, then reload.\n' +
+                    'Or run: window.fixFirefoxPush() in the console for instructions.'
+                );
+            } else {
+                console.warn('⏭️ Auto-subscribe skipped:', error.message);
+            }
             this.markAutoSubscribeAttempted(false);
             return false;
         }
@@ -317,4 +371,39 @@ window.checkPushStatus = async function() {
 window.resetAutoSubscribe = function() {
     window.pushManager.resetAutoSubscribe();
     alert('Auto-subscribe state reset. Reload the page to try again.');
+};
+
+// Firefox push.db recovery instructions
+window.fixFirefoxPush = function() {
+    const steps = [
+        '🔧 Firefox Push Notification Recovery',
+        '',
+        'Firefox has a corrupted internal push database for this site.',
+        'Chrome/Edge are NOT affected — this is a Firefox-specific issue.',
+        '',
+        '📋 Steps to fix in Firefox:',
+        '  1. Firefox menu (☰) → Settings',
+        '  2. Privacy & Security → Cookies and Site Data → Manage Data',
+        '  3. Search for this site → Remove Selected → Save Changes',
+        '  4. Reload this page — push notifications will re-subscribe automatically.',
+        '',
+        '⚡ Quick alternative:',
+        '  1. Open a new tab → type: about:serviceworkers',
+        '  2. Find this site → click "Unregister"',
+        '  3. Then clear site cookies: about:preferences#privacy → Manage Data',
+        '',
+        '🛠️ After fixing, run in the console:',
+        '  window.resetFirefoxPushFlag()',
+    ].join('\n');
+    console.log(steps);
+    alert(steps);
+};
+
+// Clear the Firefox broken-db flag so auto-subscribe retries after user fixes Firefox
+window.resetFirefoxPushFlag = function() {
+    localStorage.removeItem('push_firefox_db_broken');
+    localStorage.removeItem('push_auto_subscribe_attempted');
+    localStorage.removeItem('push_subscribed_at');
+    console.log('✅ Firefox push flag cleared. Reload the page to retry auto-subscribe.');
+    alert('✅ Flag cleared. Please reload the page to retry push subscription.');
 };
