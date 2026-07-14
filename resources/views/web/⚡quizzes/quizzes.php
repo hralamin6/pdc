@@ -63,4 +63,4 @@ new #[Title('Islamic Quizzes | PSTU Dawah')] #[Layout('layouts.web')] class exte
             'quizzes' => $quizzes,
         ];
     }
-}}
+};
