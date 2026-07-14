@@ -47,8 +47,8 @@ if (! function_exists('getSettingImage')) {
     function getImage($model, string $collection, ?string $conversion = null, ?string $defaultUrl = null): string
     {
         // 1️⃣ Default placeholder (can be from settings or static)
-        $default = $defaultUrl
-          ?: setting('placeHolder', 'https://placehold.co/400x300?text=No+Image');
+        $default = asset('logo.png');
+        // $defaultUrl  ?: setting('placeHolder', 'https://placehold.co/400x300?text=No+Image');
 
         // 2️⃣ Validate the model and method availability
         if (! $model || ! method_exists($model, 'getFirstMedia')) {
@@ -58,6 +58,8 @@ if (! function_exists('getSettingImage')) {
         // 3️⃣ Try to fetch the first media in the given collection
         $media = $model->getFirstMedia($collection);
         if (! $media instanceof \Spatie\MediaLibrary\MediaCollections\Models\Media) {
+                                // dd($default);
+
             return $default;
         }
 

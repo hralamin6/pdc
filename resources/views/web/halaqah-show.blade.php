@@ -19,6 +19,8 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
     public string $donationTransactionId = '';
     public string $donationNote = '';
     public mixed $donorId = '';
+    public bool $isAnonymous = false;
+    public ?int $bankAccountId = null;
 
     public function mount(Halaqah $halaqah): void
     {
@@ -60,36 +62,54 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
         }
     }
 
-    public function openDonationModal(): void
+    public function submitPersonalDonation(): void
     {
-        $this->authorize('donations.transactions.manage');
-        $this->reset(['donorId', 'donationAmount', 'donationPaymentMethod', 'donationTransactionId', 'donationNote']);
-        $this->donationModal = true;
-    }
+        if (!auth()->check()) {
+            $this->redirectRoute('login');
+            return;
+        }
 
-    public function saveSessionDonation(): void
-    {
-        $this->authorize('donations.transactions.manage');
-        $this->validate([
-            'donationAmount' => 'required|numeric|min:1',
+        $rules = [
+            'donationAmount' => 'required|numeric|min:10',
             'donationPaymentMethod' => 'required|in:cash,bkash,nagad,bank',
             'donationTransactionId' => 'required_if:donationPaymentMethod,bkash,nagad,bank',
-        ]);
+            'donationNote' => 'nullable|string|max:500',
+        ];
+
+        if ($this->filteredBankAccounts->isNotEmpty()) {
+            $rules['bankAccountId'] = 'required';
+        }
+
+        $this->validate($rules);
+
         Donation::create([
-            'user_id' => $this->donorId ?: null,
+            'user_id' => auth()->id(),
             'halaqah_id' => $this->halaqah->id,
             'type' => 'halaqah',
             'amount' => $this->donationAmount,
             'payment_method' => $this->donationPaymentMethod,
+            'bank_account_id' => $this->filteredBankAccounts->isNotEmpty() ? $this->bankAccountId : null,
             'transaction_id' => $this->donationTransactionId ?: null,
             'note' => $this->donationNote ?: null,
-            'status' => 'confirmed',
+            'status' => 'pending',
             'donated_at' => now(),
-            'is_anonymous' => empty($this->donorId),
+            'is_anonymous' => $this->isAnonymous,
         ]);
-        $this->success(__('Donation recorded!'));
-        $this->donationModal = false;
+
+        $this->success(__('Your donation was submitted successfully and is awaiting admin verification!'));
+        $this->reset(['donationAmount', 'donationTransactionId', 'donationNote', 'isAnonymous', 'bankAccountId']);
         $this->halaqah->load('donations');
+    }
+
+    public function getBankAccountsProperty()
+    {
+        return \App\Models\BankAccount::where('is_active', true)->get();
+    }
+
+    public function getFilteredBankAccountsProperty()
+    {
+        if (!$this->donationPaymentMethod) return collect();
+        return $this->bankAccounts->where('type', $this->donationPaymentMethod);
     }
 
     public function getHasRsvpdProperty(): bool
@@ -175,7 +195,7 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 pb-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-6 relative z-10 pb-16">
         <div class="grid lg:grid-cols-3 gap-8">
 
             {{-- ═══ MAIN COLUMN ═══ --}}
@@ -297,27 +317,105 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
                 </div>
                 @endif
 
-                {{-- Donations --}}
+                {{-- Personal Donation Card --}}
                 <div class="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/60 dark:border-slate-800/60 p-6 shadow-sm">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
-                                <x-icon name="o-banknotes" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
-                            </div>
-                            <h2 class="text-lg font-black text-slate-800 dark:text-slate-100">{{ __('Session Donations') }}</h2>
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center">
+                            <x-icon name="o-banknotes" class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        @auth
-                            @can('donations.transactions.manage')
-                                <button wire:click="openDonationModal" class="btn btn-sm btn-success rounded-xl">
-                                    <x-icon name="o-plus" class="w-4 h-4" /> {{ __('Collect') }}
+                        <h2 class="text-lg font-black text-slate-800 dark:text-slate-100">{{ __('Support this Halaqah') }}</h2>
+                    </div>
+
+                    @guest
+                        <div class="text-center py-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <p class="text-sm text-slate-500 mb-3">{{ __('Log in to contribute or support this session.') }}</p>
+                            <a href="{{ route('login') }}" class="btn btn-sm btn-primary rounded-xl font-bold">{{ __('Login to Donate') }}</a>
+                        </div>
+                    @else
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Amount') }} (৳)</label>
+                                    <input type="number" wire:model="donationAmount" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-bold focus:ring-2 focus:ring-primary" placeholder="e.g. 500" min="10">
+                                    @error('donationAmount') <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p> @enderror
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Payment Method') }}</label>
+                                    <select wire:model.live="donationPaymentMethod" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-bold focus:ring-2 focus:ring-primary">
+                                        <option value="cash">{{ __('Cash') }}</option>
+                                        <option value="bkash">{{ __('bKash') }}</option>
+                                        <option value="nagad">{{ __('Nagad') }}</option>
+                                        <option value="bank">{{ __('Bank Transfer') }}</option>
+                                    </select>
+                                    @error('donationPaymentMethod') <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p> @enderror
+                                </div>
+                            </div>
+
+                            @if($donationPaymentMethod && $this->filteredBankAccounts->isNotEmpty())
+                            <div>
+                                <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Available Accounts') }}</label>
+                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800 p-4 space-y-3 mb-3 max-h-48 overflow-y-auto">
+                                    @foreach($this->filteredBankAccounts as $account)
+                                        <div class="flex items-start gap-3">
+                                            <div class="p-2 rounded-lg shrink-0 {{ $account->type_color }}">
+                                                <x-icon :name="$account->type_icon" class="w-5 h-5" />
+                                            </div>
+                                            <div>
+                                                <h4 class="font-bold text-sm text-slate-800 dark:text-slate-200 leading-none mb-1">{{ $account->name }}</h4>
+                                                @if($account->account_number)
+                                                    <p class="text-xs text-slate-600 dark:text-slate-400 font-mono font-semibold">{{ __('A/C:') }} {{ $account->account_number }}</p>
+                                                @endif
+                                                @if($account->bank_name || $account->branch)
+                                                    <p class="text-[10px] text-slate-500">{{ $account->bank_name }} {{ $account->branch ? ' - ' . $account->branch : '' }}</p>
+                                                @endif
+                                                @if($account->holder_name)
+                                                    <p class="text-[10px] text-slate-500">{{ __('Name:') }} {{ $account->holder_name }}</p>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+
+                                <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Select Destination Account') }}</label>
+                                <select wire:model="bankAccountId" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-bold focus:ring-2 focus:ring-primary">
+                                    <option value="">{{ __('Select where you sent the money...') }}</option>
+                                    @foreach($this->filteredBankAccounts as $account)
+                                        <option value="{{ $account->id }}">{{ $account->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('bankAccountId') <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p> @enderror
+                            </div>
+                            @elseif($donationPaymentMethod && $donationPaymentMethod !== 'cash')
+                                <div class="p-3 rounded-xl bg-amber-500/10 text-amber-500 text-xs">
+                                    <x-icon name="o-exclamation-triangle" class="w-4 h-4 inline mr-1" />
+                                    {{ __('No accounts are currently configured for this payment method.') }}
+                                </div>
+                            @endif
+
+                            @if(in_array($donationPaymentMethod, ['bkash', 'nagad', 'bank']))
+                                <div>
+                                    <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Transaction ID / Ref') }}</label>
+                                    <input type="text" wire:model="donationTransactionId" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm font-bold focus:ring-2 focus:ring-primary" placeholder="Enter Transaction ID">
+                                    @error('donationTransactionId') <p class="text-xs text-red-500 mt-1 font-semibold">{{ $message }}</p> @enderror
+                                </div>
+                            @endif
+
+                            <div>
+                                <label class="block text-xs font-black uppercase tracking-widest text-slate-500 mb-1.5">{{ __('Note (Optional)') }}</label>
+                                <textarea wire:model="donationNote" rows="2" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-sm focus:ring-2 focus:ring-primary resize-none" placeholder="{{ __('Add a message (optional)') }}"></textarea>
+                            </div>
+
+                            <div class="flex items-center justify-between">
+                                <label class="flex items-center gap-2 cursor-pointer select-none">
+                                    <input type="checkbox" wire:model="isAnonymous" class="checkbox checkbox-sm checkbox-primary rounded-md border-2" />
+                                    <span class="text-xs font-bold text-slate-600 dark:text-slate-400">{{ __('Donate Anonymously') }}</span>
+                                </label>
+                                <button wire:click="submitPersonalDonation" class="btn btn-sm btn-success rounded-xl font-bold px-6">
+                                    <x-icon name="o-heart" class="w-4 h-4" /> {{ __('Donate') }}
                                 </button>
-                            @endcan
-                        @endauth
-                    </div>
-                    <div class="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 text-center border border-emerald-100 dark:border-emerald-900/40">
-                        <p class="text-3xl font-black text-emerald-700 dark:text-emerald-400">৳{{ number_format($this->totalDonations, 2) }}</p>
-                        <p class="text-xs text-emerald-600/70 dark:text-emerald-500 mt-1 font-bold">{{ __('Total collected for this session') }}</p>
-                    </div>
+                            </div>
+                        </div>
+                    @endguest
                 </div>
 
             </div>
@@ -395,12 +493,18 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
                                 <p class="font-black text-success mb-1">{{ __('You are attending!') }}</p>
                                 <p class="text-xs text-slate-400 mb-5">{{ __('We look forward to seeing you.') }}</p>
                                 @if($this->attendanceRecord)
-                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-3 mb-4 text-left border border-slate-100 dark:border-slate-800">
+                                <div class="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 mb-4 text-left border border-slate-100 dark:border-slate-800">
                                     <p class="text-xs font-black text-slate-500 mb-2">{{ __('Preparation Status') }}</p>
-                                    <button wire:click="togglePreparation" class="flex items-center gap-2 text-sm font-bold {{ $this->attendanceRecord->preparation_completed ? 'text-success' : 'text-slate-400' }}">
-                                        <x-icon name="{{ $this->attendanceRecord->preparation_completed ? 's-check-circle' : 'o-circle-stack' }}" class="w-5 h-5" />
-                                        {{ $this->attendanceRecord->preparation_completed ? __('Preparation Done ✓') : __('Mark as Prepared') }}
-                                    </button>
+                                    <div class="flex items-center gap-3 mt-1">
+                                        <input type="checkbox" 
+                                               id="prep_completed"
+                                               wire:click="togglePreparation" 
+                                               @if($this->attendanceRecord->preparation_completed) checked @endif
+                                               class="w-5 h-5 rounded-md border-slate-300 dark:border-slate-700 text-primary focus:ring-primary focus:ring-offset-0 focus:ring-2 cursor-pointer" />
+                                        <label for="prep_completed" class="text-sm font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
+                                            {{ __('Mark as Prepared') }}
+                                        </label>
+                                    </div>
                                 </div>
                                 @endif
                                 <button wire:click="toggleRsvp" wire:loading.attr="disabled" class="btn btn-error btn-outline btn-block rounded-2xl font-black">{{ __('Cancel RSVP') }}</button>
@@ -450,21 +554,6 @@ new #[Title('Halaqah Details')] #[Layout('layouts.web')] class extends Component
         </div>
     </div>
 
-    {{-- Donation Modal --}}
-    <x-modal wire:model="donationModal" title="{{ __('Collect Session Donation') }}" separator>
-        <div class="space-y-4">
-            <x-choices label="{{ __('Donor (Optional)') }}" wire:model="donorId" :options="\App\Models\User::orderBy('name')->get()" option-label="name" option-value="id" placeholder="{{ __('Search member...') }}" hint="{{ __('Leave empty for anonymous') }}" single searchable />
-            <x-input label="{{ __('Amount (৳)') }}" wire:model="donationAmount" type="number" prefix="৳" required />
-            <x-select label="{{ __('Payment Method') }}" wire:model.live="donationPaymentMethod" :options="[['id'=>'cash','name'=>__('Cash')],['id'=>'bkash','name'=>__('bKash')],['id'=>'nagad','name'=>__('Nagad')],['id'=>'bank','name'=>__('Bank Transfer')]]" />
-            @if(in_array($donationPaymentMethod, ['bkash','nagad','bank']))
-                <x-input label="{{ __('Transaction ID') }}" wire:model="donationTransactionId" required />
-            @endif
-            <x-textarea label="{{ __('Note (Optional)') }}" wire:model="donationNote" rows="2" />
-        </div>
-        <x-slot:actions>
-            <x-button label="{{ __('Cancel') }}" wire:click="$set('donationModal', false)" />
-            <x-button label="{{ __('Record Donation') }}" class="btn-success" wire:click="saveSessionDonation" spinner />
-        </x-slot:actions>
-    </x-modal>
+
 
 </div>

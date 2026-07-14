@@ -11,12 +11,12 @@
             </p>
         </div>
 
-        <div class="flex gap-4 shrink-0">
-            <div class="bg-indigo-50 dark:bg-indigo-950/25 px-5 py-3 rounded-2xl border border-indigo-100 dark:border-indigo-900/40 text-center min-w-[130px]">
+        <div class="flex flex-wrap sm:flex-nowrap gap-4 shrink-0 w-full lg:w-auto">
+            <div class="bg-indigo-50 dark:bg-indigo-950/25 px-5 py-3 rounded-2xl border border-indigo-100 dark:border-indigo-900/40 text-center flex-1 sm:flex-none min-w-[130px]">
                 <span class="block text-2xl font-black text-indigo-600 dark:text-indigo-400">{{ $stats['total_pending_count'] }}</span>
                 <span class="text-[9px] font-bold uppercase tracking-wider text-indigo-500 dark:text-indigo-400/80">{{ __('Pending Payments') }}</span>
             </div>
-            <div class="bg-emerald-50 dark:bg-emerald-950/25 px-5 py-3 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 text-center min-w-[150px]">
+            <div class="bg-emerald-50 dark:bg-emerald-950/25 px-5 py-3 rounded-2xl border border-emerald-100 dark:border-emerald-900/40 text-center flex-1 sm:flex-none min-w-[150px]">
                 <span class="block text-2xl font-black text-emerald-600 dark:text-emerald-400">৳{{ number_format($stats['total_pending_amount']) }}</span>
                 <span class="text-[9px] font-bold uppercase tracking-wider text-emerald-500 dark:text-emerald-400/80">{{ __('Unverified Value') }}</span>
             </div>
@@ -59,7 +59,7 @@
                     @forelse($pendingDonations as $donation)
                         <tr class="hover:bg-slate-50/50 dark:hover:bg-slate-800/20 transition-colors">
                             {{-- Donor Profile --}}
-                            <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200">
+                            <td class="px-6 py-4 font-bold text-slate-800 dark:text-slate-200 whitespace-nowrap">
                                 <div class="flex items-center gap-3">
                                     <div class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-bold text-indigo-500 uppercase">
                                         {{ substr($donation->user?->name ?? 'G', 0, 2) }}
@@ -72,10 +72,10 @@
                             </td>
 
                             {{-- Type & Destination --}}
-                            <td class="px-6 py-4 text-slate-600 dark:text-slate-400">
+                            <td class="px-6 py-4 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                                 @if($donation->type === 'campaign')
                                     <span class="badge badge-indigo badge-xs text-white uppercase font-bold">{{ __('Campaign') }}</span>
-                                    <span class="block font-bold text-slate-700 dark:text-slate-300 mt-0.5 line-clamp-1">{{ $donation->campaign?->title }}</span>
+                                    <span class="block font-bold text-slate-700 dark:text-slate-300 mt-0.5 max-w-[200px] truncate" title="{{ $donation->campaign?->title }}">{{ $donation->campaign?->title }}</span>
                                 @elseif($donation->type === 'recurring')
                                     <span class="badge badge-success badge-xs text-white uppercase font-bold">{{ __('Pledge / Recurring') }}</span>
                                     <span class="block font-bold text-slate-700 dark:text-slate-300 mt-0.5">{{ __('Weekly/Monthly Commit') }}</span>
@@ -85,7 +85,7 @@
                             </td>
 
                             {{-- Payment Method --}}
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2.5 py-1 rounded-lg text-[10px] font-black uppercase tracking-wider
                                     @if($donation->payment_method === 'bkash') bg-pink-100 text-pink-700 dark:bg-pink-950/30 dark:text-pink-400
                                     @elseif($donation->payment_method === 'nagad') bg-orange-100 text-orange-700 dark:bg-orange-950/30 dark:text-orange-400
@@ -96,26 +96,26 @@
                             </td>
 
                             {{-- Transaction ID --}}
-                            <td class="px-6 py-4">
+                            <td class="px-6 py-4 break-all min-w-[120px]">
                                 @if($donation->transaction_id)
-                                    <span class="font-mono text-indigo-600 dark:text-indigo-400 font-bold bg-slate-50 dark:bg-slate-800/40 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-800">{{ $donation->transaction_id }}</span>
+                                    <span class="font-mono text-indigo-600 dark:text-indigo-400 font-bold bg-slate-50 dark:bg-slate-800/40 px-2 py-0.5 rounded border border-slate-100 dark:border-slate-800 break-all">{{ $donation->transaction_id }}</span>
                                 @else
                                     <span class="text-slate-400 italic">{{ __('None') }}</span>
                                 @endif
                             </td>
 
                             {{-- Amount --}}
-                            <td class="px-6 py-4 font-black text-slate-800 dark:text-white text-sm">
+                            <td class="px-6 py-4 font-black text-slate-800 dark:text-white text-sm whitespace-nowrap">
                                 ৳{{ number_format($donation->amount) }}
                             </td>
 
                             {{-- Submitted --}}
-                            <td class="px-6 py-4 text-slate-500">
+                            <td class="px-6 py-4 text-slate-500 whitespace-nowrap">
                                 {{ $donation->created_at->diffForHumans() }}
                             </td>
 
                             {{-- Actions --}}
-                            <td class="px-6 py-4 text-right">
+                            <td class="px-6 py-4 text-right whitespace-nowrap">
                                 <x-button label="{{ __('Verify') }}" icon="o-magnifying-glass" wire:click="selectDonation({{ $donation->id }})" class="btn-sm bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-400 border-none rounded-xl font-bold hover:bg-indigo-100" />
                             </td>
                         </tr>

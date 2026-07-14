@@ -31,7 +31,7 @@
             </div>
 
             {{-- Info --}}
-            <div class="flex-1 pt-36 md:pt-16">
+            <div class="flex-1 pt-36 md:pt-36">
                 <div class="flex flex-wrap gap-2 mb-3">
                     @if($book->category)
                         <span class="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-800">{{ $book->category->name }}</span>
@@ -75,16 +75,29 @@
                     </button>
                     @endforeach
                 </div>
+                               @php
+                    $readerUrl = $book->pdf_url ?: $book->external_link;
+                    if ($readerUrl && str_contains($readerUrl, 'drive.google.com')) {
+                        // Convert view/edit URLs to preview URL for iframe embedding
+                        $readerUrl = preg_replace('/\/view(\?usp=sharing)?$/', '/preview', $readerUrl);
+                        $readerUrl = preg_replace('/\/edit(\?usp=sharing)?$/', '/preview', $readerUrl);
+                        if (!str_contains($readerUrl, '/preview') && preg_match('/\/file\/d\/([^\/]+)/', $readerUrl, $matches)) {
+                            $readerUrl = "https://drive.google.com/file/d/{$matches[1]}/preview";
+                        }
+                    }
+                @endphp
 
                 {{-- Action Buttons --}}
                 <div class="flex flex-wrap gap-3">
-                    @if($book->pdf_url)
+                    @if($readerUrl)
                         <button wire:click="toggleReader"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg transition-all hover:-translate-y-0.5
                                 {{ $showReader ? 'bg-slate-200 dark:bg-slate-700 text-slate-900 dark:text-white' : 'bg-gradient-to-r from-cyan-600 to-blue-600 text-white' }}">
                             <x-icon name="{{ $showReader ? 'o-eye-slash' : 'o-eye' }}" class="w-4 h-4" />
                             {{ $showReader ? __('Hide Reader') : __('Read Online') }}
                         </button>
+                    @endif
+                    @if($book->pdf_url)
                         <a href="{{ $book->pdf_url }}" target="_blank"
                             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-sm bg-emerald-600 hover:bg-emerald-700 text-white shadow-lg transition-all hover:-translate-y-0.5"
                             @guest onclick="window.location='{{ route('login') }}'; return false;" @endguest>
@@ -102,7 +115,7 @@
         </div>
 
         {{-- PDF READER --}}
-        @if($showReader && $book->pdf_url)
+        @if($showReader && $readerUrl)
         <div class="mb-8 bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-800 overflow-hidden shadow-xl">
             <div class="flex items-center justify-between px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50">
                 <span class="font-black text-slate-900 dark:text-white flex items-center gap-2"><x-icon name="o-document-text" class="w-4 h-4 text-cyan-500" /> {{ __('PDF Reader') }}</span>
@@ -110,7 +123,7 @@
                     <x-icon name="o-x-mark" class="w-5 h-5" />
                 </button>
             </div>
-            <iframe src="{{ $book->pdf_url }}#toolbar=1" class="w-full" style="height: 80vh;" title="{{ $book->title }}"></iframe>
+            <iframe src="{{ $readerUrl }}{{ $book->pdf_url ? '#toolbar=1' : '' }}" class="w-full" style="height: 80vh;" title="{{ $book->title }}"></iframe>
         </div>
         @endif
 

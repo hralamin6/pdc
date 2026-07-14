@@ -297,7 +297,7 @@
                                 @endif
                             @endcan
 
-                            <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <div class="flex gap-1">
                                 <x-button icon="o-cog-6-tooth" class="btn-ghost btn-sm btn-circle"
                                     wire:click="openQuizModal({{ $quiz->id }})" tooltip="{{ __('Settings') }}" />
 

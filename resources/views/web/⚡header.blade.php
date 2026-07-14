@@ -454,7 +454,7 @@ new class extends Component {
                                                 <img src="{{ userImage(auth()->user()) }}" class="w-full h-full object-cover" />
                                             </div>
                                             @if(($totalUnread = $this->unreadMessagesCount + $this->unreadNotificationsCount) > 0)
-                                                <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary text-[9px] font-black text-white rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900 shadow-sm z-10">
+                                                <span class="absolute -top-1.5 -right-1.5 w-4 h-4 bg-primary text-[9px] font-black text-white rounded-full flex items-center justify-center ring-2 ring-white dark:ring-slate-900 shadow-sm lg:hidden z-10">
                                                     {{ $totalUnread }}
                                                 </span>
                                             @endif

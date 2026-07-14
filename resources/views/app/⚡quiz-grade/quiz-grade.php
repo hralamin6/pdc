@@ -95,7 +95,7 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
         $answers = QuizAnswer::with('question', 'attempt')
             ->whereHas('question', fn ($q) => $q->where('type', 'short_text'))
             ->whereNull('admin_grade')
-            ->where('ai_grade', '>=', 0.85)
+            ->where('ai_grade', '>=', 0.75)
             ->get();
 
         $count = 0;
@@ -142,6 +142,9 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
                 $answer->ai_grade = $result['grade'];
                 $answer->ai_grade_reason = $result['reason'];
                 $answer->save();
+                
+                $this->adminGrades[$answer->id] = $result['grade'];
+                
                 $count++;
             } catch (\Exception $e) {
                 // Keep evaluating others
@@ -172,6 +175,9 @@ new #[Title('Grade Short Answers')] #[Layout('layouts.app')] class extends Compo
                 $answer->ai_grade = $result['grade'];
                 $answer->ai_grade_reason = $result['reason'];
                 $answer->save();
+                
+                $this->adminGrades[$answer->id] = $result['grade'];
+                
                 $count++;
             } catch (\Exception $e) {
                 // Keep evaluating others

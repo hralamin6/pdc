@@ -54,7 +54,7 @@ For quizzes containing open-ended (`short_text`) questions:
 2. You will see a list of pending answers.
 3. The system automatically displays the **Student's Text**, alongside the **AI's Confidence Grade (0-100%)** and the **AI's Reasoning**.
 4. You can manually enter an Admin Grade (0 to 1) and click confirm.
-5. **Bulk Action:** If you trust the AI, click **"Auto-Confirm High Confidence"** to instantly approve all answers where the AI's grade is 85% or higher.
+5. **Bulk Action:** If you trust the AI, click **"Auto-Confirm High Confidence"** to instantly approve all answers where the AI's grade is 75% or higher.
 
 ---
 

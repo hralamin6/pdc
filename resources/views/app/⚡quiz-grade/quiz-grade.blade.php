@@ -1,18 +1,20 @@
 <div>
     <x-header :title="__('Grade Short Answers')" :subtitle="__('Review AI-graded short text answers and confirm them.')" separator>
         <x-slot:actions>
-            <x-select wire:model.live="quizId" :options="$this->quizzes" option-label="title" option-value="id" placeholder="{{ __('All Quizzes') }}" class="select-bordered select-sm max-w-xs" />
-            
-            <div class="join">
-                <button wire:click="$set('filterStatus', 'pending')" class="btn btn-sm join-item {{ $filterStatus === 'pending' ? 'btn-primary' : '' }}">{{ __('Pending') }}</button>
-                <button wire:click="$set('filterStatus', 'graded')" class="btn btn-sm join-item {{ $filterStatus === 'graded' ? 'btn-primary' : '' }}">{{ __('Graded') }}</button>
-            </div>
+            <div class="flex flex-wrap items-center gap-2">
+                <x-select wire:model.live="quizId" :options="$this->quizzes" option-label="title" option-value="id" placeholder="{{ __('All Quizzes') }}" class="select-bordered select-sm max-w-xs" />
+                
+                <div class="join">
+                    <button wire:click="$set('filterStatus', 'pending')" class="btn btn-sm join-item {{ $filterStatus === 'pending' ? 'btn-primary' : '' }}">{{ __('Pending') }}</button>
+                    <button wire:click="$set('filterStatus', 'graded')" class="btn btn-sm join-item {{ $filterStatus === 'graded' ? 'btn-primary' : '' }}">{{ __('Graded') }}</button>
+                </div>
 
-            @if($filterStatus === 'pending')
-                <x-button label="{{ __('Evaluate Pending with AI') }}" icon="o-sparkles" class="btn-primary btn-sm ml-2" wire:click="evaluatePendingWithAi" spinner tooltip="{{ __('Run AI grading on all un-evaluated answers') }}" />
-                <x-button label="{{ __('Re-evaluate All') }}" icon="o-arrow-path" class="btn-warning btn-sm ml-2" wire:click="reevaluateAllWithAi" wire:confirm="{{ __('Re-run AI evaluation for ALL pending answers? This may take some time.') }}" spinner tooltip="{{ __('Force AI to re-evaluate all pending answers') }}" />
-                <x-button label="{{ __('Auto-Confirm High Confidence') }}" icon="o-check-badge" class="btn-success btn-sm ml-2" wire:click="autoConfirmHighConfidence" spinner tooltip="{{ __('Confirms all pending answers with AI Grade >= 85%') }}" />
-            @endif
+                @if($filterStatus === 'pending')
+                    <x-button label="{{ __('Evaluate Pending with AI') }}" icon="o-sparkles" class="btn-primary btn-sm" wire:click="evaluatePendingWithAi" spinner tooltip="{{ __('Run AI grading on all un-evaluated answers') }}" />
+                    <x-button label="{{ __('Re-evaluate All') }}" icon="o-arrow-path" class="btn-warning btn-sm" wire:click="reevaluateAllWithAi" wire:confirm="{{ __('Re-run AI evaluation for ALL pending answers? This may take some time.') }}" spinner tooltip="{{ __('Force AI to re-evaluate all pending answers') }}" />
+                    <x-button label="{{ __('Auto-Confirm High Confidence') }}" icon="o-check-badge" class="btn-success btn-sm" wire:click="autoConfirmHighConfidence" spinner tooltip="{{ __('Confirms all pending answers with AI Grade >= 75%') }}" />
+                @endif
+            </div>
         </x-slot:actions>
     </x-header>
 
@@ -26,23 +28,25 @@
             @foreach($this->answers as $ans)
                 <div class="bg-base-100 rounded-xl border border-base-content/10 p-5 shadow-sm" wire:key="ans-{{ $ans->id }}">
                     {{-- Header --}}
-                    <div class="flex items-start justify-between gap-4 mb-4">
-                        <div>
-                            <div class="flex items-center gap-2 mb-1">
-                                <span class="badge badge-primary badge-sm font-bold">{{ $ans->attempt->user->name }}</span>
-                                <span class="text-xs text-base-content/50">{{ __('in') }} {{ $ans->attempt->quiz->title }}</span>
-                                <span class="text-xs text-base-content/50 flex items-center gap-1">
+                    <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4 mb-4">
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-2 mb-1.5">
+                                <span class="badge badge-primary badge-sm font-bold max-w-[150px] sm:max-w-xs" title="{{ $ans->attempt->user->name }}">
+                                    <span class="truncate">{{ $ans->attempt->user->name }}</span>
+                                </span>
+                                <span class="text-xs text-base-content/50 truncate max-w-[200px] sm:max-w-none" title="{{ $ans->attempt->quiz->title }}">{{ __('in') }} {{ $ans->attempt->quiz->title }}</span>
+                                <span class="text-xs text-base-content/50 flex items-center gap-1 whitespace-nowrap">
                                     <x-icon name="o-clock" class="w-3 h-3" /> {{ $ans->created_at->diffForHumans() }}
                                 </span>
                             </div>
-                            <p class="font-bold text-sm">{{ $ans->question->question_text }}</p>
+                            <p class="font-bold text-sm text-base-content break-words">{{ $ans->question->question_text }}</p>
                             <p class="text-xs text-base-content/50 mt-1">{{ $ans->question->marks }} {{ __('max marks') }}</p>
                         </div>
                         
-                        <div class="flex items-center gap-2 bg-base-200/50 p-2 rounded-lg border border-base-content/10">
-                            <div class="text-xs text-right mr-2">
+                        <div class="flex items-center gap-2 bg-base-200/50 p-2 rounded-lg border border-base-content/10 w-fit self-start sm:self-auto shrink-0">
+                            <div class="text-xs text-right mr-2 min-w-[60px]">
                                 <span class="block text-base-content/50">{{ __('AI Grade') }}</span>
-                                <span class="font-black {{ $ans->ai_grade >= 0.85 ? 'text-success' : ($ans->ai_grade <= 0.3 ? 'text-error' : 'text-warning') }}">
+                                <span class="font-black {{ $ans->ai_grade >= 0.75 ? 'text-success' : ($ans->ai_grade <= 0.3 ? 'text-error' : 'text-warning') }}">
                                     {{ !is_null($ans->ai_grade) ? round($ans->ai_grade * 100) . '%' : 'N/A' }}
                                 </span>
                             </div>

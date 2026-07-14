@@ -59,7 +59,7 @@
 
                     <div class="mt-auto pt-4 border-t border-base-content/5 flex items-center justify-between">
                         <span class="text-[10px] text-base-content/40">{{ __('By:') }} {{ $book->uploader?->name ?? __('System') }}</span>
-                        <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div class="flex gap-1">
                             @if($book->status === 'pending')
                                 <x-button icon="o-check" class="btn-ghost btn-sm text-success" wire:click="approve({{ $book->id }})" tooltip="{{ __('Approve') }}" />
                             @endif
@@ -105,8 +105,43 @@
         <div class="p-4 bg-base-200/50 rounded-xl border border-base-content/10 space-y-4 mb-4">
             <h4 class="font-bold text-sm uppercase text-base-content/50">{{ __('Files & Links') }}</h4>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <x-file wire:model="cover_file" label="{{ __('Cover Image') }}" accept="image/*" class="file-input-bordered" />
-                <x-file wire:model="pdf_file" label="{{ __('PDF File (Max 50MB)') }}" accept="application/pdf" class="file-input-bordered" />
+                <div>
+                    <x-file wire:model="cover_file" label="{{ __('Cover Image') }}" accept="image/*" class="file-input-bordered w-full" />
+                    
+                    @if ($cover_file)
+                        <div class="mt-2 p-2 bg-base-100 rounded-lg border border-base-content/10 flex items-center gap-3">
+                            <img src="{{ $cover_file->temporaryUrl() }}" class="w-12 h-16 object-cover rounded-md shadow-sm" />
+                            <div>
+                                <p class="text-xs font-bold text-base-content/75 truncate max-w-[150px]">{{ $cover_file->getClientOriginalName() }}</p>
+                                <p class="text-[10px] text-base-content/50">{{ number_format($cover_file->getSize() / 1024, 1) }} KB</p>
+                            </div>
+                        </div>
+                    @elseif ($editingId && ($existingBook = \App\Models\Book::find($editingId)) && $existingBook->cover_url)
+                        <div class="mt-2 p-2 bg-base-100 rounded-lg border border-base-content/10 flex items-center gap-3">
+                            <img src="{{ $existingBook->cover_url }}" class="w-12 h-16 object-cover rounded-md shadow-sm" />
+                            <div>
+                                <p class="text-xs font-bold text-base-content/75">{{ __('Current Cover') }}</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+
+                <div>
+                    <x-file wire:model="pdf_file" label="{{ __('PDF File (Max 50MB)') }}" accept="application/pdf" class="file-input-bordered w-full" />
+                    
+                    @if ($pdf_file)
+                        <div class="mt-2 p-2 bg-base-100 rounded-lg border border-base-content/10 flex items-center gap-3">
+                            <div class="w-12 h-16 bg-rose-500/10 rounded-md flex flex-col items-center justify-center text-rose-500 shadow-sm border border-rose-500/20">
+                                <x-icon name="o-document-text" class="w-6 h-6" />
+                                <span class="text-[8px] font-black uppercase">PDF</span>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-base-content/75 truncate max-w-[150px]">{{ $pdf_file->getClientOriginalName() }}</p>
+                                <p class="text-[10px] text-base-content/50">{{ number_format($pdf_file->getSize() / (1024 * 1024), 2) }} MB</p>
+                            </div>
+                        </div>
+                    @endif
+                </div>
             </div>
             <x-input wire:model="external_link" label="{{ __('Or External Download Link (e.g. Google Drive)') }}" class="input-bordered rounded-xl" />
         </div>

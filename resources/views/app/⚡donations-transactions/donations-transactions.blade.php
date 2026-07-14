@@ -3,7 +3,9 @@
     <x-header title="{{ __('Transaction Ledger') }}" subtitle="{{ __('Master record of all donation activities and offline entries') }}" separator>
         <x-slot:actions>
             @if($activeTab === 'ledger')
-                <x-button label="{{ __('Export CSV') }}" icon="o-arrow-down-tray" wire:click="exportCsv" class="btn-outline" spinner="exportCsv" />
+                <div class="flex flex-wrap items-center gap-2">
+                    <x-button label="{{ __('Export CSV') }}" icon="o-arrow-down-tray" wire:click="exportCsv" class="btn-outline btn-sm" spinner="exportCsv" />
+                </div>
             @endif
         </x-slot:actions>
     </x-header>
@@ -50,25 +52,26 @@
 
         <!-- Ledger Table -->
         <div class="bg-base-100 rounded-2xl shadow-sm border border-base-200 overflow-hidden">
-            <table class="table w-full">
-                <thead class="bg-base-200/50">
-                    <tr>
-                        <th>{{ __('Date & ID') }}</th>
-                        <th>{{ __('Donor') }}</th>
-                        <th>{{ __('Category') }}</th>
-                        <th>{{ __('Amount / Method') }}</th>
-                        <th>{{ __('Status') }}</th>
-                        <th class="text-right">{{ __('Actions') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="overflow-x-auto">
+                <table class="table w-full">
+                    <thead class="bg-base-200/50">
+                        <tr>
+                            <th>{{ __('Date & ID') }}</th>
+                            <th>{{ __('Donor') }}</th>
+                            <th>{{ __('Category') }}</th>
+                            <th>{{ __('Amount / Method') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th class="text-right">{{ __('Actions') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
                     @forelse($transactions as $tx)
                         <tr>
-                            <td>
-                                <div class="font-medium whitespace-nowrap">{{ (clone $tx->created_at)->setTimezone('Asia/Dhaka')->format('d M, Y h:i A') }}</div>
-                                <div class="text-xs font-mono text-base-content/50 mt-1" title="{{ __('Transaction ID') }}">{{ $tx->transaction_id ?? 'TXN-'.$tx->id }}</div>
+                            <td class="whitespace-nowrap">
+                                <div class="font-medium">{{ (clone $tx->created_at)->setTimezone('Asia/Dhaka')->format('d M, Y h:i A') }}</div>
+                                <div class="text-xs font-mono text-base-content/50 mt-1 break-all max-w-[120px]" title="{{ __('Transaction ID') }}">{{ $tx->transaction_id ?? 'TXN-'.$tx->id }}</div>
                             </td>
-                            <td>
+                            <td class="whitespace-nowrap">
                                 <div class="flex items-center gap-3">
                                     @if($tx->is_anonymous || !$tx->user)
                                         <div class="avatar placeholder">
@@ -89,7 +92,7 @@
                                     @endif
                                 </div>
                             </td>
-                            <td>
+                            <td class="whitespace-nowrap">
                                 <x-badge value="{{ ucfirst($tx->type) }}" class="badge-neutral badge-sm uppercase" />
                                 @if($tx->type === 'campaign' && $tx->campaign)
                                     <div class="text-xs text-base-content/70 mt-1 truncate max-w-[150px]" title="{{ $tx->campaign->title }}">{{ $tx->campaign->title }}</div>
@@ -97,11 +100,11 @@
                                     <div class="text-xs text-base-content/70 mt-1 truncate max-w-[150px]" title="{{ $tx->halaqah->title }}">{{ $tx->halaqah->title }}</div>
                                 @endif
                             </td>
-                            <td>
+                            <td class="whitespace-nowrap">
                                 <div class="font-bold text-primary">{{ __('BDT') }} {{ number_format($tx->amount, 2) }}</div>
                                 <div class="text-xs uppercase tracking-widest text-base-content/70 mt-1">{{ __($tx->payment_method) }}</div>
                             </td>
-                            <td>
+                            <td class="whitespace-nowrap">
                                 @if($tx->status === 'confirmed')
                                     <x-badge value="{{ __('Confirmed') }}" class="badge-success badge-sm" />
                                 @elseif($tx->status === 'pending')
@@ -112,7 +115,7 @@
                                     <x-badge value="{{ __('Voided') }}" class="badge-neutral badge-sm" />
                                 @endif
                             </td>
-                            <td class="text-right">
+                            <td class="text-right whitespace-nowrap">
                                 @if($tx->status === 'confirmed')
                                     <x-button icon="o-archive-box-x-mark" wire:click="voidTransaction({{ $tx->id }})" class="btn-sm btn-ghost text-error" tooltip="{{ __('Void Transaction') }}" wire:confirm="{{ __('Are you sure? This will mark the transaction as voided/rejected.') }}" spinner="voidTransaction({{ $tx->id }})" />
                                 @endif
@@ -131,6 +134,7 @@
                 </tbody>
             </table>
         </div>
+    </div>
 
         <div class="mt-6">
             {{ $transactions->links() }}
@@ -210,10 +214,10 @@
 
                     <hr class="border-base-300" />
 
-                    <div class="flex items-center justify-between">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <x-toggle label="{{ __('Send Email/Notification Receipt') }}" wire:model="sendReceipt" class="toggle-primary" hint="{{ __('Only applies if a Registered User is selected') }}" />
                         
-                        <x-button label="{{ __('Record Transaction') }}" type="submit" icon="o-check-circle" class="btn-primary" spinner="recordTransaction" />
+                        <x-button label="{{ __('Record Transaction') }}" type="submit" icon="o-check-circle" class="btn-primary w-full sm:w-auto" spinner="recordTransaction" />
                     </div>
                 </div>
             </x-form>

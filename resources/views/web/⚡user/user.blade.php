@@ -122,7 +122,9 @@
                 ['icon' => 'o-fire', 'value' => $stats['currentStreak'].'d', 'label' => 'Streak', 'color' => 'orange'],
                 ['icon' => 'o-clipboard-document-check', 'value' => $stats['totalReports'], 'label' => 'Reports', 'color' => 'green'],
                 ['icon' => 'o-question-mark-circle', 'value' => $stats['quizCount'], 'label' => 'Quizzes', 'color' => 'purple'],
-                ['icon' => 'o-calendar', 'value' => $user->created_at->diffInDays(now()).'d', 'label' => 'Member', 'color' => 'rose'],
+                ['icon' => 'o-calendar', 'value' => $user->created_at->diffForHumans(['short' => true,
+    'parts' => 1,
+    'syntax' => \Carbon\CarbonInterface::DIFF_ABSOLUTE,]), 'label' => 'Member', 'color' => 'rose'],
             ] as $stat)
             <div class="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-4 text-center hover:border-{{ $stat['color'] }}-400 hover:shadow-lg transition-all group">
                 <x-icon name="{{ $stat['icon'] }}" class="w-5 h-5 mx-auto mb-1.5 text-{{ $stat['color'] }}-500 group-hover:scale-110 transition-transform" />

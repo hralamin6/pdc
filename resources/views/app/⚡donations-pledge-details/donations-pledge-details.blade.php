@@ -2,8 +2,10 @@
     <!-- Header -->
     <x-header title="{{ $this->getTitle() }}" subtitle="{{ __('Pledge ID: #:id', ['id' => $pledge->id]) }}" separator>
         <x-slot:actions>
-            <x-button label="{{ __('Back to Pledges') }}" icon="o-arrow-left" link="{{ route('app.donations.pledges') }}" class="btn-ghost" />
-            <x-button label="{{ __('Edit Pledge') }}" icon="o-pencil" wire:click="openEditModal" class="btn-primary" />
+            <div class="flex flex-wrap items-center gap-2">
+                <x-button label="{{ __('Back to Pledges') }}" icon="o-arrow-left" link="{{ route('app.donations.pledges') }}" class="btn-ghost btn-sm" />
+                <x-button label="{{ __('Edit Pledge') }}" icon="o-pencil" wire:click="openEditModal" class="btn-primary btn-sm" />
+            </div>
         </x-slot:actions>
     </x-header>
 
@@ -62,56 +64,58 @@
     <!-- Payments/Invoices History -->
     <h3 class="text-xl font-bold mb-4">{{ __('Payment History (Recurring Invoices)') }}</h3>
     <div class="bg-base-100 rounded-2xl shadow-sm border border-base-200 overflow-hidden">
-        <table class="table w-full">
-            <thead class="bg-base-200/50">
-                <tr>
-                    <th>{{ __('Date') }}</th>
-                    <th>{{ __('Amount') }}</th>
-                    <th>{{ __('Method') }}</th>
-                    <th>{{ __('Transaction ID') }}</th>
-                    <th>{{ __('Status') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($payments as $payment)
+        <div class="overflow-x-auto">
+            <table class="table w-full">
+                <thead class="bg-base-200/50">
                     <tr>
-                        <td>
-                            <div class="font-medium">{{ $payment->created_at->format('d M, Y h:i A') }}</div>
-                            <div class="text-xs text-base-content/50">{{ $payment->created_at->diffForHumans() }}</div>
-                        </td>
-                        <td class="font-bold">
-                            {{ $payment->currency }} {{ number_format($payment->amount, 2) }}
-                        </td>
-                        <td class="uppercase text-sm tracking-wide">
-                            {{ __($payment->payment_method) }}
-                        </td>
-                        <td class="font-mono text-sm text-base-content/70">
-                            {{ $payment->transaction_id ?? '-' }}
-                        </td>
-                        <td>
-                            @if($payment->status === 'confirmed')
-                                <x-badge value="{{ __('Confirmed') }}" class="badge-success badge-sm" />
-                            @elseif($payment->status === 'pending')
-                                <x-badge value="{{ __('Pending Review') }}" class="badge-warning badge-sm" />
-                            @elseif($payment->status === 'pending_payment')
-                                <x-badge value="{{ __('Unpaid / Due') }}" class="badge-error badge-sm" />
-                            @else
-                                <x-badge value="{{ ucfirst($payment->status) }}" class="badge-neutral badge-sm" />
-                            @endif
-                        </td>
+                        <th>{{ __('Date') }}</th>
+                        <th>{{ __('Amount') }}</th>
+                        <th>{{ __('Method') }}</th>
+                        <th>{{ __('Transaction ID') }}</th>
+                        <th>{{ __('Status') }}</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">
-                            <div class="py-12 text-center text-base-content/50">
-                                <x-icon name="o-banknotes" class="w-12 h-12 mx-auto mb-3 opacity-20" />
-                                <p>{{ __('No recurring payments found for this user.') }}</p>
-                            </div>
-                        </td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @forelse($payments as $payment)
+                        <tr>
+                            <td class="whitespace-nowrap">
+                                <div class="font-medium">{{ $payment->created_at->format('d M, Y h:i A') }}</div>
+                                <div class="text-xs text-base-content/50">{{ $payment->created_at->diffForHumans() }}</div>
+                            </td>
+                            <td class="font-bold whitespace-nowrap">
+                                {{ $payment->currency }} {{ number_format($payment->amount, 2) }}
+                            </td>
+                            <td class="uppercase text-sm tracking-wide whitespace-nowrap">
+                                {{ __($payment->payment_method) }}
+                            </td>
+                            <td class="font-mono text-sm text-base-content/70 break-all min-w-[150px]">
+                                {{ $payment->transaction_id ?? '-' }}
+                            </td>
+                            <td>
+                                @if($payment->status === 'confirmed')
+                                    <x-badge value="{{ __('Confirmed') }}" class="badge-success badge-sm" />
+                                @elseif($payment->status === 'pending')
+                                    <x-badge value="{{ __('Pending Review') }}" class="badge-warning badge-sm" />
+                                @elseif($payment->status === 'pending_payment')
+                                    <x-badge value="{{ __('Unpaid / Due') }}" class="badge-error badge-sm" />
+                                @else
+                                    <x-badge value="{{ ucfirst($payment->status) }}" class="badge-neutral badge-sm" />
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="py-12 text-center text-base-content/50">
+                                    <x-icon name="o-banknotes" class="w-12 h-12 mx-auto mb-3 opacity-20" />
+                                    <p>{{ __('No recurring payments found for this user.') }}</p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <!-- Pagination -->

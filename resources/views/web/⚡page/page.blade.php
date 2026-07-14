@@ -32,7 +32,9 @@
                                      class="w-full h-auto rounded-lg">
                             </figure>
 
-                      <article class="prose dark:prose-invert max-w-none line-clamp-2" x-on:click="$el.classList.toggle('line-clamp-2')">
+                      <article class="prose dark:prose-invert max-w-none " 
+                      {{-- x-on:click="$el.classList.toggle('line-clamp-2')" --}}
+                      >
                         {!! $page->content !!}
                       </article>
 

@@ -125,17 +125,25 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
     <section class="relative -mt-10 z-20 max-w-6xl mx-auto px-4"
         x-data="{
             times: {}, nextName: '---', nextTime: '--:--',
+            selectedCityName: localStorage.getItem('prayer_city') || 'Barishal',
+            cities: [
+                { name: 'Barishal', lat: 22.7010, lng: 90.3535 },
+                { name: 'Dhaka', lat: 23.8103, lng: 90.4125 },
+                { name: 'Chittagong', lat: 22.3569, lng: 91.7832 },
+                { name: 'Sylhet', lat: 24.8949, lng: 91.8687 },
+                { name: 'Rajshahi', lat: 24.3636, lng: 88.6241 },
+                { name: 'Khulna', lat: 22.8456, lng: 89.5403 },
+                { name: 'Rangpur', lat: 25.7439, lng: 89.2752 },
+                { name: 'Mymensingh', lat: 24.7471, lng: 90.4203 }
+            ],
             async boot() {
-                // Fallback to Barishal immediately
-                await this.fetchTimes(22.7010, 90.3535);
-
-                // Try GPS in background, update if allowed
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (pos) => this.fetchTimes(pos.coords.latitude, pos.coords.longitude),
-                        () => {} // silent fail, keep Barishal
-                    );
-                }
+                const defaultCity = this.cities.find(c => c.name === this.selectedCityName) || this.cities[0];
+                await this.fetchTimes(defaultCity.lat, defaultCity.lng);
+            },
+            async changeCity(city) {
+                this.selectedCityName = city.name;
+                localStorage.setItem('prayer_city', city.name);
+                await this.fetchTimes(city.lat, city.lng);
             },
             async fetchTimes(lat, lng) {
                 try {
@@ -153,12 +161,31 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
         }" x-init="boot()">
         <div class="bg-slate-900/90 backdrop-blur-3xl rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 p-5 md:p-6">
             <div class="flex flex-col md:flex-row items-center justify-between gap-6">
-                <div class="flex items-center gap-4 bg-white/5 rounded-[1.5rem] p-3 pr-8 border border-white/5 w-full md:w-auto shrink-0">
+                <div class="flex items-center gap-4 bg-white/5 rounded-[1.5rem] p-3 pr-8 border border-white/5 w-full md:w-auto shrink-0 relative">
                     <div class="w-14 h-14 bg-cyan-500 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(6,182,212,0.6)] shrink-0">
                         <x-icon name="o-clock" class="w-7 h-7 text-white" />
                     </div>
-                    <div>
-                        <p class="text-[10px] font-black uppercase tracking-widest text-cyan-400">{{ __('Next Objective') }}</p>
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-cyan-400">{{ __('Next Objective') }}</span>
+                            <span class="text-[10px] font-semibold text-slate-300 bg-white/10 px-1.5 py-0.5 rounded" x-text="selectedCityName"></span>
+                            
+                            <!-- Mini settings dropdown to change city -->
+                            <div class="relative inline-block" x-data="{ open: false }">
+                                <button @click="open = !open" class="text-slate-400 hover:text-white p-0.5 rounded hover:bg-white/10 transition-colors flex items-center">
+                                    <x-icon name="o-cog-6-tooth" class="w-3.5 h-3.5" />
+                                </button>
+                                <div x-show="open" @click.outside="open = false" class="absolute left-0 mt-2 w-36 bg-slate-800 border border-white/10 rounded-xl shadow-xl z-30 py-1 text-xs">
+                                    <template x-for="city in cities" :key="city.name">
+                                        <button @click="changeCity(city); open = false" 
+                                                class="w-full text-left px-3 py-1.5 hover:bg-cyan-500 hover:text-white font-medium transition-colors"
+                                                :class="city.name === selectedCityName ? 'text-cyan-400 font-bold' : 'text-slate-300'">
+                                            <span x-text="city.name"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
                         <p class="text-2xl font-black text-white leading-none mt-1 whitespace-nowrap" x-text="nextName + ' — ' + nextTime"></p>
                     </div>
                 </div>
@@ -194,7 +221,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($featuredAlbums as $album)
-                <a href="{{ route('web.showcase') }}" wire:navigate class="group relative h-64 md:h-72 rounded-[2rem] overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 block">
+                <a href="{{ route('web.showcase.show', $album->slug) }}" wire:navigate class="group relative h-64 md:h-72 rounded-[2rem] overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800 block">
                     @if($album->getFirstMediaUrl('gallery_images'))
                         <img src="{{ $album->getFirstMediaUrl('gallery_images') }}" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     @else
@@ -286,12 +313,12 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                         </div>
                         {{ __('Grimoires (Library)') }}
                     </h3>
-                    <a href="{{ route('web.library') }}" class="text-indigo-500 dark:text-indigo-400 text-sm font-bold hover:underline">{{ __('All Books') }}</a>
+                    <a wire:navigate href="{{ route('web.library') }}" class="text-indigo-500 dark:text-indigo-400 text-sm font-bold hover:underline">{{ __('All Books') }}</a>
                 </div>
 
                 <div class="space-y-4">
                     @forelse($latestBooks as $book)
-                    <div class="flex items-center gap-5 group cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/30 p-2 -mx-2 rounded-2xl transition-colors">
+                    <a href="{{ route('web.book', $book->slug) }}" wire:navigate class="flex items-center gap-5 group hover:bg-slate-50 dark:hover:bg-slate-700/30 p-2 -mx-2 rounded-2xl transition-colors">
                         <div class="w-14 h-20 bg-slate-200 dark:bg-slate-700 rounded-xl overflow-hidden shrink-0 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg group-hover:shadow-indigo-500/20 transition-all">
                             @if($book->cover_url)
                                 <img src="{{ $book->cover_url }}" class="w-full h-full object-cover" alt="{{ __('Cover') }}">
@@ -303,7 +330,7 @@ new #[Title('Welcome | PSTU Dawah Community')] #[Layout('layouts.web')] class ex
                             <h4 class="font-black text-slate-900 dark:text-white text-base line-clamp-1 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 transition-colors">{{ $book->title }}</h4>
                             <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-bold">{{ $book->author?->name ?? __('Unknown Scholar') }}</p>
                         </div>
-                    </div>
+                    </a>
                     @empty
                     <p class="text-sm text-slate-500 font-bold py-4">{{ __('The library is currently being stocked.') }}</p>
                     @endforelse
