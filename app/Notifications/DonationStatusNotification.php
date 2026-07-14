@@ -36,10 +36,12 @@ class DonationStatusNotification extends Notification implements ShouldQueue
 
         if ($preference->database_enabled) {
             $channels[] = 'database';
+            $channels[] = 'broadcast';
+
         }
 
         if ($preference->email_enabled) {
-            $channels[] = 'mail';
+            // $channels[] = 'mail';
         }
 
         return $channels;

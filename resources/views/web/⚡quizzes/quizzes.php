@@ -16,7 +16,7 @@ new #[Title('Islamic Quizzes | PSTU Dawah')] #[Layout('layouts.web')] class exte
 
     public function mount(): void
     {
-        $this->authorize('quiz.view');
+        // $this->authorize('quiz.view');
     }
 
     public function updatingSearch(): void
@@ -63,4 +63,4 @@ new #[Title('Islamic Quizzes | PSTU Dawah')] #[Layout('layouts.web')] class exte
             'quizzes' => $quizzes,
         ];
     }
-}
+}}

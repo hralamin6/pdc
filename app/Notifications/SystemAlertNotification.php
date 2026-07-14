@@ -50,7 +50,7 @@ class SystemAlertNotification extends Notification implements ShouldQueue
 
         if ($preference->email_enabled && in_array($this->alertType, ['warning', 'error'])) {
             // Only send emails for warnings and errors
-            $channels[] = 'mail';
+            // $channels[] = 'mail';
         }
 
         if ($preference->push_enabled && $notifiable->pushSubscriptions()->exists()) {

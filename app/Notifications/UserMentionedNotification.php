@@ -40,7 +40,7 @@ class UserMentionedNotification extends Notification implements ShouldQueue
         }
 
         if ($preference->email_enabled) {
-            $channels[] = 'mail';
+            // $channels[] = 'mail';
         }
 
         if ($preference->push_enabled && $notifiable->pushSubscriptions()->exists()) {
