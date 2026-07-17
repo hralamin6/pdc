@@ -11,16 +11,17 @@
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <meta name="user-authenticated" content="{{ auth()->check() ? 'true' : 'false' }}">
       <meta property="og:url" content="@yield('url', config('app.url'))" />
-      <meta property="og:site_name" content="{{ setting('name', 'starter') }}" />
+      <meta property="og:site_name" content="{{ setting('app.name', 'starter') }}" />
 
-      @php($title=Str::title(str_replace(['.', '_'], ' ',  request()->route()->getName())))
-      <title>@yield('title', $title) - {{ setting('name', 'starter') }}</title>
-      <meta property="og:title" content="@yield('title', $title) - {{ setting('name', 'starter') }}" />
-      <meta name="twitter:title" content="@yield('title', $title) - {{ setting('name', 'starter') }}" />
+      @php(isset($title)?:$title=Str::title(str_replace(['.', '_'], ' ',  request()->route()->getName())))
+      {{-- @dd($title); --}}
+      <title>@yield('title', $title) - {{ setting('app.name', 'starter') }}</title>
+      <meta property="og:title" content="@yield('title', $title) - {{ setting('app.name', 'starter') }}" />
+      <meta name="twitter:title" content="@yield('title', $title) - {{ setting('app.name', 'starter') }}" />
 
-      <meta name="description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}">
-      <meta property="og:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}" />
-      <meta name="twitter:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('name', 'starter') }}" />
+      <meta name="description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('app.name', 'starter') }}">
+      <meta property="og:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('app.name', 'starter') }}" />
+      <meta name="twitter:description" content="@yield('description', setting('details', __('dummy description')) ) - {{ setting('app.details', 'starter') }}" />
 
       <meta property="og:image:width" content="1536" />
       <meta property="og:image:height" content="1024" />

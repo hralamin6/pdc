@@ -50,6 +50,9 @@ new #[Layout('layouts::web')] #[Title('Create a new account')] class extends Com
         event(new Registered($user));
 
         Auth::login($user);
+        if (! $user->roles()->exists()) {
+            $user->assignRole('user');
+        }
         return redirect()->intended(route('web.home'));
     }
 };
