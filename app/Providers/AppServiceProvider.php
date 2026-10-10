@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Ai\Gateways\OpenAiCompatibleGateway;
+use App\Ai\Providers\OpenAiCompatibleProvider;
 use App\Listeners\AuthActivityListener;
 use App\Models\User;
 use App\Observers\GlobalActivityObserver;
@@ -16,6 +18,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Ai\Ai;
 use Illuminate\Contracts\Events\Dispatcher;
+use Laravel\Ai\AiManager;
 use Laravel\Ai\Contracts\Gateway\Gateway;
 use App\Ai\Providers\PollinationsProvider;
 use Laravel\Ai\Gateway\Prism\PrismGateway;
@@ -47,6 +50,7 @@ class AppServiceProvider extends ServiceProvider
         // ->in(resource_path('views/layouts'), fold: true)
         ->in(resource_path('views/auth'))
         ->in(resource_path('views/vendor'))
+        ->in(resource_path('views/nexus'), compile: false)
         ;
         Paginator::defaultView('pagination::default');
 
@@ -113,6 +117,17 @@ class AppServiceProvider extends ServiceProvider
                 $config,
                 $app->make(Dispatcher::class)
             );
+        });
+
+
+        $this->app->resolving(AiManager::class, function (AiManager $manager) {
+            $manager->extend('openai-compatible', function ($app, array $config) {
+                return new OpenAiCompatibleProvider(
+                    new OpenAiCompatibleGateway($app['events']),
+                    $config,
+                    $app->make(Dispatcher::class)
+                );
+            });
         });
     }
 

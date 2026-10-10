@@ -92,12 +92,12 @@ return [
             'key' => env('NVIDIA_API_KEY'),
             'url' => env('NVIDIA_BASE_URL', 'https://integrate.api.nvidia.com/v1'),
         ],
-        'custom' => [
-            'driver' => 'groq',
+        'openai-custom' => [
+            'driver' => 'pollinations',
             'key' => env('CUSTOM_API_KEY'),
             'url' => env('CUSTOM_BASE_URL', 'https://9router.com/v1'),
         ],
-
+        
     ],
 
 ];

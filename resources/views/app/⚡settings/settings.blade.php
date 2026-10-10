@@ -318,6 +318,7 @@
             <x-form wire:submit="addCustomProvider" class="space-y-4">
               <x-input label="{{ __('Unique Key / Name') }}" wire:model.defer="newProviderKey" placeholder="{{ __('e.g. cerebras, my-router') }}" hint="{{ __('Must be alpha-numeric, all lower case') }}" required />
               <x-select label="{{ __('Driver') }}" wire:model.defer="newProviderDriver" :options="[
+                                ['id' => 'openai-compatible', 'name' => 'OpenAI Compatible'],
                 ['id' => 'openai', 'name' => 'OpenAI'],
                 ['id' => 'groq', 'name' => 'Groq'],
                 ['id' => 'gemini', 'name' => 'Gemini'],
