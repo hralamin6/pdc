@@ -77,6 +77,11 @@ class PermissionSeeder extends Seeder
             'daily-reports' => [
                 'daily-reports.view', 'daily-reports.manage',
             ],
+            'nexus' => [
+                'nexus.use',         // access NexusAI chat
+                'nexus.documents',   // upload & manage RAG documents
+                'nexus.memory',      // view & edit AI memory
+            ],
         ];
 
         // Create permissions
@@ -122,6 +127,7 @@ class PermissionSeeder extends Seeder
             'donations.campaigns.manage', 'donations.verify', 'donations.pledges.manage', 'donations.transactions.manage',
             'library.view', 'library.manage', 'library.hubs.manage', 'library.hubs.create',
             'daily-reports.view', 'daily-reports.manage',
+            'nexus.use', 'nexus.documents', 'nexus.memory',
         ])->get();
         $admin->syncPermissions($adminPerms);
 
@@ -153,6 +159,7 @@ class PermissionSeeder extends Seeder
             'quiz.view', 'quiz.attempt',
             'library.view',
             'daily-reports.view',
+            'nexus.use', 'nexus.documents', 'nexus.memory',
         ])->get();
         $user->syncPermissions($userPerms);
 
@@ -165,6 +172,7 @@ class PermissionSeeder extends Seeder
             'quiz.view', 'quiz.attempt', 'quiz.live.host',
             'library.view', 'library.hubs.manage',
             'daily-reports.view', 'daily-reports.manage',
+            'nexus.use', 'nexus.documents', 'nexus.memory',
         ])->get();
         $mentor->syncPermissions($mentorPerms);
 

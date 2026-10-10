@@ -45,4 +45,3 @@ To keep the database schema clean and avoid a cluttered migration folder during 
        Schema::enableForeignKeyConstraints();
    }
    ```
-5. **Fresh Seed Validation**: After making any migration changes, always verify by running `php artisan migrate:fresh --seed` to ensure the seeding database pipeline remains fully functional.

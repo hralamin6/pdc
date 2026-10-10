@@ -133,6 +133,18 @@ Route::middleware('auth')->group(function () {
     // Chat routes
     Route::livewire('/app/chat/{conversation?}', 'app::chat')->name('app.chat');
     Route::livewire('/app/ai-chat/{conversation?}', 'app::ai-chat')->name('app.ai-chat');
+
+    // ── NexusAI ────────────────────────────────────────────────────────────────
+    Route::prefix('nexus')->name('nexus.')->group(function () {
+        Route::livewire('/', \App\Livewire\Nexus\NexusApp::class)->name('home');
+
+        // SSE streaming endpoint
+        Route::post('/stream/{chat}', [\App\Http\Controllers\NexusStreamController::class, 'stream'])->name('stream');
+
+        // Voice API
+        Route::post('/voice/transcribe', [\App\Http\Controllers\NexusStreamController::class, 'transcribe'])->name('voice.transcribe');
+        Route::post('/voice/synthesize', [\App\Http\Controllers\NexusStreamController::class, 'synthesize'])->name('voice.synthesize');
+    });
 });
 
 // Push notification API routes (now accessible to both guests and authenticated users)

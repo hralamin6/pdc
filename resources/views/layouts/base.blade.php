@@ -121,7 +121,6 @@
         {{-- :data-theme="theme" --}}
         >
         @yield('body')
-        <x-toast />
         
         {{-- Global AI Image Generator Drawer --}}
         <livewire:global-ai-image-generator />
